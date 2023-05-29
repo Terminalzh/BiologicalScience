@@ -21,16 +21,16 @@
 1. 均采用 JSON 作为信息交换格式
 2. 基本字段
 
-   ```typescript
-   interface Response {
-     // code: 状态码，没有特别定义的情况下，与[HTTP Status Code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)保持一直，一定要做到状态码有语义。
-     code: number;
-     // 携带的消息，成功可确定为：Success，失败则包含失败的信息。
-     message: string;
-     // data: 携带请求结果的信息，可为空
-     data?: any;
-   }
-   ```
+```typescript
+interface Response {
+  // code: 状态码，没有特别定义的情况下，与[HTTP Status Code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)保持一直，一定要做到状态码有语义。
+  code: number;
+  // 携带的消息，成功可确定为：Success，失败则包含失败的信息。
+  message: string;
+  // data: 携带请求结果的信息，可为空
+  data?: any;
+}
+```
 
 3. 对于分页的信息，在基本字段的前提下，data 的类型为 Pagination:
 
@@ -50,6 +50,7 @@ interface Pagination<T> {
 ```
 
 4. 对于分页的请求，包含以下 Query Parameter:
+
 ```typescript
 interface QueryParameter {
   // 请求的页码
@@ -58,11 +59,13 @@ interface QueryParameter {
   pageSize?: number;
 }
 ```
-5. 对于API的设计风格，比如有一个资源，在最基本的增删改查中，应该以下面的格式进行
- ```
-   GET     /user/:id  根据id查询一个User的详细信息
-   GET     /user      查询所有的User，以分页的形式返回
-   POST    /user      增加一个User
-   PUT     /user/:id  更新一个User的信息，注意这个PUT请求会上传一整个User的信息，包括没有改变的字段。
-   DELETE  /user/:id  删除一个User
+
+5. 对于 API 的设计风格，比如有一个资源，在最基本的增删改查中，应该以下面的格式进行
+
+```
+  GET     /user/:id  根据id查询一个User的详细信息
+  GET     /user      查询所有的User，以分页的形式返回
+  POST    /user      增加一个User
+  PUT     /user/:id  更新一个User的信息，注意这个PUT请求会上传一整个User的信息，包括没有改变的字段。
+  DELETE  /user/:id  删除一个User
 ```

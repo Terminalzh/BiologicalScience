@@ -7,31 +7,35 @@ import java.util.List;
 
 @Mapper
 public interface CategoryMapper {
+
     @Insert("""
             insert into t_category
-            (clazz, orders, family, genus, species)
-            VALUES(#{category.clazz}, #{category.orders}, #{category.family}, #{category.genus}, #{category.species})
+            (c_name, latin_name, sub_class_count, order_count, family_count, genus_count, species_count, parent_id)
+            values(#{category.cName}, #{category.latinName}, #{category.subClassCount}, #{category.orderCount}, #{category.familyCount}, #{category.genusCount}, #{category.speciesCount}, #{category.parentId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addCategory(@Param("category") Category category);
 
-    @Delete("delete from t_category where id = #{id}")
+    @Delete("delete from t_category where id=#{id}")
     int deleteCategoryById(@Param("id") Integer id);
 
     @Update("""
             update t_category set
-            clazz=#{category.clazz},
-            orders=#{category.orders},
-            family=#{category.family},
-            genus=#{category.genus},
-            species=#{category.species}
+            c_name=#{category.cName},
+            latin_name=#{category.latinName},
+            sub_class_count=#{category.subClassCount},
+            order_count=#{category.orderCount},
+            family_count=#{category.familyCount},
+            genus_count=#{category.genusCount},
+            species_count=#{category.speciesCount},
+            parent_id=#{category.parentId}
             where id=#{category.id}
             """)
     int updateCategoryById(@Param("category") Category category);
 
-    @Select("select id, clazz, orders, family, genus, species from t_category where id = #{id}")
+    @Select("select * from t_category where id=#{id}")
     Category inquireCategoryById(@Param("id") Integer id);
 
-    @Select("select id, clazz, orders, family, genus, species from t_category")
-    List<Category> inquireAllCategory();
+    @Select("select * from t_category")
+    List<Category> inquireAllCategories();
 }

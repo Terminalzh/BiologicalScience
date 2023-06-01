@@ -10,30 +10,30 @@ public interface SpeciesMapper {
     @Insert("""
             insert into t_species
             (name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level, create_time, update_time)
-            values (#{name}, #{latinName}, #{genusId}, #{briefIntroduction}, #{detailIntroduction}, #{recommend}, #{level}, #{createTime}, #{updateTime});
+            values (#{species.name}, #{species.latinName}, #{species.genusId}, #{species.briefIntroduction}, #{species.detailIntroduction}, #{species.recommend}, #{species.level}, #{species.createTime}, #{species.updateTime});
             """)
-    int addSpecies(Species species);
+    int addSpecies(@Param("species") Species species);
 
     @Delete("delete from t_species where id = #{id};")
-    int deleteSpeciesById(Integer id);
+    int deleteSpeciesById(@Param("id") Integer id);
 
     @Update("""
             update t_species set
-            name = #{name},
-            latin_name = #{latinName},
-            genus_id = #{genusId},
-            brief_introduction = #{briefIntroduction},
-            detail_introduction = #{detailIntroduction},
-            recommend = #{recommend},
-            level = #{level},
-            create_time = #{createTime},
-            update_time = #{updateTime}
+            name = #{species.name},
+            latin_name = #{species.latinName},
+            genus_id = #{species.genusId},
+            brief_introduction = #{species.briefIntroduction},
+            detail_introduction = #{species.detailIntroduction},
+            recommend = #{species.recommend},
+            level = #{species.level},
+            create_time = #{species.createTime},
+            update_time = #{species.updateTime}
             where id = #{id};
             """)
-    int updateSpeciesById(Species species);
+    int updateSpeciesById(@Param("species") Species species);
 
     @Select("select * from t_species where id = #{id}")
-    Species inquireSpeciesById(Integer id);
+    Species inquireSpeciesById(@Param("id") Integer id);
 
     @Select("select * from t_species")
     List<Species> inquireAllSpecies();

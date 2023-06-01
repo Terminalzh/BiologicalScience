@@ -10,28 +10,29 @@ public interface ReportMapper {
 
     @Insert("""
             insert into t_report
-            (reporter_user_id, reported_user_id, report_reason, report_time)
-            values (#{reporterUserId}, #{reportedUserId}, #{reportReason}, #{reportTime});
+            (reporter_name, reporter_phone, email, report_time, report_reason)
+            values(#{report.reporterName}, #{report.reporterPhone}, #{report.email}, #{report.reportTime}, #{report.reportReason})
             """)
-    int addReport(Report report);
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int addReport(@Param("report") Report report);
 
-    @Delete("delete from t_report where id = #{id};")
-    int deleteReportById(Integer id);
+    @Delete("delete from t_report where id=#{id}")
+    int deleteReportById(@Param("id") Integer id);
 
     @Update("""
             update t_report set
-            reporter_user_id = #{reporterUserId},
-            reported_user_id = #{reportedUserId},
-            report_reason = #{reportReason},
-            report_time = #{reportTime}
-            where id = #{id};
+            reporter_name=#{report.reporterName},
+            reporter_phone=#{report.reporterPhone},
+            email=#{report.email},
+            report_time=#{report.reportTime},
+            report_reason=#{report.reportReason}
+            where id=#{report.id}
             """)
-    int updateReportById(Report report);
+    int updateReportById(@Param("report") Report report);
 
-    @Select("select * from t_report where id = #{id}")
-    Report inquireReportById(Integer id);
+    @Select("select * from t_report where id=#{id}")
+    Report inquireReportById(@Param("id") Integer id);
 
     @Select("select * from t_report")
-    List<Report> inquireAllReport();
-
+    List<Report> inquireAllReports();
 }

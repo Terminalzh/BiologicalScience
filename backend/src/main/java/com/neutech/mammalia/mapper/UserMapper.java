@@ -7,33 +7,36 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
+
     @Insert("""
             insert into t_user
-            (name, password, gender, phone, create_time)
-            values (#{name}, #{password}, #{gender}, #{phone}, #{createTime});
+            (name, password, gender, phone, email, create_time)
+            values( #{user.name}, #{user.password}, #{user.gender}, #{user.phone}, #{user.email}, #{user.createTime})
             """)
-    int addUser(User user);
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int addUser(@Param("user") User user);
 
-    @Delete("delete from t_user where id = #{id};")
-    int deleteUserById(Integer id);
+    @Delete("delete from t_user where id=#{id}")
+    int deleteUserById(@Param("id") Integer id);
 
     @Update("""
             update t_user set
-            name = #{name},
-            password = #{password},
-            gender = #{gender},
-            phone = #{phone},
-            create_time = #{createTime}
-            where id = #{id};
+            name=#{user.name},
+            password=#{user.password},
+            gender=#{user.gender},
+            phone=#{user.phone},
+            email=#{user.email},
+            create_time=#{user.createTime}
+            where id=#{user.id}
             """)
-    int updateUserById(User user);
+    int updateUserById(@Param("user") User user);
 
-    @Select("select * from t_user where id = #{id}")
-    User inquireUserById(Integer id);
+    @Select("select * from t_user where id=#{id}")
+    User inquireUserById(@Param("id") Integer id);
 
-    @Select("select * from t_user where name = #{name}")
-    User inquireUserByName(String name);
+    @Select("select * from t_user where name=#{name}")
+    User inquireUserByName(@Param("name") String name);
 
     @Select("select * from t_user")
-    List<User> inquireAllUser();
+    List<User> inquireAllUsers();
 }

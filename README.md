@@ -60,7 +60,7 @@ interface QueryParameter {
 }
 ```
 
-5. 对于 API 的设计风格，比如有一个资源，在最基本的增删改查中，应该以下面的格式进行
+5. 对于 API 的设计风格，参照[RESTful](https://learn.microsoft.com/zh-cn/azure/architecture/best-practices/api-design)实践，比如有一个资源，在最基本的增删改查中，应该以下面的格式进行
 
 ```
   GET     /user/:id  根据id查询一个User的详细信息

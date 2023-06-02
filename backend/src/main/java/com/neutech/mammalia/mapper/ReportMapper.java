@@ -10,8 +10,8 @@ public interface ReportMapper {
 
     @Insert("""
             insert into t_report
-            (reporter_name, reporter_phone, email, report_time, report_reason)
-            values(#{report.reporterName}, #{report.reporterPhone}, #{report.email}, #{report.reportTime}, #{report.reportReason})
+            (reporter_name, reporter_phone, email, report_reason)
+            values(#{report.reporterName}, #{report.reporterPhone}, #{report.email}, #{report.reportReason})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addReport(@Param("report") Report report);
@@ -24,7 +24,6 @@ public interface ReportMapper {
             reporter_name=#{report.reporterName},
             reporter_phone=#{report.reporterPhone},
             email=#{report.email},
-            report_time=#{report.reportTime},
             report_reason=#{report.reportReason}
             where id=#{report.id}
             """)

@@ -9,8 +9,8 @@ import java.util.List;
 public interface SpeciesMapper {
     @Insert("""
             insert into t_species
-            (name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level, create_time, update_time)
-            values (#{species.name}, #{species.latinName}, #{species.genusId}, #{species.briefIntroduction}, #{species.detailIntroduction}, #{species.recommend}, #{species.level}, #{species.createTime}, #{species.updateTime});
+            (name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level)
+            values (#{species.name}, #{species.latinName}, #{species.genusId}, #{species.briefIntroduction}, #{species.detailIntroduction}, #{species.recommend}, #{species.level});
             """)
     int addSpecies(@Param("species") Species species);
 
@@ -26,7 +26,6 @@ public interface SpeciesMapper {
             detail_introduction = #{species.detailIntroduction},
             recommend = #{species.recommend},
             level = #{species.level},
-            create_time = #{species.createTime},
             update_time = #{species.updateTime}
             where id = #{id};
             """)

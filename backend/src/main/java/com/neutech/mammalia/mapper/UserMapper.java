@@ -1,6 +1,7 @@
 package com.neutech.mammalia.mapper;
 
 import com.neutech.mammalia.bean.User;
+import com.neutech.mammalia.mapper.sqlProvider.UserSqlProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -10,8 +11,8 @@ public interface UserMapper {
 
     @Insert("""
             insert into t_user
-            (name, password, gender, phone, email, create_time)
-            values( #{user.name}, #{user.password}, #{user.gender}, #{user.phone}, #{user.email}, #{user.createTime})
+            (name, password, gender, phone, email)
+            values( #{user.name}, #{user.password}, #{user.gender}, #{user.phone}, #{user.email})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addUser(@Param("user") User user);
@@ -25,8 +26,7 @@ public interface UserMapper {
             password=#{user.password},
             gender=#{user.gender},
             phone=#{user.phone},
-            email=#{user.email},
-            create_time=#{user.createTime}
+            email=#{user.email}
             where id=#{user.id}
             """)
     int updateUserById(@Param("user") User user);
@@ -36,6 +36,9 @@ public interface UserMapper {
 
     @Select("select * from t_user where name=#{name}")
     User inquireUserByName(@Param("name") String name);
+
+    @SelectProvider(value = UserSqlProvider.class, method = "inquireUserCountByEmailOrPhone")
+    User inquireUserCountByEmailOrPhone(@Param("user") User user);
 
     @Select("select * from t_user")
     List<User> inquireAllUsers();

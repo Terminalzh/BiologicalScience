@@ -10,8 +10,8 @@ public interface PhotoMapper {
 
     @Insert("""
             insert into t_photo
-            (species_id, works_id, is_public, view_count, like_count, comment_count, create_time, update_time)
-            values(#{photo.speciesId}, #{photo.worksId}, #{photo.isPublic}, #{photo.viewCount}, #{photo.likeCount}, #{photo.commentCount}, #{photo.createTime}, #{photo.updateTime})
+            (species_id, works_id, is_public, view_count, like_count, comment_count)
+            values(#{photo.speciesId}, #{photo.worksId}, #{photo.isPublic}, #{photo.viewCount}, #{photo.likeCount}, #{photo.commentCount})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addPhoto(@Param("photo") Photo photo);
@@ -27,7 +27,6 @@ public interface PhotoMapper {
             view_count=#{photo.viewCount},
             like_count=#{photo.likeCount},
             comment_count=#{photo.commentCount},
-            create_time=#{photo.createTime},
             update_time=#{photo.updateTime}
             where id=#{photo.id}
             """)

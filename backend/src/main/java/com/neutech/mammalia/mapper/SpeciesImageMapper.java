@@ -10,8 +10,8 @@ public interface SpeciesImageMapper {
 
     @Insert("""
             insert into species_image
-            (species_id, path, create_time, update_time)
-            values( #{speciesImage.speciesId}, #{speciesImage.path}, #{speciesImage.createTime}, #{speciesImage.updateTime})
+            (species_id, path)
+            values( #{speciesImage.speciesId}, #{speciesImage.path})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addSpeciesImage(@Param("speciesImage") SpeciesImage speciesImage);
@@ -23,7 +23,6 @@ public interface SpeciesImageMapper {
             update species_image set
             species_id=#{speciesImage.speciesId},
             path=#{speciesImage.path},
-            create_time=#{speciesImage.createTime},
             update_time=#{speciesImage.updateTime}
             where id=#{speciesImage.id}
             """)

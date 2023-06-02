@@ -15,5 +15,7 @@ public interface UserService {
 
     User inquireUserByName(String name);
 
+    User inquireUserCountByEmailOrPhone(User user);
+
     List<User> inquireAllUser();
 }

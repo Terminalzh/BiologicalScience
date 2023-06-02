@@ -10,8 +10,8 @@ public interface BannerMapper {
 
     @Insert("""
             insert into t_banner
-            (species_id, works_id, created_time, updated_time)
-            values(#{banner.speciesId}, #{banner.worksId}, #{banner.createdTime}, #{banner.updatedTime})
+            (species_id, works_id)
+            values(#{banner.speciesId}, #{banner.worksId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addBanner(@Param("banner") Banner banner);
@@ -19,20 +19,21 @@ public interface BannerMapper {
     @Delete("delete from t_banner where id=#{id}")
     int deleteBannerById(@Param("id") Integer id);
 
+    @Delete("delete from t_banner where works_id = #{worksId}")
+    int deleteBannerByWorksId(@Param("worksId") Integer worksId);
+
     @Update("""
             update t_banner set
             species_id=#{banner.speciesId},
             works_id=#{banner.worksId},
-            created_time=#{banner.createdTime},
-            updated_time=#{banner.updatedTime}
+            update_time=#{banner.updateTime}
             where id=#{banner.id}
             """)
     int updateBannerById(@Param("banner") Banner banner);
 
     @Select("select * from t_banner where id=#{id}")
-    Banner inquireBannerBuId(@Param("id") Integer id);
+    Banner inquireBannerById(@Param("id") Integer id);
 
     @Select("select * from t_banner")
     List<Banner> inquireAllBanner();
-
 }

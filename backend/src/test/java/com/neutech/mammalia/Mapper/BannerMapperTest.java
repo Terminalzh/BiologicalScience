@@ -12,6 +12,7 @@ import java.util.List;
 public class BannerMapperTest {
     @Resource
     BannerMapper mapper;
+
     @Test
     void addBanner() {
     }

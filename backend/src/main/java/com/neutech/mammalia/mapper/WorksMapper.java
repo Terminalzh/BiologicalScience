@@ -19,6 +19,9 @@ public interface WorksMapper {
     @Delete("delete from t_works where id=#{id}")
     int deleteWorksById(@Param("id") Integer id);
 
+    @Delete("delete from t_works where user_id = #{id}")
+    int deleteWorksByUserId(@Param("id") Integer id);
+
     @Update("""
             update t_works set
             user_id=#{works.userId},
@@ -36,6 +39,9 @@ public interface WorksMapper {
 
     @Select("select * from t_works where id=#{id}")
     Works inquireWorksById(@Param("id") Integer id);
+
+    @Select("select id from t_works where user_id = #{userId}")
+    Integer inquireWorksIdByUserId(@Param("userId") Integer userId);
 
     @Select("select * from t_works")
     List<Works> inquireAllWorks();

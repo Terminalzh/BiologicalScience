@@ -36,6 +36,15 @@ public interface CategoryMapper {
     @Select("select * from t_category where id=#{id}")
     Category inquireCategoryById(@Param("id") Integer id);
 
+    @Select("select * from t_category where parent_id = #{parentId}")
+    List<Category> inquireCategoryByParentId(@Param("parentId") Integer parentId);
+
+    @Select("select * from t_category where c_name = #{cName} and latin_name = #{latinName}")
+    Category inquireCategoryByName(@Param("cName") String cName, @Param("latinName") String latinName);
+
+    @Select("select * from t_category where parent_id = #{parentId} and latin_name = #{latinName}")
+    Category inquireCategoryByLatinNameAndParentId(@Param("parentId") Integer parentId, @Param("latinName") String latinName);
+
     @Select("select * from t_category")
     List<Category> inquireAllCategories();
 }

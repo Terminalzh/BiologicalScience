@@ -11,8 +11,8 @@ public interface UserMapper {
 
     @Insert("""
             insert into t_user
-            (name, password, gender, phone, email)
-            values( #{user.name}, #{user.password}, #{user.gender}, #{user.phone}, #{user.email})
+            (name, avatar, password, gender, phone, email)
+            values( #{user.name}, #{user.avatar}, #{user.password}, #{user.gender}, #{user.phone}, #{user.email})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addUser(@Param("user") User user);
@@ -23,6 +23,7 @@ public interface UserMapper {
     @Update("""
             update t_user set
             name=#{user.name},
+            avatar=#{user.avatar},
             password=#{user.password},
             gender=#{user.gender},
             phone=#{user.phone},

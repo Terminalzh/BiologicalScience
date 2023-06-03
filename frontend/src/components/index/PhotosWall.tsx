@@ -1,6 +1,6 @@
 import { AspectRatio, Image } from "@hope-ui/solid";
 import Title from "./Title";
-import pic from "~/assets/images/lion.jpg";
+import pic from "~/assets/images/lion.webp";
 
 const PhotoItem = (props: { src: string }) => {
   return (
@@ -21,7 +21,7 @@ const Line = (props: { fromLeft?: boolean }) => {
         style={{
           animation: `${
             props.fromLeft ? "scrollLeft2Right" : "scrollRight2Left"
-          } 30s infinite linear`,
+          } 50s infinite linear`,
         }}
       >
         <PhotoItem src={pic} />
@@ -42,7 +42,7 @@ const Line = (props: { fromLeft?: boolean }) => {
 export default function PhotosWall() {
   return (
     <section class="container-compact py-4">
-      <Title title="热门动物" description="镜头下的哺乳动物"></Title>
+      <Title title="热门动物" description="镜头下的哺乳纲"></Title>
       <Line fromLeft />
       <Line />
     </section>

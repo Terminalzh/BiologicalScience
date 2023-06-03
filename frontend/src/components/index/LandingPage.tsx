@@ -1,8 +1,8 @@
 import { AspectRatio, IconButton, Image } from "@hope-ui/solid";
 import { For, JSX, createMemo, createSignal, onMount, untrack } from "solid-js";
-import pic from "~/assets/images/ivan.jpg";
-import pic1 from "~/assets/images/lion.jpg";
-import pic2 from "~/assets/images/animal.jpg";
+import pic from "~/assets/images/ivan.webp";
+import pic1 from "~/assets/images/lion.webp";
+import pic2 from "~/assets/images/animal.webp";
 import { Queue } from "~/utils";
 
 export function PhMagnifyingGlassBold(props: JSX.IntrinsicElements["svg"]) {

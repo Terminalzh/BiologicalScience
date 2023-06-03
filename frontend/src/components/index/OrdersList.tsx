@@ -1,6 +1,6 @@
 import { For } from "solid-js";
 import OrderCard, { OrderCardProps } from "../order/OrderCard";
-import pic from "~/assets/images/animal.jpg";
+import pic from "~/assets/images/animal.webp";
 import { Anchor } from "@hope-ui/solid";
 
 const orders: Array<OrderCardProps> = [
@@ -50,7 +50,7 @@ const orders: Array<OrderCardProps> = [
 
 export default function OrdersList() {
   return (
-    <section class="container-compact mt-12">
+    <section class="container-compact">
       <div class="grid grid-cols-3 gap-4">
         <For each={orders}>{(item) => <OrderCard {...item} />}</For>
       </div>

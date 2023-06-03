@@ -11,6 +11,7 @@ body {
   from {
     transform: translateX(0%);
   }
+
   to {
     transform: translateX(-50%);
   }
@@ -20,9 +21,17 @@ body {
   from {
     transform: translateX(-50%);
   }
+
   to {
     transform: translateX(0%);
   }
+}
+
+.line-container:hover {}
+
+.line-ul {
+  animation-play-state: paused;
+
 }
 
 .line-container:hover .line-ul {

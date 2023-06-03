@@ -8,6 +8,10 @@ export default defineConfig({
         accent: "#18DF07",
       },
     },
+
+    fontFamily: {
+      slogan: "SmileySans",
+    },
   },
   shortcuts: {
     btn: "font-bold tracking-1 bg-brand-primary/87 rounded-3",
@@ -16,6 +20,9 @@ export default defineConfig({
 
     "container-compact":
       "m-auto sm:w-full px-2 sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px] 2xl:max-w-[1180px]",
+    "text-primary": "light:text-dark/87 dark:text-white/87",
+    "text-secondary": "light:text-dark/53 dark:text-white/53",
+    "text-body": "text-lg",
   },
   presets: [
     presetUno(),

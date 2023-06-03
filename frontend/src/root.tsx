@@ -14,6 +14,7 @@ import {
   Title,
 } from "solid-start";
 import "virtual:uno.css";
+import "./style.css";
 
 const config: HopeThemeConfig = {
   initialColorMode: "system",

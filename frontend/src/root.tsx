@@ -19,6 +19,10 @@ import "./style.css";
 const config: HopeThemeConfig = {
   initialColorMode: "system",
   lightTheme: {
+    radii: {
+      std: "2.5rem",
+    },
+
     colors: {
       primary1: "#FEF5E6",
       primary2: "#FDEACE",
@@ -49,6 +53,10 @@ const config: HopeThemeConfig = {
   },
 
   darkTheme: {
+    radii: {
+      std: "2.5rem",
+    },
+
     colors: {
       primary1: "#FEF5E6",
       primary2: "#FDEACE",
@@ -79,10 +87,34 @@ const config: HopeThemeConfig = {
   },
 
   components: {
-    Button: {
+    Anchor: {
       baseStyle: {
-        root: {
-          background: "$primary8",
+        position: "relative",
+        textDecoration: "none",
+        fontFamily: "$sans",
+        fontWeight: "bold",
+        padding: "0.2rem 0.5rem",
+        transition: "all 300ms",
+
+        _after: {
+          content: "",
+          position: "absolute",
+          bottom: "0",
+          zIndex: "-1",
+          left: "0",
+          right: "0",
+          height: "0.2rem",
+          borderRadius: "$sm",
+
+          background: "$primary3",
+          transition: "all 100ms",
+        },
+
+        _hover: {
+          color: "Black",
+          _after: {
+            height: "100%",
+          },
         },
       },
     },

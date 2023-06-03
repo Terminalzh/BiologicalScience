@@ -23,6 +23,8 @@ export default defineConfig({
     "text-primary": "light:text-dark/87 dark:text-white/87",
     "text-secondary": "light:text-dark/53 dark:text-white/53",
     "text-body": "text-lg",
+    "rounded-std": "rounded-[2.5rem]",
+    anchor: "font-bold font-sans text-primary border-b-2 border-b-solid",
   },
   presets: [
     presetUno(),
@@ -30,6 +32,7 @@ export default defineConfig({
       provider: "google",
       fonts: {
         brand: "Righteous",
+        playfair: "Playfair",
       },
     }),
   ],

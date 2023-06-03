@@ -1,6 +1,7 @@
 package com.neutech.mammalia.mapper;
 
 import com.neutech.mammalia.bean.Category;
+import com.neutech.mammalia.mapper.sqlProvider.CategorySqlProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -19,18 +20,7 @@ public interface CategoryMapper {
     @Delete("delete from t_category where id=#{id}")
     int deleteCategoryById(@Param("id") Integer id);
 
-    @Update("""
-            update t_category set
-            c_name=#{category.cName},
-            latin_name=#{category.latinName},
-            sub_class_count=#{category.subClassCount},
-            order_count=#{category.orderCount},
-            family_count=#{category.familyCount},
-            genus_count=#{category.genusCount},
-            species_count=#{category.speciesCount},
-            parent_id=#{category.parentId}
-            where id=#{category.id}
-            """)
+    @UpdateProvider(value = CategorySqlProvider.class, method = "updateCategoryById")
     int updateCategoryById(@Param("category") Category category);
 
     @Select("select * from t_category where id=#{id}")

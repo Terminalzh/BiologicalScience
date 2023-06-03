@@ -33,12 +33,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public int deleteCategoryById(Integer id) {
-        return 0;
+        int count = 0;
+        List<Category> categories = categoryMapper.inquireCategoryByParentId(id);
+        if (categories.size() == 0) {
+            return categoryMapper.deleteCategoryById(id);
+        } else {
+            for (Category category : categories) {
+                count += deleteCategoryById(category.getId());
+            }
+            count += categoryMapper.deleteCategoryById(id);
+        }
+        return count;
     }
 
     @Override
     public int updateCategoryById(Category category) {
-        return 0;
+        return categoryMapper.updateCategoryById(category);
     }
 
     @Override

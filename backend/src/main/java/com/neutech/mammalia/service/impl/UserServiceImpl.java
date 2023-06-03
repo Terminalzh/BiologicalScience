@@ -1,7 +1,9 @@
 package com.neutech.mammalia.service.impl;
 
 import com.neutech.mammalia.bean.User;
+import com.neutech.mammalia.mapper.BannerMapper;
 import com.neutech.mammalia.mapper.UserMapper;
+import com.neutech.mammalia.mapper.WorksMapper;
 import com.neutech.mammalia.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private WorksMapper worksMapper;
+    @Resource
+    private BannerMapper bannerMapper;
 
     @Override
     public int addUser(User user) {
@@ -21,8 +27,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int deleteUserById(Integer id) {
-        return userMapper.deleteUserById(id);
+    public int deleteUserById(Integer userId) {
+        Integer worksId = worksMapper.inquireWorksIdByUserId(userId);
+        bannerMapper.deleteBannerByWorksId(worksId);
+        worksMapper.deleteWorksByUserId(userId);
+        return userMapper.deleteUserById(userId);
     }
 
     @Override

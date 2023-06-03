@@ -27,6 +27,10 @@ public class Category {
      */
     private String latinName;
     /**
+     * 父级ID对应分类表的主键
+     */
+    private Integer parentId;
+    /**
      * 纲总数
      */
     private Integer subClassCount;
@@ -46,8 +50,4 @@ public class Category {
      * 种总数
      */
     private Integer speciesCount;
-    /**
-     * 父级ID对应分类表的主键
-     */
-    private Integer parentId;
 }

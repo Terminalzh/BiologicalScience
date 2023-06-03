@@ -50,7 +50,7 @@ const orders: Array<OrderCardProps> = [
 
 export default function OrdersList() {
   return (
-    <section class="container-compact">
+    <section class="container-compact mt-12">
       <div class="grid grid-cols-3 gap-4">
         <For each={orders}>{(item) => <OrderCard {...item} />}</For>
       </div>

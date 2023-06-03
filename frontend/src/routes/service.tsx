@@ -50,7 +50,7 @@ export default function ServiceLayout() {
   return (
     <>
       <header
-        class="sticky top-0 z-20"
+        class="fixed top-0 z-20 left-0 right-0"
         classList={{
           dark: colorMode() === "dark",
           light: colorMode() === "light",

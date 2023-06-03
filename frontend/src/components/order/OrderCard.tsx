@@ -15,7 +15,7 @@ export default function OrderCard(props: OrderCardProps) {
       class={`${props.class} flex gap-6 items-center justify-center bg-brand-primary/10 px-8 py-6 rounded-std dark:hover:bg-brand-primary/15 hover:dark:shadow-white/10 hover:shadow-md transition-all cursor-pointer`}
     >
       <AspectRatio ratio={1} class="w-3/8">
-        <Image src={props.src} borderRadius="$std" />
+        <Image src={props.src} borderRadius="1.8rem" />
       </AspectRatio>
       <div class="flex-1">
         <h4 class="font-extrabold text-primary text-4xl font-playfair italic">

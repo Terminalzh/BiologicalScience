@@ -130,7 +130,7 @@ export default function Root() {
           <Meta charset="utf-8" />
           <Meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <Body class="transition-all">
+        <Body class="transition-all pt-20">
           <Routes>
             <FileRoutes />
           </Routes>

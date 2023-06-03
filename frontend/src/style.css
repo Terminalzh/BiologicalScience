@@ -6,3 +6,25 @@
 body {
   color-scheme: light;
 }
+
+@keyframes scrollRight2Left {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollLeft2Right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+.line-container:hover .line-ul {
+  animation-play-state: paused;
+}

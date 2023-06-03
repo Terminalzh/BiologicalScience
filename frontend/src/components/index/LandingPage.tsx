@@ -1,8 +1,9 @@
-import { AspectRatio, Button, IconButton, Image } from "@hope-ui/solid";
+import { AspectRatio, IconButton, Image } from "@hope-ui/solid";
 import { For, JSX, createMemo, createSignal, onMount, untrack } from "solid-js";
 import pic from "~/assets/images/ivan.jpg";
 import pic1 from "~/assets/images/lion.jpg";
 import pic2 from "~/assets/images/animal.jpg";
+import { Queue } from "~/utils";
 
 export function PhMagnifyingGlassBold(props: JSX.IntrinsicElements["svg"]) {
   return (
@@ -19,38 +20,6 @@ export function PhMagnifyingGlassBold(props: JSX.IntrinsicElements["svg"]) {
       ></path>
     </svg>
   );
-}
-
-class Queue<T> {
-  items: Record<string, T>;
-  frontIndex: number;
-  backIndex: number;
-  constructor() {
-    this.items = {};
-    this.frontIndex = 0;
-    this.backIndex = 0;
-  }
-  enqueue(item: T) {
-    this.items[this.backIndex] = item;
-    this.backIndex++;
-    return item + " inserted";
-  }
-  dequeue() {
-    const item = this.items[this.frontIndex];
-    delete this.items[this.frontIndex];
-    this.frontIndex++;
-    return item;
-  }
-  peek() {
-    return this.items[this.frontIndex];
-  }
-
-  toArray(): Array<T> {
-    return Object.values(this.items);
-  }
-  get printQueue() {
-    return this.items;
-  }
 }
 
 export default function LandingPage() {

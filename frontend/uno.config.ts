@@ -6,6 +6,7 @@ export default defineConfig({
       brand: {
         primary: "#FAB752",
         accent: "#18DF07",
+        background: "#151718",
       },
     },
 

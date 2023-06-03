@@ -7,7 +7,9 @@
   },
   "type": "module",
   "devDependencies": {
+    "@iconify-json/tabler": "^1.1.78",
     "@types/node": "^18.11.18",
+    "@unocss/preset-icons": "^0.52.7",
     "@unocss/preset-web-fonts": "^0.52.7",
     "esbuild": "^0.14.54",
     "postcss": "^8.4.21",
@@ -17,6 +19,7 @@
     "vite": "^4.1.4"
   },
   "dependencies": {
+    "@felte/solid": "^1.2.7",
     "@hope-ui/solid": "^0.6.7",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",

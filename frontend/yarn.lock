@@ -1017,6 +1017,25 @@
   resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.17.19.tgz"
   integrity sha512-lAhycmKnVOuRYNtRtatQR1LPQf2oYCkRGkSFnseDAKPl8lu5SOsK/e1sXe5a0Pc5kHIHe6P2I/ilntNv2xf3cA==
 
+"@felte/common@1.1.4":
+  version "1.1.4"
+  resolved "https://registry.npmjs.org/@felte/common/-/common-1.1.4.tgz"
+  integrity sha512-4jNB4EwRpaGZppwV/YqbGF7SVRwehWw+hyTGmw2N+pL86LuqVTTSrgVOGXwPaLTju1BxAptcoAXjxZbBf0XB4Q==
+
+"@felte/core@1.3.7":
+  version "1.3.7"
+  resolved "https://registry.npmjs.org/@felte/core/-/core-1.3.7.tgz"
+  integrity sha512-/AkIEZu/Yg/K+YEdnup5c3Bb0xyr9ONdZnS0us6V/b9DgfiEqbcm1xgglD/mtwh+IH7KOhIuQecjBdPQfpNViQ==
+  dependencies:
+    "@felte/common" "1.1.4"
+
+"@felte/solid@^1.2.7":
+  version "1.2.7"
+  resolved "https://registry.npmjs.org/@felte/solid/-/solid-1.2.7.tgz"
+  integrity sha512-kVCmIBxJiemAcklJ61yxW7WCo+r4sGDSfuUws3t9pFQyKHENT+7HEfUU3hpEqx+BA5xd4bczS8MrOhf9L429rw==
+  dependencies:
+    "@felte/core" "1.3.7"
+
 "@floating-ui/core@^0.6.1":
   version "0.6.2"
   resolved "https://registry.npmjs.org/@floating-ui/core/-/core-0.6.2.tgz"
@@ -1052,7 +1071,14 @@
     lodash.merge "4.6.2"
     scroll-lock "2.1.5"
 
-"@iconify/types@^2.0.0":
+"@iconify-json/tabler@^1.1.78":
+  version "1.1.78"
+  resolved "https://registry.npmjs.org/@iconify-json/tabler/-/tabler-1.1.78.tgz"
+  integrity sha512-WNnRObt9TQ395xjfs9MhTx6YvCKv+S3i1GI22T8OQCkDRmQEdFLqgZgTvfaqcZiR/gRD/jBeTGjEtT3Iiex2Wg==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@iconify/types/-/types-2.0.0.tgz"
   integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
@@ -1340,7 +1366,7 @@
   dependencies:
     "@unocss/core" "0.52.7"
 
-"@unocss/preset-icons@0.52.7":
+"@unocss/preset-icons@^0.52.7", "@unocss/preset-icons@0.52.7":
   version "0.52.7"
   resolved "https://registry.npmjs.org/@unocss/preset-icons/-/preset-icons-0.52.7.tgz"
   integrity sha512-4M8V7dhNxA+XGRqz+mlmEtqHOnyXYuqFpc+3biqjhlJb4zirNgJ9ujEty0OWwrKhC8QKfxifVlTtHInfjQQkDA==
@@ -2864,7 +2890,7 @@ sirv@^2.0.2, sirv@^2.0.3:
     mrmime "^1.0.0"
     totalist "^3.0.0"
 
-solid-js@^1.0.0, solid-js@^1.3, solid-js@^1.4.0, solid-js@^1.5.3, solid-js@^1.6.2, solid-js@^1.7.2, "solid-js@>= 1.0", solid-js@>=1.4.0:
+solid-js@^1.0.0, solid-js@^1.2.0, solid-js@^1.3, solid-js@^1.4.0, solid-js@^1.5.3, solid-js@^1.6.2, solid-js@^1.7.2, "solid-js@>= 1.0", solid-js@>=1.4.0:
   version "1.7.6"
   resolved "https://registry.npmjs.org/solid-js/-/solid-js-1.7.6.tgz"
   integrity sha512-DXVOTjUh/bIAhE0fIqu3ezGLyQaez7v8EOw3uPLIi87DmLjg+hsuCAgKyNIZ+o4jUetOk3ZORccvJmE1yZUk8g==

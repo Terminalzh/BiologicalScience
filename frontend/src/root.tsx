@@ -118,6 +118,42 @@ const config: HopeThemeConfig = {
         },
       },
     },
+
+    FormControl: {
+      baseStyle: {
+        label: {
+          fontWeight: "bold",
+          fontSize: "$md",
+        },
+      },
+    },
+    Input: {
+      baseStyle: {
+        input: {
+          border: "none",
+          borderRadius: "$xl",
+          _light: {
+            background: "$blackAlpha3",
+          },
+          _dark: {
+            background: "$whiteAlpha4",
+          },
+        },
+      },
+    },
+
+    Textarea: {
+      baseStyle: {
+        border: "none",
+        borderRadius: "$xl",
+        _light: {
+          background: "$blackAlpha3",
+        },
+        _dark: {
+          background: "$whiteAlpha4",
+        },
+      },
+    },
   },
 };
 

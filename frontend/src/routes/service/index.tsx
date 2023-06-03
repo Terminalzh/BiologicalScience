@@ -1,4 +1,5 @@
 import AboutUs from "~/components/index/AboutUs";
+import ContactUs from "~/components/index/ContactUs";
 import LandingPage from "~/components/index/LandingPage";
 import OrdersList from "~/components/index/OrdersList";
 import PhotosWall from "~/components/index/PhotosWall";
@@ -17,6 +18,7 @@ export default function Service() {
       <PhotosWall />
       <Recommends />
       <AboutUs />
+      <ContactUs />
     </div>
   );
 }

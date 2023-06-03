@@ -37,6 +37,100 @@ export function MaterialSymbolsLightMode(props: JSX.IntrinsicElements["svg"]) {
   );
 }
 
+export function TablerBrandBilibili(props: JSX.IntrinsicElements["svg"]) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="2rem"
+      height="2rem"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width={2}
+        d="M3 10a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-6zm5-7l2 3m6-3l-2 3m-5 7v-2m6 0v2"
+      ></path>
+    </svg>
+  );
+}
+
+export function TablerBrandTiktok(props: JSX.IntrinsicElements["svg"]) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="2rem"
+      height="2rem"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width={2}
+        d="M21 7.917v4.034A9.948 9.948 0 0 1 16 10v4.5a6.5 6.5 0 1 1-8-6.326V12.5a2.5 2.5 0 1 0 4 2V3h4.083A6.005 6.005 0 0 0 21 7.917z"
+      ></path>
+    </svg>
+  );
+}
+
+export function TablerBrandGithub(props: JSX.IntrinsicElements["svg"]) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="2rem"
+      height="2rem"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width={2}
+        d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2c2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2a4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6c-.6.6-.6 1.2-.5 2V21"
+      ></path>
+    </svg>
+  );
+}
+
+export function TablerBrandWechat(props: JSX.IntrinsicElements["svg"]) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="2rem"
+      height="2rem"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width={2}
+      >
+        <path d="M16.5 10c3.038 0 5.5 2.015 5.5 4.5c0 1.397-.778 2.645-2 3.47V20l-1.964-1.178A6.649 6.649 0 0 1 16.5 19c-3.038 0-5.5-2.015-5.5-4.5s2.462-4.5 5.5-4.5z"></path>
+        <path d="M11.197 15.698c-.69.196-1.43.302-2.197.302a8.008 8.008 0 0 1-2.612-.432L4 17v-2.801C2.763 13.117 2 11.635 2 10c0-3.314 3.134-6 7-6c3.782 0 6.863 2.57 7 5.785v.233M10 8h.01M7 8h.01M15 14h.01M18 14h.01"></path>
+      </g>
+    </svg>
+  );
+}
+
+const BrandItem = (props: { brand: JSX.Element }) => {
+  return (
+    <li class="hover:text-brand-primary/87 cursor-pointer transition-all">
+      {props.brand}
+    </li>
+  );
+};
+
 const NavItem = (props: any) => {
   return (
     <li class="cursor-pointer hover:text-brand-primary/87 transition-all">
@@ -98,6 +192,16 @@ export default function ServiceLayout() {
       >
         <Outlet />
       </main>
+      <footer class="container-compact text-center mt-12 py-4">
+        <h5 class="font-bold text-primary">关注我们</h5>
+        <ul class="text-center flex items-center justify-center gap-4 mt-2">
+          <BrandItem brand={<TablerBrandWechat />} />
+          <BrandItem brand={<TablerBrandBilibili />} />
+          <BrandItem brand={<TablerBrandTiktok />} />
+          <BrandItem brand={<TablerBrandGithub />} />
+        </ul>
+        <p class="font-bold text-secondary mt-2">Designed by Haodong Qin</p>
+      </footer>
     </>
   );
 }

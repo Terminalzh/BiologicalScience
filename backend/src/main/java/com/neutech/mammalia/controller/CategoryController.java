@@ -19,14 +19,14 @@ public class CategoryController {
     @PostMapping(produces = "application/json;charset=UTF-8")
     public Map<String, Object> addCategory(@RequestBody List<Category> categories) {
         Map<String, Object> map = new HashMap<>();
-        int result = categoryService.addCategory(categories);
-        if (result >= 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", "添加成功");
+        int i = categoryService.addCategory(categories);
+        if (i >= 1) {
+            map.put("code", HttpStatus.CREATED.value());
+            map.put("message", HttpStatus.CREATED.getReasonPhrase());
             map.put("data", categories);
         } else {
             map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", "添加失败");
+            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
         return map;
     }
@@ -36,11 +36,11 @@ public class CategoryController {
         Map<String, Object> map = new HashMap<>();
         int i = categoryService.deleteCategoryById(id);
         if (i >= 1) {
-            map.put("code", HttpStatus.OK.value());
+            map.put("code", HttpStatus.NO_CONTENT.value());
             map.put("message", "删除成功, 已删除" + i + "条数据");
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", "未找到该条记录,可能已被删除或不存在");
+            map.put("code", HttpStatus.BAD_REQUEST.value());
+            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
         return map;
     }
@@ -52,26 +52,26 @@ public class CategoryController {
         int i = categoryService.updateCategoryById(category);
         if (i == 1) {
             map.put("code", HttpStatus.OK.value());
-            map.put("message", "修改成功");
+            map.put("message", HttpStatus.OK.getReasonPhrase());
             map.put("data", category);
         } else {
             map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", "未找到该条记录,可能已被删除或不存在");
+            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
         }
         return map;
     }
 
-    @GetMapping(value = "/{parentId}")
-    public Map<String, Object> inquireCategoryById(@PathVariable("parentId") Integer parentId) {
+    @GetMapping(value = "/{id}")
+    public Map<String, Object> inquireCategoryById(@PathVariable("id") Integer id) {
         Map<String, Object> map = new HashMap<>();
-        List<Category> categories = categoryService.inquireCategoryByParentId(parentId);
+        List<Category> categories = categoryService.inquireCategoryByParentId(id);
         if (categories.size() != 0) {
             map.put("code", HttpStatus.OK.value());
-            map.put("message", "Success");
+            map.put("message", HttpStatus.OK.getReasonPhrase());
             map.put("data", categories);
         } else {
             map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", "Not Found");
+            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
         }
         return map;
     }

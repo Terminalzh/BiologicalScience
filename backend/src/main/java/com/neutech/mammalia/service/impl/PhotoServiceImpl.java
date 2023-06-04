@@ -15,26 +15,26 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public int addPhoto(Photo photo) {
-        return 0;
+        return photoMapper.addPhoto(photo);
     }
 
     @Override
     public int deletePhotoById(Integer id) {
-        return 0;
+        return photoMapper.deletePhotoById(id);
     }
 
     @Override
     public int updatePhotoById(Photo photo) {
-        return 0;
+        return photoMapper.updatePhotoById(photo);
     }
 
     @Override
     public Photo inquirePhotoById(Integer id) {
-        return null;
+        return photoMapper.inquirePhotoById(id);
     }
 
     @Override
     public List<Photo> inquireAllPhotos() {
-        return null;
+        return photoMapper.inquireAllPhotos();
     }
 }

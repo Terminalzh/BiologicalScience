@@ -12,13 +12,19 @@ import java.util.List;
 public class SpeciesServiceImpl implements SpeciesService {
     @Resource
     private SpeciesMapper speciesMapper;
+
     @Override
     public int addSpecies(Species species) {
-        return 0;
+        return speciesMapper.addSpecies(species);
     }
 
     @Override
     public int deleteSpeciesById(Integer id) {
+        return 0;
+    }
+
+    @Override
+    public int deleteSpeciesByGenusId(Integer genusId) {
         return 0;
     }
 

@@ -9,9 +9,11 @@ public interface WorksService {
 
     int deleteWorksById(Integer id);
 
+    int deleteWorksByUserId(Integer userId);
+
     int updateWorksById(Works works);
 
-    Works inquireWorksById(Integer id);
+    List<Works> inquireWorksById(Integer id);
 
     List<Works> inquireAllWorksByUserId(Integer userId);
 

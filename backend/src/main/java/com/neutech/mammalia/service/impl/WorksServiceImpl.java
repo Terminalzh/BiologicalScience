@@ -24,12 +24,17 @@ public class WorksServiceImpl implements WorksService {
     }
 
     @Override
+    public int deleteWorksByUserId(Integer userId) {
+        return 0;
+    }
+
+    @Override
     public int updateWorksById(Works works) {
         return 0;
     }
 
     @Override
-    public Works inquireWorksById(Integer id) {
+    public List<Works> inquireWorksById(Integer id) {
         return null;
     }
 

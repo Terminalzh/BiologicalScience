@@ -9,6 +9,8 @@ public interface SpeciesService {
 
     int deleteSpeciesById(Integer id);
 
+    int deleteSpeciesByGenusId(Integer genusId);
+
     int updateSpeciesById(Species species);
 
     Species inquireSpeciesById(Integer id);

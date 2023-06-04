@@ -17,6 +17,9 @@ public interface SpeciesMapper {
     @Delete("delete from t_species where id = #{id};")
     int deleteSpeciesById(@Param("id") Integer id);
 
+    @Delete("delete from t_species where genus_id = #{genusId}")
+    int deleteSpeciesByGenusId(@Param("genusId") Integer genusId);
+
     @Update("""
             update t_species set
             name = #{species.name},
@@ -33,6 +36,9 @@ public interface SpeciesMapper {
 
     @Select("select * from t_species where id = #{id}")
     Species inquireSpeciesById(@Param("id") Integer id);
+
+    @Select("select * from t_species where genus_id = #{genusId}")
+    List<Species> inquireSpeciesByGenusId(@Param("genusId") Integer genusId);
 
     @Select("select * from t_species")
     List<Species> inquireAllSpecies();

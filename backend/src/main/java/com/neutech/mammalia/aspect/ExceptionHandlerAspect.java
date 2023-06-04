@@ -15,7 +15,7 @@ public class ExceptionHandlerAspect {
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public Map<String, Object> handleDuplicateKeyException(SQLIntegrityConstraintViolationException e) {
         Map<String, Object> map = new HashMap<>();
-        map.put("code", HttpStatus.BAD_REQUEST.value());
+        map.put("code", HttpStatus.CONFLICT.value());
         map.put("message", e.getMessage());
         return map;
     }

@@ -32,6 +32,10 @@ public class Works {
     */
     private String imageUrl;
     /**
+    * 作品是否公开展示，true 或 false
+    */
+    private Boolean isPublic;
+    /**
     * 作品创建时间
     */
     private Date createTime;
@@ -39,10 +43,6 @@ public class Works {
     * 作品最近一次更新的时间
     */
     private Date updateTime;
-    /**
-    * 作品是否公开展示，true 或 false
-    */
-    private Boolean isPublic;
     /**
     * 作品被查看的次数
     */

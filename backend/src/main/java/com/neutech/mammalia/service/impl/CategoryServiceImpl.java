@@ -3,17 +3,22 @@ package com.neutech.mammalia.service.impl;
 import com.neutech.mammalia.bean.Category;
 import com.neutech.mammalia.mapper.CategoryMapper;
 import com.neutech.mammalia.service.CategoryService;
+import com.neutech.mammalia.service.SpeciesService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
 public class CategoryServiceImpl implements CategoryService {
     @Resource
     private CategoryMapper categoryMapper;
+    @Resource
+    private SpeciesService speciesService;
 
     @Override
     public int addCategory(List<Category> categories) {
@@ -36,11 +41,13 @@ public class CategoryServiceImpl implements CategoryService {
         int count = 0;
         List<Category> categories = categoryMapper.inquireCategoryByParentId(id);
         if (categories.size() == 0) {
+            speciesService.deleteSpeciesByGenusId(id);
             return categoryMapper.deleteCategoryById(id);
         } else {
             for (Category category : categories) {
                 count += deleteCategoryById(category.getId());
             }
+            speciesService.deleteSpeciesByGenusId(id);
             count += categoryMapper.deleteCategoryById(id);
         }
         return count;
@@ -52,17 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category inquireCategoryById(Integer id) {
-        return null;
-    }
-
-    @Override
     public List<Category> inquireCategoryByParentId(Integer parentId) {
         return categoryMapper.inquireCategoryByParentId(parentId);
-    }
-
-    @Override
-    public List<Category> inquireAllCategory() {
-        return null;
     }
 }

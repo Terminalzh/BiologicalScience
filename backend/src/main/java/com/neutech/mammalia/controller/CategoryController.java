@@ -19,7 +19,7 @@ public class CategoryController {
     @PostMapping(produces = "application/json;charset=UTF-8")
     public Map<String, Object> addCategory(@RequestBody List<Category> categories) {
         Map<String, Object> map = new HashMap<>();
-        if (categoryService.addCategory(categories) == 1) {
+        if (categoryService.addCategory(categories) >= 1) {
             map.put("code", HttpStatus.CREATED.value());
             map.put("message", HttpStatus.CREATED.getReasonPhrase());
         } else {

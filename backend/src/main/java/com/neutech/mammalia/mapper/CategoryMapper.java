@@ -11,8 +11,8 @@ public interface CategoryMapper {
 
     @Insert("""
             insert into t_category
-            (c_name, latin_name, sub_class_count, order_count, family_count, genus_count, species_count, parent_id)
-            values(#{category.cName}, #{category.latinName}, #{category.subClassCount}, #{category.orderCount}, #{category.familyCount}, #{category.genusCount}, #{category.speciesCount}, #{category.parentId})
+            (c_name, latin_name, parent_id)
+            values(#{category.cName}, #{category.latinName}, #{category.parentId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addCategory(@Param("category") Category category);
@@ -34,6 +34,9 @@ public interface CategoryMapper {
 
     @Select("select * from t_category where parent_id = #{parentId} and latin_name = #{latinName}")
     Category inquireCategoryByLatinNameAndParentId(@Param("parentId") Integer parentId, @Param("latinName") String latinName);
+
+    @Select("select count(0) from t_category where parent_id = #{parentId}")
+    int inquireCategoryCountByParentId(@Param("parentId") Integer parentId);
 
     @Select("select * from t_category")
     List<Category> inquireAllCategories();

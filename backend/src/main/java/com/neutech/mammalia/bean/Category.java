@@ -30,24 +30,4 @@ public class Category {
      * 父级ID对应分类表的主键
      */
     private Integer parentId;
-    /**
-     * 纲总数
-     */
-    private Integer subClassCount;
-    /**
-     * 目总数
-     */
-    private Integer orderCount;
-    /**
-     * 科总数
-     */
-    private Integer familyCount;
-    /**
-     * 属总数
-     */
-    private Integer genusCount;
-    /**
-     * 种总数
-     */
-    private Integer speciesCount;
 }

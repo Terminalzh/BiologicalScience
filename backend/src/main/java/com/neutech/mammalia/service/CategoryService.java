@@ -11,5 +11,9 @@ public interface CategoryService {
 
     int updateCategoryById(Category category);
 
+    Category inquireCategoryById(Integer id);
+
     List<Category> inquireCategoryByParentId(Integer parentId);
+
+    Category inquireCategoryByLatinNameAndParentId(Integer parentId, String latinName);
 }

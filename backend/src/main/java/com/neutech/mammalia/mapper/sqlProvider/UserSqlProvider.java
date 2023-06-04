@@ -4,7 +4,7 @@ import com.neutech.mammalia.bean.User;
 import org.apache.ibatis.jdbc.SQL;
 
 public class UserSqlProvider {
-    public static String inquireUserCountByEmailOrPhone(User user) {
+    public static String inquireUserByEmailOrPhone(User user) {
         SQL sql = new SQL();
         sql.SELECT("*");
         sql.FROM("t_user ");

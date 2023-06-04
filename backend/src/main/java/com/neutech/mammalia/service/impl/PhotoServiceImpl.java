@@ -6,6 +6,7 @@ import com.neutech.mammalia.service.PhotoService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,6 +31,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public int updatePhotoById(Photo photo) {
+        photo.setUpdateTime(new Date());
         return photoMapper.updatePhotoById(photo);
     }
 

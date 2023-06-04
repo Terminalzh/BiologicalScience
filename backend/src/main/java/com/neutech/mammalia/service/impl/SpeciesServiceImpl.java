@@ -6,6 +6,7 @@ import com.neutech.mammalia.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -42,6 +43,7 @@ public class SpeciesServiceImpl implements SpeciesService {
 
     @Override
     public int updateSpeciesById(Species species) {
+        species.setUpdateTime(new Date());
         return speciesMapper.updateSpeciesById(species);
     }
 

@@ -6,6 +6,7 @@ import com.neutech.mammalia.service.BannerService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,6 +36,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public int updateBannerById(Banner banner) {
+        banner.setUpdateTime(new Date());
         return bannerMapper.updateBannerById(banner);
     }
 

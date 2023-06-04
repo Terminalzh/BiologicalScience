@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int addUser(User user) {
+
         return userMapper.addUser(user);
     }
 
@@ -40,8 +41,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User inquireUserCountByEmailOrPhone(User user) {
-        return userMapper.inquireUserCountByEmailOrPhone(user);
+    public User inquireUserByEmailOrPhone(User user) {
+        return userMapper.inquireUserByEmailOrPhone(user);
     }
 
     @Override

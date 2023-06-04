@@ -86,5 +86,4 @@ public class BannerController {
         }
         return map;
     }
-
 }

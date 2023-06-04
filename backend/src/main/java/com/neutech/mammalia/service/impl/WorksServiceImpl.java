@@ -15,12 +15,12 @@ public class WorksServiceImpl implements WorksService {
 
     @Override
     public int addWorks(Works works) {
-        return 0;
+        return worksMapper.addWorks(works);
     }
 
     @Override
     public int deleteWorksById(Integer id) {
-        return 0;
+        return worksMapper.deleteWorksById(id);
     }
 
     @Override
@@ -35,26 +35,21 @@ public class WorksServiceImpl implements WorksService {
 
     @Override
     public int updateWorksById(Works works) {
-        return 0;
+        return worksMapper.updateWorksById(works);
     }
 
     @Override
     public List<Works> inquireWorksById(Integer id) {
-        return null;
+        return worksMapper.inquireWorksById(id);
     }
 
     @Override
     public List<Works> inquireAllWorksByUserId(Integer userId) {
-        return null;
-    }
-
-    @Override
-    public List<Works> inquireAllWorksByPhotoWallId(Integer photoWallId) {
-        return null;
+        return worksMapper.inquireWorksIdByUserId(userId);
     }
 
     @Override
     public List<Works> inquireAllWorks() {
-        return null;
+        return worksMapper.inquireAllWorks();
     }
 }

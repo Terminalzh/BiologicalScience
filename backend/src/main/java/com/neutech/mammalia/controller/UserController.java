@@ -23,11 +23,13 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         if (userService.addUser(user) == 1) {
             session.setAttribute("user", user);
+            user = userService.inquireUserByEmailOrPhone(user);
             map.put("code", HttpStatus.CREATED.value());
             if (user.getEmail().equals(user.getPhone()))
                 map.put("message", "admin");
             else
                 map.put("message", "user");
+            map.put("data", user);
         } else {
             map.put("code", HttpStatus.BAD_REQUEST.value());
             map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
@@ -38,9 +40,10 @@ public class UserController {
     @PostMapping(value = "/login")
     public Map<String, Object> login(@RequestBody User account, HttpSession session) {
         Map<String, Object> map = new HashMap<>();
-        User user = userService.inquireUserCountByEmailOrPhone(account);
+        User user = userService.inquireUserByEmailOrPhone(account);
         if (user != null) {
             session.setAttribute("user", user);
+            user = userService.inquireUserByEmailOrPhone(user);
             map.put("code", HttpStatus.OK.value());
             if (user.getEmail().equals(user.getPhone()))
                 map.put("message", "admin");

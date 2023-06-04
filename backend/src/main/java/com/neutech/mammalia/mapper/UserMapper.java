@@ -38,8 +38,8 @@ public interface UserMapper {
     @Select("select * from t_user where name=#{name}")
     User inquireUserByName(@Param("name") String name);
 
-    @SelectProvider(value = UserSqlProvider.class, method = "inquireUserCountByEmailOrPhone")
-    User inquireUserCountByEmailOrPhone(@Param("user") User user);
+    @SelectProvider(value = UserSqlProvider.class, method = "inquireUserByEmailOrPhone")
+    User inquireUserByEmailOrPhone(@Param("user") User user);
 
     @Select("select * from t_user")
     List<User> inquireAllUsers();

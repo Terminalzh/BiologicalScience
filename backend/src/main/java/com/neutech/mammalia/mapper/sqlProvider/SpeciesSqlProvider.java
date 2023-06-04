@@ -3,8 +3,6 @@ package com.neutech.mammalia.mapper.sqlProvider;
 import com.neutech.mammalia.bean.Species;
 import org.apache.ibatis.jdbc.SQL;
 
-import java.util.Date;
-
 public class SpeciesSqlProvider {
     public static String updateSpeciesById(Species species) {
         SQL sql = new SQL();
@@ -23,7 +21,6 @@ public class SpeciesSqlProvider {
             sql.SET("recommend = #{species.recommend}");
         if (species.getLevel() != null)
             sql.SET("level = #{species.level}");
-        species.setUpdateTime(new Date());
         sql.SET("update_time = #{species.updateTime}");
         sql.WHERE("id = #{species.id}");
         return sql.toString();

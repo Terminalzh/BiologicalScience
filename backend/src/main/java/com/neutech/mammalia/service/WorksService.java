@@ -19,7 +19,5 @@ public interface WorksService {
 
     List<Works> inquireAllWorksByUserId(Integer userId);
 
-    List<Works> inquireAllWorksByPhotoWallId(Integer photoWallId);
-
     List<Works> inquireAllWorks();
 }

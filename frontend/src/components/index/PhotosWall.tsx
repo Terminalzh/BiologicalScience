@@ -5,7 +5,7 @@ import pic from "~/assets/images/lion.webp";
 const PhotoItem = (props: { src: string }) => {
   return (
     <AspectRatio ratio={16 / 10} w="15rem" class="m-4">
-      <Image src={props.src} shadow="$lg" borderRadius="$std" />
+      <Image src={props.src} borderRadius="$std" class="shadow-md" />
     </AspectRatio>
   );
 };

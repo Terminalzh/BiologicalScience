@@ -1,3 +1,5 @@
+import { Resource, catchError, createMemo } from "solid-js";
+
 export class Queue<T> {
   items: Record<string, T>;
   frontIndex: number;
@@ -29,3 +31,12 @@ export class Queue<T> {
     return this.items;
   }
 }
+
+export const catchResource = <T>(
+  resource: Resource<T>,
+  onError: (e: Error) => void
+) => {
+  return createMemo(() => {
+    return catchError(() => resource(), onError);
+  });
+};

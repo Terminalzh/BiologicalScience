@@ -1,5 +1,10 @@
 // @refresh reload
-import { Button, HopeProvider, HopeThemeConfig } from "@hope-ui/solid";
+import {
+  Button,
+  HopeProvider,
+  HopeThemeConfig,
+  NotificationsProvider,
+} from "@hope-ui/solid";
 import { Suspense } from "solid-js";
 import {
   A,
@@ -12,6 +17,7 @@ import {
   Routes,
   Scripts,
   Title,
+  useLocation,
 } from "solid-start";
 import "virtual:uno.css";
 import "./style.css";
@@ -93,6 +99,7 @@ const config: HopeThemeConfig = {
         textDecoration: "none",
         fontFamily: "$sans",
         fontWeight: "bold",
+        zIndex: "2",
         padding: "0.2rem 0.5rem",
         transition: "all 300ms",
 
@@ -124,6 +131,7 @@ const config: HopeThemeConfig = {
         label: {
           fontWeight: "bold",
           fontSize: "$md",
+          marginBottom: "$2",
         },
       },
     },
@@ -154,25 +162,38 @@ const config: HopeThemeConfig = {
         },
       },
     },
+
+    Notification: {
+      baseStyle: {
+        root: {
+          borderRadius: "$2xl",
+        },
+      },
+    },
   },
 };
 
 export default function Root() {
   return (
     <HopeProvider config={config}>
-      <Html lang="en">
-        <Head>
-          <Title>SolidStart - Bare</Title>
-          <Meta charset="utf-8" />
-          <Meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        <Body class="transition-all pt-20">
-          <Routes>
-            <FileRoutes />
-          </Routes>
-          <Scripts />
-        </Body>
-      </Html>
+      <NotificationsProvider>
+        <Html lang="en" class="h-full">
+          <Head>
+            <Title>SolidStart - Bare</Title>
+            <Meta charset="utf-8" />
+            <Meta
+              name="viewport"
+              content="width=device-width, initial-scale=1"
+            />
+          </Head>
+          <Body class="transition-all pt-20 h-full">
+            <Routes>
+              <FileRoutes />
+            </Routes>
+            <Scripts />
+          </Body>
+        </Html>
+      </NotificationsProvider>
     </HopeProvider>
   );
 }

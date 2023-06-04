@@ -1,7 +1,19 @@
-import { Button, IconButton, useColorMode } from "@hope-ui/solid";
-import { JSX } from "solid-js";
-import { Outlet } from "solid-start";
+import {
+  Anchor,
+  Avatar,
+  Button,
+  IconButton,
+  Image,
+  Spinner,
+  notificationService,
+  useColorMode,
+} from "@hope-ui/solid";
+import { ErrorBoundary, JSX, Show, Suspense, createResource } from "solid-js";
+import { Outlet, useLocation, useNavigate } from "solid-start";
 import { LogoIcon } from "~/components/LogoIcon";
+import bg from "~/assets/images/login-bg.webp";
+import { getMe } from "~/api/user";
+import { catchResource } from "~/utils";
 
 export function MaterialSymbolsDarkMode(props: JSX.IntrinsicElements["svg"]) {
   return (
@@ -141,6 +153,9 @@ const NavItem = (props: any) => {
 
 export default function ServiceLayout() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const [meResource] = createResource(getMe);
+  const location = useLocation();
+  const navigate = useNavigate();
   return (
     <>
       <header
@@ -152,7 +167,12 @@ export default function ServiceLayout() {
       >
         <div class="backdrop-blur-md">
           <nav class="inline flex container-compact items-center py-4">
-            <div class="flex items-center gap-2">
+            <div
+              class="flex items-center gap-2 cursor-pointer"
+              onClick={() => {
+                navigate("/service");
+              }}
+            >
               <LogoIcon class="text-brand-primary" />
               <span class="flex-1 font-brand text-brand-primary text-2xl">
                 Mammalia
@@ -165,8 +185,37 @@ export default function ServiceLayout() {
               <NavItem>关于我们</NavItem>
             </ul>
             <div class="flex gap-8 flex-1 items-center justify-end">
-              <Button class="btn-outlined">登录</Button>
-              <Button class="btn">注册</Button>
+              <ErrorBoundary
+                fallback={() => (
+                  <>
+                    <Button
+                      class="btn-outlined"
+                      onClick={() => {
+                        navigate("login");
+                      }}
+                    >
+                      登录
+                    </Button>
+                    <Button
+                      class="btn"
+                      onClick={() => {
+                        navigate("login?registry=true");
+                      }}
+                    >
+                      注册
+                    </Button>
+                  </>
+                )}
+              >
+                <Suspense fallback={<Spinner />}>
+                  <Avatar
+                    width="2.5rem"
+                    height="2.5rem"
+                    name={meResource()?.name}
+                    src={meResource()?.avatar}
+                  />
+                </Suspense>
+              </ErrorBoundary>
               <IconButton
                 onClick={toggleColorMode}
                 aria-label="切换主题"
@@ -193,15 +242,25 @@ export default function ServiceLayout() {
         <Outlet />
       </main>
       <footer class="container-compact text-center mt-12 py-4">
-        <h5 class="font-bold text-primary">关注我们</h5>
+        <h5 class="font-bold text-secondary">关注我们</h5>
         <ul class="text-center flex items-center justify-center gap-4 mt-2">
           <BrandItem brand={<TablerBrandWechat />} />
           <BrandItem brand={<TablerBrandBilibili />} />
           <BrandItem brand={<TablerBrandTiktok />} />
           <BrandItem brand={<TablerBrandGithub />} />
         </ul>
-        <p class="font-bold text-secondary mt-2">Designed by Haodong Qin</p>
+        <p class="font-bold text-secondary mt-2">
+          Designed by{" "}
+          <Anchor target="_blank" href="https://github.com/zacharychin233">
+            Haodong Qin
+          </Anchor>
+        </p>
       </footer>
+      <Show when={location.pathname.endsWith("login")}>
+        {/* <div class="absolute top-0 left-0 bottom-0 right-0 z--1 overflow-hidden">
+          <Image src={bg} class="opacity-5" />
+        </div> */}
+      </Show>
     </>
   );
 }

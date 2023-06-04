@@ -1,7 +1,7 @@
 package com.neutech.mammalia.controller;
 
-import com.neutech.mammalia.bean.Banner;
-import com.neutech.mammalia.service.BannerService;
+import com.neutech.mammalia.bean.Report;
+import com.neutech.mammalia.service.ReportService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,16 +11,15 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/banner")
-public class BannerController {
-
+@RequestMapping(value = "/report")
+public class ReportController {
     @Resource
-    private BannerService bannerService;
+    private ReportService reportService;
 
     @PostMapping
-    public Map<String, Object> addBanner(@RequestBody Banner banner) {
+    public Map<String, Object> addReport(@RequestBody Report report) {
         Map<String, Object> map = new HashMap<>();
-        if (bannerService.addBanner(banner) == 1) {
+        if (reportService.addReport(report) == 1) {
             map.put("code", HttpStatus.CREATED.value());
             map.put("message", HttpStatus.CREATED.getReasonPhrase());
         } else {
@@ -31,9 +30,9 @@ public class BannerController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deleteBannerById(@PathVariable Integer id) {
+    public Map<String, Object> deleteReportById(@PathVariable Integer id) {
         Map<String, Object> map = new HashMap<>();
-        if (bannerService.deleteBannerById(id) == 1) {
+        if (reportService.deleteReportById(id) == 1) {
             map.put("code", HttpStatus.NO_CONTENT.value());
             map.put("message", HttpStatus.NO_CONTENT.value());
         } else {
@@ -44,10 +43,10 @@ public class BannerController {
     }
 
     @PutMapping(value = "/{id}")
-    public Map<String, Object> updateBannerById(@PathVariable Integer id, @RequestBody Banner banner) {
+    public Map<String, Object> updateReportById(@PathVariable Integer id, @RequestBody Report report) {
         Map<String, Object> map = new HashMap<>();
-        banner.setId(id);
-        if (bannerService.updateBannerById(banner) == 1) {
+        report.setId(id);
+        if (reportService.updateReportById(report) == 1) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", HttpStatus.OK.value());
         } else {
@@ -58,13 +57,13 @@ public class BannerController {
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> inquireBannerById(@PathVariable Integer id) {
+    public Map<String, Object> inquireReportById(@PathVariable Integer id) {
         Map<String, Object> map = new HashMap<>();
-        Banner banner = bannerService.inquireBannerById(id);
-        if (banner != null) {
+        Report report = reportService.inquireReportById(id);
+        if (report != null) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", HttpStatus.OK.value());
-            map.put("data", banner);
+            map.put("data", report);
         } else {
             map.put("code", HttpStatus.NOT_FOUND.value());
             map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -73,13 +72,13 @@ public class BannerController {
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllBanner() {
+    public Map<String, Object> inquireAllReport() {
         Map<String, Object> map = new HashMap<>();
-        List<Banner> banners = bannerService.inquireAllBanner();
-        if (banners.size() > 0) {
+        List<Report> reports = reportService.inquireAllReport();
+        if (reports.size() > 0) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", HttpStatus.OK.value());
-            map.put("data", banners);
+            map.put("data", reports);
         } else {
             map.put("code", HttpStatus.NOT_FOUND.value());
             map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());

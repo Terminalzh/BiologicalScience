@@ -15,12 +15,12 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public int addBanner(Banner banner) {
-        return 0;
+        return bannerMapper.addBanner(banner);
     }
 
     @Override
     public int deleteBannerById(Integer id) {
-        return 0;
+        return bannerMapper.deleteBannerById(id);
     }
 
     @Override
@@ -35,16 +35,16 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public int updateBannerById(Banner banner) {
-        return 0;
+        return bannerMapper.updateBannerById(banner);
     }
 
     @Override
     public Banner inquireBannerById(Integer id) {
-        return null;
+        return bannerMapper.inquireBannerById(id);
     }
 
     @Override
     public List<Banner> inquireAllBanner() {
-        return null;
+        return bannerMapper.inquireAllBanner();
     }
 }

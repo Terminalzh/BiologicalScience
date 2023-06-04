@@ -15,26 +15,26 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public int addReport(Report report) {
-        return 0;
+        return reportMapper.addReport(report);
     }
 
     @Override
     public int deleteReportById(Integer id) {
-        return 0;
+        return reportMapper.deleteReportById(id);
     }
 
     @Override
     public int updateReportById(Report report) {
-        return 0;
+        return reportMapper.updateReportById(report);
     }
 
     @Override
     public Report inquireReportById(Integer id) {
-        return null;
+        return reportMapper.inquireReportById(id);
     }
 
     @Override
     public List<Report> inquireAllReport() {
-        return null;
+        return reportMapper.inquireAllReports();
     }
 }

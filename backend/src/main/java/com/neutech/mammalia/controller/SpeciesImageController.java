@@ -1,7 +1,7 @@
 package com.neutech.mammalia.controller;
 
-import com.neutech.mammalia.bean.Species;
-import com.neutech.mammalia.service.SpeciesService;
+import com.neutech.mammalia.bean.SpeciesImage;
+import com.neutech.mammalia.service.SpeciesImageService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,30 +11,30 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/species")
-public class SpeciesController {
+@RequestMapping(value = "/speciesImage")
+public class SpeciesImageController {
     @Resource
-    private SpeciesService speciesService;
+    private SpeciesImageService speciesImageService;
 
     @PostMapping
-    public Map<String, Object> addSpecies(@RequestBody Species species) {
+    public Map<String, Object> addSpeciesImageService(@RequestBody SpeciesImage speciesImage) {
         Map<String, Object> map = new HashMap<>();
-        if (speciesService.addSpecies(species) == 1) {
+        if (speciesImageService.addSpeciesImage(speciesImage) == 1) {
             map.put("code", HttpStatus.CREATED.value());
-            map.put("message", "添加成功");
+            map.put("message", HttpStatus.CREATED.getReasonPhrase());
         } else {
             map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", "添加失败");
+            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
         return map;
     }
 
     @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deleteSpeciesById(@PathVariable Integer id) {
+    public Map<String, Object> deleteSpeciesImageById(@PathVariable Integer id) {
         Map<String, Object> map = new HashMap<>();
-        if (speciesService.deleteSpeciesById(id) == 1) {
+        if (speciesImageService.deleteSpeciesImageById(id) == 1) {
             map.put("code", HttpStatus.NO_CONTENT.value());
-            map.put("message", HttpStatus.NO_CONTENT.getReasonPhrase());
+            map.put("message", HttpStatus.NO_CONTENT.value());
         } else {
             map.put("code", HttpStatus.NOT_FOUND.value());
             map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -43,12 +43,12 @@ public class SpeciesController {
     }
 
     @PutMapping(value = "/{id}")
-    public Map<String, Object> updateSpeciesById(@PathVariable Integer id, @RequestBody Species species) {
+    public Map<String, Object> updateSpeciesImageById(@PathVariable Integer id, @RequestBody SpeciesImage speciesImage) {
         Map<String, Object> map = new HashMap<>();
-        species.setId(id);
-        if (speciesService.updateSpeciesById(species) == 1) {
+        speciesImage.setId(id);
+        if (speciesImageService.updateSpeciesImageById(speciesImage) == 1) {
             map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.getReasonPhrase());
+            map.put("message", HttpStatus.OK.value());
         } else {
             map.put("code", HttpStatus.BAD_REQUEST.value());
             map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
@@ -56,15 +56,14 @@ public class SpeciesController {
         return map;
     }
 
-
-    @GetMapping(value = "/{id}")
-    public Map<String, Object> inquireSpeciesById(@PathVariable Integer id) {
+    @GetMapping("/{id}")
+    public Map<String, Object> inquireSpeciesImageById(@PathVariable Integer id) {
         Map<String, Object> map = new HashMap<>();
-        Species species = speciesService.inquireSpeciesById(id);
-        if (species != null) {
+        SpeciesImage speciesImage = speciesImageService.inquireSpeciesImageById(id);
+        if (speciesImage != null) {
             map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.getReasonPhrase());
-            map.put("data", species);
+            map.put("message", HttpStatus.OK.value());
+            map.put("data", speciesImage);
         } else {
             map.put("code", HttpStatus.NOT_FOUND.value());
             map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -73,13 +72,13 @@ public class SpeciesController {
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllSpecies() {
+    public Map<String, Object> inquireAllSpeciesImage() {
         Map<String, Object> map = new HashMap<>();
-        List<Species> species = speciesService.inquireAllSpecies();
-        if (species.size() > 0) {
+        List<SpeciesImage> speciesImage = speciesImageService.inquireAllSpeciesImages();
+        if (speciesImage.size() > 0) {
             map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.getReasonPhrase());
-            map.put("data", species);
+            map.put("message", HttpStatus.OK.value());
+            map.put("data", speciesImage);
         } else {
             map.put("code", HttpStatus.NOT_FOUND.value());
             map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());

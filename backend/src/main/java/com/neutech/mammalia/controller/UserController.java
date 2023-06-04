@@ -28,7 +28,6 @@ public class UserController {
                 map.put("message", "admin");
             else
                 map.put("message", "user");
-            map.put("data", user);
         } else {
             map.put("code", HttpStatus.BAD_REQUEST.value());
             map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());

@@ -2,11 +2,11 @@ package com.neutech.mammalia.service.impl;
 
 import com.neutech.mammalia.bean.SpeciesImage;
 import com.neutech.mammalia.mapper.SpeciesImageMapper;
-import com.neutech.mammalia.mapper.SpeciesMapper;
 import com.neutech.mammalia.service.SpeciesImageService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -16,12 +16,12 @@ public class SpeciesImageServiceImpl implements SpeciesImageService {
 
     @Override
     public int addSpeciesImage(SpeciesImage speciesImage) {
-        return 0;
+        return speciesImageMapper.addSpeciesImage(speciesImage);
     }
 
     @Override
     public int deleteSpeciesImageById(Integer id) {
-        return 0;
+        return speciesImageMapper.deleteSpeciesImageById(id);
     }
 
     @Override
@@ -31,16 +31,17 @@ public class SpeciesImageServiceImpl implements SpeciesImageService {
 
     @Override
     public int updateSpeciesImageById(SpeciesImage speciesImage) {
-        return 0;
+        speciesImage.setUpdateTime(new Date());
+        return speciesImageMapper.updateSpeciesImageById(speciesImage);
     }
 
     @Override
     public SpeciesImage inquireSpeciesImageById(Integer id) {
-        return null;
+        return speciesImageMapper.inquireSpeciesImageById(id);
     }
 
     @Override
     public List<SpeciesImage> inquireAllSpeciesImages() {
-        return null;
+        return speciesImageMapper.inquireAllSpeciesImages();
     }
 }

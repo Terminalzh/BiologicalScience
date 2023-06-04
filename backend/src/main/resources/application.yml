@@ -16,3 +16,6 @@ mybatis:
 logging:
   level:
     com.neutech.mammalia.mapper: TRACE
+server:
+  servlet:
+    context-path: /api

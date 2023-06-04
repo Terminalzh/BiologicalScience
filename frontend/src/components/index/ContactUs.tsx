@@ -41,7 +41,7 @@ export default function ContactUs() {
                 required
                 type="email"
                 name="contact"
-                placeholder="feedback@mammalia.com"
+                placeholder="feedback@mammalia.org"
               />
             </FormControl>
           </div>

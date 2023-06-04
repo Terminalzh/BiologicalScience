@@ -1,0 +1,28 @@
+{
+  "storage": "local",
+  "port": 7711,
+  "local": {
+    "dir": "./.gen"
+  },
+  "base_url": "http://localhost:3000",
+  "password": "12345",
+  "partitions": {
+    "cover": {
+      "enable": true,
+      "lossy": true,
+      "quality": 80.0,
+      "resolves": {
+        "s": {
+          "width": 200,
+          "height": 200,
+          "quality": 50
+        },
+        "m": {
+          "width": 400,
+          "height": 400
+        },
+        "l": {}
+      }
+    }
+  }
+}

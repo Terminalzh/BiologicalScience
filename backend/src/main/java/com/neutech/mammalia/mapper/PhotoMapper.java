@@ -20,6 +20,9 @@ public interface PhotoMapper {
     @Delete("delete from t_photo where id=#{id}")
     int deletePhotoById(@Param("id") Integer id);
 
+    @Delete("delete from t_photo where species_id = #{speciesId}")
+    int deletePhotoBySpeciesId(@Param("speciesId") Integer speciesId);
+
     @UpdateProvider(value = PhotoSqlProvider.class, method = "updatePhotoById")
     int updatePhotoById(@Param("photo") Photo photo);
 

@@ -2,6 +2,7 @@ package com.neutech.mammalia.bean;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ public class Species {
     /**
      * 物种的中文名称
      */
-    private String name;
+    @JsonProperty
+    private String cName;
     /**
      * 物种的拉丁文正式名
      */

@@ -9,6 +9,10 @@ public interface BannerService {
 
     int deleteBannerById(Integer id);
 
+    int deleteBannerByWorksId(int WorksId);
+
+    int deleteBannerBySpeciesId(Integer speciesId);
+
     int updateBannerById(Banner banner);
 
     Banner inquireBannerById(Integer id);

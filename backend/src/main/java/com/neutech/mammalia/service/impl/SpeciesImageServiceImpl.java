@@ -25,6 +25,11 @@ public class SpeciesImageServiceImpl implements SpeciesImageService {
     }
 
     @Override
+    public int deleteSpeciesImageBySpeciesId(Integer speciesId) {
+        return speciesImageMapper.deleteSpeciesImageBySpeciesId(speciesId);
+    }
+
+    @Override
     public int updateSpeciesImageById(SpeciesImage speciesImage) {
         return 0;
     }

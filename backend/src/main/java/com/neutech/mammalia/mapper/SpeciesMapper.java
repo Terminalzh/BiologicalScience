@@ -1,6 +1,7 @@
 package com.neutech.mammalia.mapper;
 
 import com.neutech.mammalia.bean.Species;
+import com.neutech.mammalia.mapper.sqlProvider.SpeciesSqlProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -9,8 +10,8 @@ import java.util.List;
 public interface SpeciesMapper {
     @Insert("""
             insert into t_species
-            (name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level)
-            values (#{species.name}, #{species.latinName}, #{species.genusId}, #{species.briefIntroduction}, #{species.detailIntroduction}, #{species.recommend}, #{species.level});
+            (c_name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level)
+            values (#{species.cName}, #{species.latinName}, #{species.genusId}, #{species.briefIntroduction}, #{species.detailIntroduction}, #{species.recommend}, #{species.level});
             """)
     int addSpecies(@Param("species") Species species);
 
@@ -20,18 +21,7 @@ public interface SpeciesMapper {
     @Delete("delete from t_species where genus_id = #{genusId}")
     int deleteSpeciesByGenusId(@Param("genusId") Integer genusId);
 
-    @Update("""
-            update t_species set
-            name = #{species.name},
-            latin_name = #{species.latinName},
-            genus_id = #{species.genusId},
-            brief_introduction = #{species.briefIntroduction},
-            detail_introduction = #{species.detailIntroduction},
-            recommend = #{species.recommend},
-            level = #{species.level},
-            update_time = #{species.updateTime}
-            where id = #{id};
-            """)
+    @UpdateProvider(value = SpeciesSqlProvider.class, method = "updateSpeciesById")
     int updateSpeciesById(@Param("species") Species species);
 
     @Select("select * from t_species where id = #{id}")

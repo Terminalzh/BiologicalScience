@@ -25,7 +25,12 @@ public class WorksServiceImpl implements WorksService {
 
     @Override
     public int deleteWorksByUserId(Integer userId) {
-        return 0;
+        return worksMapper.deleteWorksByUserId(userId);
+    }
+
+    @Override
+    public int deleteWorksBySpeciesId(Integer speciesId) {
+        return worksMapper.deleteWorksBySpeciesId(speciesId);
     }
 
     @Override

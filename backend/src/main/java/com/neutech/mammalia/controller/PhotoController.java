@@ -19,8 +19,7 @@ public class PhotoController {
     @PostMapping
     public Map<String, Object> addPhoto(@RequestBody Photo photo) {
         Map<String, Object> map = new HashMap<>();
-        int i = photoService.addPhoto(photo);
-        if (i == 1) {
+        if (photoService.addPhoto(photo) == 1) {
             map.put("code", HttpStatus.CREATED.value());
             map.put("message", HttpStatus.CREATED.getReasonPhrase());
         } else {
@@ -33,8 +32,7 @@ public class PhotoController {
     @DeleteMapping(value = "/{id}")
     public Map<String, Object> deletePhotoById(@PathVariable Integer id) {
         Map<String, Object> map = new HashMap<>();
-        int i = photoService.deletePhotoById(id);
-        if (i == 1) {
+        if (photoService.deletePhotoById(id) == 1) {
             map.put("code", HttpStatus.NO_CONTENT.value());
             map.put("message", HttpStatus.NO_CONTENT.value());
         } else {
@@ -48,8 +46,7 @@ public class PhotoController {
     public Map<String, Object> updatePhotoById(@PathVariable Integer id, @RequestBody Photo photo) {
         Map<String, Object> map = new HashMap<>();
         photo.setId(id);
-        int i = photoService.updatePhotoById(photo);
-        if (i == 1) {
+        if (photoService.updatePhotoById(photo) == 1) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", HttpStatus.OK.value());
         } else {

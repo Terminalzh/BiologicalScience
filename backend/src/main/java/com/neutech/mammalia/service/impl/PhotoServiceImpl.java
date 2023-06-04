@@ -24,6 +24,11 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
+    public int deletePhotoBySpeciesId(Integer speciesId) {
+        return photoMapper.deletePhotoBySpeciesId(speciesId);
+    }
+
+    @Override
     public int updatePhotoById(Photo photo) {
         return photoMapper.updatePhotoById(photo);
     }

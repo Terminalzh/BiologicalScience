@@ -11,6 +11,8 @@ public interface WorksService {
 
     int deleteWorksByUserId(Integer userId);
 
+    int deleteWorksBySpeciesId(Integer speciesId);
+
     int updateWorksById(Works works);
 
     List<Works> inquireWorksById(Integer id);

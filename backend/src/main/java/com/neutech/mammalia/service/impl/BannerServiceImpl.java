@@ -24,6 +24,16 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
+    public int deleteBannerByWorksId(int WorksId) {
+        return bannerMapper.deleteBannerByWorksId(WorksId);
+    }
+
+    @Override
+    public int deleteBannerBySpeciesId(Integer speciesId) {
+        return bannerMapper.deleteBannerBySpeciesId(speciesId);
+    }
+
+    @Override
     public int updateBannerById(Banner banner) {
         return 0;
     }

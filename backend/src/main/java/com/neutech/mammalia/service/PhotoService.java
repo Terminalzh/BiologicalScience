@@ -6,13 +6,14 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface PhotoService {
-    int addPhoto(@Param("photo") Photo photo);
+    int addPhoto(Photo photo);
 
-    int deletePhotoById(@Param("id") Integer id);
+    int deletePhotoById(Integer id);
+    int deletePhotoBySpeciesId(Integer speciesId);
 
-    int updatePhotoById(@Param("photo") Photo photo);
+    int updatePhotoById(Photo photo);
 
-    Photo inquirePhotoById(@Param("id") Integer id);
+    Photo inquirePhotoById(Integer id);
 
     List<Photo> inquireAllPhotos();
 

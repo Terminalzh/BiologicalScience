@@ -19,6 +19,9 @@ public interface SpeciesImageMapper {
     @Delete("delete from species_image where id=#{id}")
     int deleteSpeciesImageById(@Param("id") Integer id);
 
+    @Delete("delete from species_image where species_id = #{speciesId}")
+    int deleteSpeciesImageBySpeciesId(@Param("speciesId") Integer speciesId);
+
     @Update("""
             update species_image set
             species_id=#{speciesImage.speciesId},

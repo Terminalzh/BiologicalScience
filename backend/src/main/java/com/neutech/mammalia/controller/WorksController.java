@@ -19,8 +19,7 @@ public class WorksController {
     @PostMapping
     public Map<String, Object> addWorks(@RequestBody Works works) {
         Map<String, Object> map = new HashMap<>();
-        int i = worksService.addWorks(works);
-        if (i == 1) {
+        if (worksService.addWorks(works) == 1) {
             map.put("code", HttpStatus.CREATED.value());
             map.put("message", "上传成功");
         } else {
@@ -33,8 +32,7 @@ public class WorksController {
     @DeleteMapping(value = "/{id}")
     public Map<String, Object> deleteWorksById(@PathVariable("id") Integer id) {
         Map<String, Object> map = new HashMap<>();
-        int i = worksService.deleteWorksById(id);
-        if (i >= 1) {
+        if (worksService.deleteWorksById(id) == 1) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", "删除成功");
         } else {
@@ -47,8 +45,8 @@ public class WorksController {
     @PutMapping(value = "/{id}")
     public Map<String, Object> updateWorksById(@PathVariable("id") Integer id, @RequestBody Works works) {
         Map<String, Object> map = new HashMap<>();
-        int i = worksService.updateWorksById(works);
-        if (i >= 1) {
+        works.setId(id);
+        if (worksService.updateWorksById(works) >= 1) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", "修改成功");
         } else {

@@ -19,11 +19,9 @@ public class CategoryController {
     @PostMapping(produces = "application/json;charset=UTF-8")
     public Map<String, Object> addCategory(@RequestBody List<Category> categories) {
         Map<String, Object> map = new HashMap<>();
-        int i = categoryService.addCategory(categories);
-        if (i >= 1) {
+        if (categoryService.addCategory(categories) == 1) {
             map.put("code", HttpStatus.CREATED.value());
             map.put("message", HttpStatus.CREATED.getReasonPhrase());
-            map.put("data", categories);
         } else {
             map.put("code", HttpStatus.BAD_REQUEST.value());
             map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
@@ -49,11 +47,9 @@ public class CategoryController {
     public Map<String, Object> updateCategoryNameById(@PathVariable("id") Integer id, @RequestBody Category category) {
         Map<String, Object> map = new HashMap<>();
         category.setId(id);
-        int i = categoryService.updateCategoryById(category);
-        if (i == 1) {
+        if (categoryService.updateCategoryById(category) == 1) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", HttpStatus.OK.getReasonPhrase());
-            map.put("data", category);
         } else {
             map.put("code", HttpStatus.NOT_FOUND.value());
             map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());

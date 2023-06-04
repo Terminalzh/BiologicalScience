@@ -22,6 +22,9 @@ public interface WorksMapper {
     @Delete("delete from t_works where user_id = #{id}")
     int deleteWorksByUserId(@Param("id") Integer id);
 
+    @Delete("delete from t_works where species_id = #{speciesId}")
+    int deleteWorksBySpeciesId(@Param("speciesId") Integer speciesId);
+
     @Update("""
             update t_works set
             user_id=#{works.userId},

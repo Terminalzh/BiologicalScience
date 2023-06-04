@@ -21,8 +21,7 @@ public class UserController {
     @PostMapping
     public Map<String, Object> addUser(@RequestBody User user, HttpSession session) {
         Map<String, Object> map = new HashMap<>();
-        int i = userService.addUser(user);
-        if (i == 1) {
+        if (userService.addUser(user) == 1) {
             session.setAttribute("user", user);
             map.put("code", HttpStatus.CREATED.value());
             if (user.getEmail().equals(user.getPhone()))
@@ -59,8 +58,7 @@ public class UserController {
     @DeleteMapping(value = "/{id}")
     public Map<String, Object> deleteUserById(@PathVariable("id") Integer id) {
         Map<String, Object> map = new HashMap<>();
-        int i = userService.deleteUserById(id);
-        if (i == 1) {
+        if (userService.deleteUserById(id) == 1) {
             map.put("code", HttpStatus.NO_CONTENT.value());
             map.put("message", HttpStatus.NO_CONTENT.getReasonPhrase());
         } else {
@@ -83,8 +81,7 @@ public class UserController {
     public Map<String, Object> updateUserById(@PathVariable("id") Integer id, @RequestBody User user) {
         Map<String, Object> map = new HashMap<>();
         user.setId(id);
-        int i = userService.updateUserById(user);
-        if (i == 1) {
+        if (userService.updateUserById(user) == 1) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", HttpStatus.OK.getReasonPhrase());
         } else {
@@ -103,8 +100,8 @@ public class UserController {
             map.put("message", HttpStatus.OK.getReasonPhrase());
             map.put("data", user);
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            map.put("code", HttpStatus.NOT_FOUND.value());
+            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
         }
         return map;
     }
@@ -122,10 +119,24 @@ public class UserController {
             map.put("message", HttpStatus.OK.getReasonPhrase());
             map.put("data", users);
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            map.put("code", HttpStatus.NOT_FOUND.value());
+            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
         }
         return map;
     }
 
+    @GetMapping("/me")
+    public Map<String, Object> getCurrentUser(HttpSession session) {
+        Map<String, Object> map = new HashMap<>();
+        Object user = session.getAttribute("user");
+        if (user != null) {
+            map.put("code", HttpStatus.OK.value());
+            map.put("message", HttpStatus.OK.getReasonPhrase());
+            map.put("data", user);
+        } else {
+            map.put("code", HttpStatus.UNAUTHORIZED.value());
+            map.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        }
+        return map;
+    }
 }

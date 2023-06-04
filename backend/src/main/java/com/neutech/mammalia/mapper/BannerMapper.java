@@ -22,6 +22,9 @@ public interface BannerMapper {
     @Delete("delete from t_banner where works_id = #{worksId}")
     int deleteBannerByWorksId(@Param("worksId") Integer worksId);
 
+    @Delete("delete from t_banner where species_id = #{speciesId};")
+    int deleteBannerBySpeciesId(@Param("speciesId") Integer speciesId);
+
     @Update("""
             update t_banner set
             species_id=#{banner.speciesId},

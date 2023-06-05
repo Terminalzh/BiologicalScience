@@ -1,5 +1,6 @@
 package com.neutech.mammalia.controller;
 
+import com.github.pagehelper.PageHelper;
 import com.neutech.mammalia.bean.Banner;
 import com.neutech.mammalia.service.BannerService;
 import jakarta.annotation.Resource;
@@ -18,9 +19,9 @@ public class BannerController {
     private BannerService bannerService;
 
     @PostMapping
-    public Map<String, Object> addBanner(@RequestBody Banner banner) {
+    public Map<String, Object> addBanner(@RequestBody Integer speciesImageId) {
         Map<String, Object> map = new HashMap<>();
-        if (bannerService.addBanner(banner) == 1) {
+        if (bannerService.addBanner(speciesImageId) == 1) {
             map.put("code", HttpStatus.CREATED.value());
             map.put("message", HttpStatus.CREATED.getReasonPhrase());
         } else {
@@ -44,10 +45,9 @@ public class BannerController {
     }
 
     @PutMapping(value = "/{id}")
-    public Map<String, Object> updateBannerById(@PathVariable Integer id, @RequestBody Banner banner) {
+    public Map<String, Object> updateBannerById(@PathVariable Integer id, @RequestBody Integer speciesImageId) {
         Map<String, Object> map = new HashMap<>();
-        banner.setId(id);
-        if (bannerService.updateBannerById(banner) == 1) {
+        if (bannerService.updateBannerById(id, speciesImageId) == 1) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", HttpStatus.OK.value());
         } else {
@@ -73,8 +73,9 @@ public class BannerController {
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllBanner() {
+    public Map<String, Object> inquireAllBanner(@RequestBody Integer current, @RequestBody Integer pageSize) {
         Map<String, Object> map = new HashMap<>();
+        PageHelper.startPage(current, pageSize);
         List<Banner> banners = bannerService.inquireAllBanner();
         if (banners.size() > 0) {
             map.put("code", HttpStatus.OK.value());

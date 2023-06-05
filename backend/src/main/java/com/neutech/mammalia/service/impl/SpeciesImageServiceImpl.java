@@ -2,8 +2,10 @@ package com.neutech.mammalia.service.impl;
 
 import com.neutech.mammalia.bean.SpeciesImage;
 import com.neutech.mammalia.mapper.SpeciesImageMapper;
+import com.neutech.mammalia.service.BannerService;
 import com.neutech.mammalia.service.SpeciesImageService;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -13,6 +15,9 @@ import java.util.List;
 public class SpeciesImageServiceImpl implements SpeciesImageService {
     @Resource
     private SpeciesImageMapper speciesImageMapper;
+    @Lazy
+    @Resource
+    private BannerService bannerService;
 
     @Override
     public int addSpeciesImage(SpeciesImage speciesImage) {
@@ -21,6 +26,7 @@ public class SpeciesImageServiceImpl implements SpeciesImageService {
 
     @Override
     public int deleteSpeciesImageById(Integer id) {
+        bannerService.deleteBannerBySpeciesImageId(id);
         return speciesImageMapper.deleteSpeciesImageById(id);
     }
 

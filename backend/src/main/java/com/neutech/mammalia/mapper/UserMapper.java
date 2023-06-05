@@ -20,16 +20,7 @@ public interface UserMapper {
     @Delete("delete from t_user where id=#{id}")
     int deleteUserById(@Param("id") Integer id);
 
-    @Update("""
-            update t_user set
-            name=#{user.name},
-            avatar=#{user.avatar},
-            password=#{user.password},
-            gender=#{user.gender},
-            phone=#{user.phone},
-            email=#{user.email}
-            where id=#{user.id}
-            """)
+    @UpdateProvider(value = UserSqlProvider.class, method = "updateUserById")
     int updateUserById(@Param("user") User user);
 
     @Select("select * from t_user where id=#{id}")

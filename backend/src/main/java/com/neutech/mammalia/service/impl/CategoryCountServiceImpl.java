@@ -75,6 +75,8 @@ public class CategoryCountServiceImpl implements CategoryCountService {
     public CategoryCount inquireCategoryCount(Integer id) {
         CategoryCount categoryCount = new CategoryCount();
         String s = categoryCountMapper.inquireCategorizedInheritance(id);
+        if (s == null)
+            return null;
         List<Integer> list = new ArrayList<>();
         for (int i = s.split("\\.").length; i < 6; i++) {
             int count;

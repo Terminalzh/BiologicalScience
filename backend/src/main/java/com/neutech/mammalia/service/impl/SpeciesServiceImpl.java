@@ -18,8 +18,6 @@ public class SpeciesServiceImpl implements SpeciesService {
     @Resource
     private WorksService worksService;
     @Resource
-    private BannerService bannerService;
-    @Resource
     private SpeciesImageService speciesImageService;
 
     @Override
@@ -30,7 +28,6 @@ public class SpeciesServiceImpl implements SpeciesService {
     @Override
     public int deleteSpeciesById(Integer id) {
         photoService.deletePhotoBySpeciesId(id);
-        bannerService.deleteBannerBySpeciesId(id);
         worksService.deleteWorksBySpeciesId(id);
         speciesImageService.deleteSpeciesImageBySpeciesId(id);
         return speciesMapper.deleteSpeciesById(id);

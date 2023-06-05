@@ -16,6 +16,9 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public int addPhoto(Photo photo) {
+        Date date = new Date();
+        photo.setCreateTime(date);
+        photo.setUpdateTime(date);
         return photoMapper.addPhoto(photo);
     }
 

@@ -59,7 +59,7 @@ public class WorksController {
     @GetMapping(value = "/{userId}")
     public Map<String, Object> inquireWorksByUserId(@PathVariable Integer userId) {
         Map<String, Object> map = new HashMap<>();
-        List<Works> works = worksService.inquireWorksById(userId);
+        List<Works> works = worksService.inquireAllWorksByUserId(userId);
         if (works.size() >= 1) {
             map.put("code", HttpStatus.OK.value());
             map.put("message", "success");

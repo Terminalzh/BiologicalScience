@@ -5,15 +5,13 @@ import com.neutech.mammalia.bean.Banner;
 import java.util.List;
 
 public interface BannerService {
-    int addBanner(Banner banner);
+    int addBanner(Integer speciesImageId);
 
     int deleteBannerById(Integer id);
 
-    int deleteBannerByWorksId(int WorksId);
+    int deleteBannerBySpeciesImageId(int speciesImageId);
 
-    int deleteBannerBySpeciesId(Integer speciesId);
-
-    int updateBannerById(Banner banner);
+    int updateBannerById(Integer id, Integer speciesImageId);
 
     Banner inquireBannerById(Integer id);
 

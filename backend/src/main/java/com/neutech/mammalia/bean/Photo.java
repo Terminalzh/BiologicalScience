@@ -14,10 +14,6 @@ public class Photo {
      * 主键
      */
     private Integer id;
-    /**
-     * 物种表物种ID
-     */
-    private Integer speciesId;
 
     /**
      * 摄影作品表ID

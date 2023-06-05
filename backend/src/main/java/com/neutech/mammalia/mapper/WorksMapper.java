@@ -27,11 +27,8 @@ public interface WorksMapper {
 
     @Update("""
             update t_works set
-            user_id=#{works.userId},
             species_id=#{works.speciesId},
             image_url=#{works.imageUrl},
-            create_time=#{works.createTime},
-            update_time=#{works.updateTime},
             is_public=#{works.isPublic},
             view_count=#{works.viewCount},
             like_count=#{works.likeCount},

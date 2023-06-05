@@ -1,6 +1,7 @@
 package com.neutech.mammalia.service.impl;
 
 import com.neutech.mammalia.bean.Category;
+import com.neutech.mammalia.bean.CategoryCount;
 import com.neutech.mammalia.mapper.CategoryMapper;
 import com.neutech.mammalia.service.CategoryCountService;
 import com.neutech.mammalia.service.CategoryService;
@@ -90,4 +91,8 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.inquireCategoryByLatinNameAndParentId(parentId, latinName);
     }
 
+    @Override
+    public CategoryCount inquireCategoryCountById(Integer id) {
+        return categoryCountService.inquireCategoryCount(id);
+    }
 }

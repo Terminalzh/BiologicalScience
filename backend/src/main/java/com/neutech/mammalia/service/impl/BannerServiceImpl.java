@@ -1,10 +1,14 @@
 package com.neutech.mammalia.service.impl;
 
 import com.neutech.mammalia.bean.Banner;
+import com.neutech.mammalia.bean.SpeciesImage;
 import com.neutech.mammalia.mapper.BannerMapper;
 import com.neutech.mammalia.service.BannerService;
+import com.neutech.mammalia.service.SpeciesImageService;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 import java.util.List;
@@ -13,9 +17,18 @@ import java.util.List;
 public class BannerServiceImpl implements BannerService {
     @Resource
     private BannerMapper bannerMapper;
+    @Lazy
+    @Resource
+    private SpeciesImageService speciesImageService;
 
     @Override
-    public int addBanner(Banner banner) {
+    public int addBanner(Integer speciesImageId) {
+        SpeciesImage speciesImage = speciesImageService.inquireSpeciesImageById(speciesImageId);
+        Banner banner = new Banner();
+        banner.setSpeciesImage(speciesImage);
+        Date date = new Date();
+        banner.setCreateTime(date);
+        banner.setUpdateTime(date);
         return bannerMapper.addBanner(banner);
     }
 
@@ -25,17 +38,16 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public int deleteBannerByWorksId(int WorksId) {
-        return bannerMapper.deleteBannerByWorksId(WorksId);
+    public int deleteBannerBySpeciesImageId(int speciesImageId) {
+        return bannerMapper.deleteBannerBySpeciesImageId(speciesImageId);
     }
 
     @Override
-    public int deleteBannerBySpeciesId(Integer speciesId) {
-        return bannerMapper.deleteBannerBySpeciesId(speciesId);
-    }
-
-    @Override
-    public int updateBannerById(Banner banner) {
+    public int updateBannerById(Integer id, Integer speciesImageId) {
+        Banner banner = new Banner();
+        banner.setId(id);
+        SpeciesImage speciesImage = speciesImageService.inquireSpeciesImageById(speciesImageId);
+        banner.setSpeciesImage(speciesImage);
         banner.setUpdateTime(new Date());
         return bannerMapper.updateBannerById(banner);
     }

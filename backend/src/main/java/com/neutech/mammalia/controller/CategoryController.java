@@ -1,6 +1,7 @@
 package com.neutech.mammalia.controller;
 
 import com.neutech.mammalia.bean.Category;
+import com.neutech.mammalia.bean.CategoryCount;
 import com.neutech.mammalia.service.CategoryService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
@@ -65,6 +66,21 @@ public class CategoryController {
             map.put("code", HttpStatus.OK.value());
             map.put("message", HttpStatus.OK.getReasonPhrase());
             map.put("data", categories);
+        } else {
+            map.put("code", HttpStatus.NOT_FOUND.value());
+            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+        }
+        return map;
+    }
+
+    @GetMapping(value = "/count/{id}")
+    public Map<String, Object> inquireCategoryCountById(@PathVariable("id") Integer id) {
+        Map<String, Object> map = new HashMap<>();
+        CategoryCount categoryCount = categoryService.inquireCategoryCountById(id);
+        if (categoryCount != null) {
+            map.put("code", HttpStatus.OK.value());
+            map.put("message", HttpStatus.OK.getReasonPhrase());
+            map.put("data", categoryCount);
         } else {
             map.put("code", HttpStatus.NOT_FOUND.value());
             map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());

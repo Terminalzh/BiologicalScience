@@ -20,13 +20,9 @@ public class Banner {
      */
     private Integer id;
     /**
-     * 物种Id
-     */
-    private String speciesId;
-    /**
      * 摄影作品Id
      */
-    private String worksId;
+    private SpeciesImage speciesImage;
     /**
      * 创建时间
      */

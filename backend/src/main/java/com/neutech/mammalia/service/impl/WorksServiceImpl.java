@@ -6,6 +6,7 @@ import com.neutech.mammalia.service.WorksService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -15,6 +16,9 @@ public class WorksServiceImpl implements WorksService {
 
     @Override
     public int addWorks(Works works) {
+        Date date = new Date();
+        works.setCreateTime(date);
+        works.setUpdateTime(date);
         return worksMapper.addWorks(works);
     }
 
@@ -35,6 +39,7 @@ public class WorksServiceImpl implements WorksService {
 
     @Override
     public int updateWorksById(Works works) {
+        works.setUpdateTime(new Date());
         return worksMapper.updateWorksById(works);
     }
 

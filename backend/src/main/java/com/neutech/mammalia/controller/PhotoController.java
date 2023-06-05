@@ -1,7 +1,11 @@
 package com.neutech.mammalia.controller;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.neutech.mammalia.bean.Photo;
+import com.neutech.mammalia.bean.Report;
+import com.neutech.mammalia.bean.Response;
 import com.neutech.mammalia.service.PhotoService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
@@ -18,74 +22,77 @@ public class PhotoController {
     private PhotoService photoService;
 
     @PostMapping
-    public Map<String, Object> addPhoto(@RequestBody Integer worksId, @RequestBody Boolean isPublic) {
-        Map<String, Object> map = new HashMap<>();
+    public Response addPhoto(@RequestBody Map<String, Object> param) {
+        Response response = new Response();
+        Integer worksId = (Integer) param.get("worksId");
+        Boolean isPublic = (Boolean) param.get("isPublic");
         if (photoService.addPhoto(worksId, isPublic) == 1) {
-            map.put("code", HttpStatus.CREATED.value());
-            map.put("message", HttpStatus.CREATED.getReasonPhrase());
+            response.setCode(HttpStatus.CREATED.value());
+            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deletePhotoById(@PathVariable Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response deletePhotoById(@PathVariable Integer id) {
+        Response response = new Response();
         if (photoService.deletePhotoById(id) == 1) {
-            map.put("code", HttpStatus.NO_CONTENT.value());
-            map.put("message", HttpStatus.NO_CONTENT.value());
+            response.setCode(HttpStatus.NO_CONTENT.value());
+            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @PutMapping(value = "/{id}")
-    public Map<String, Object> updatePhotoById(@PathVariable Integer id, @RequestBody Photo photo) {
-        Map<String, Object> map = new HashMap<>();
+    public Response updatePhotoById(@PathVariable Integer id, @RequestBody Photo photo) {
+        Response response = new Response();
         photo.setId(id);
         if (photoService.updatePhotoById(photo) == 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> inquirePhotoById(@PathVariable Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquirePhotoById(@PathVariable Integer id) {
+        Response response = new Response();
         Photo photo = photoService.inquirePhotoById(id);
         if (photo != null) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
-            map.put("data", photo);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(photo);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllPhoto(@RequestBody Integer current, @RequestBody Integer pageSize) {
-        Map<String, Object> map = new HashMap<>();
-        PageHelper.startPage(current, pageSize);
+    public Response inquireAllPhoto(Page<Integer> page) {
+        Response response = new Response();
+        PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Photo> photos = photoService.inquireAllPhotos();
+        PageInfo<Photo> photoPageInfo = new PageInfo<>(photos);
         if (photos.size() > 0) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
-            map.put("data", photos);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(photoPageInfo);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
 }

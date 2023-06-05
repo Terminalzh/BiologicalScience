@@ -23,12 +23,12 @@
 
 ```typescript
 interface Response {
-  // code: 状态码，没有特别定义的情况下，与[HTTP Status Code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)保持一直，一定要做到状态码有语义。
-  code: number;
-  // 携带的消息，成功可确定为：Success，失败则包含失败的信息。
-  message: string;
-  // data: 携带请求结果的信息，可为空
-  data?: any;
+    // code: 状态码，没有特别定义的情况下，与[HTTP Status Code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)保持一直，一定要做到状态码有语义。
+    code: number;
+    // 携带的消息，成功可确定为：Success，失败则包含失败的信息。
+    message: string;
+    // data: 携带请求结果的信息，可为空
+    data?: any;
 }
 ```
 
@@ -36,16 +36,16 @@ interface Response {
 
 ```typescript
 interface Pagination<T> {
-  // 数据项
-  list: Array<T>;
-  page: {
-    // 当前页号，从1开始
-    current: number;
-    // 总页数
-    total: number;
-    // 一页所包含的项目数量
-    pageSize: number;
-  };
+    // 数据项
+    list: Array<T>;
+    page: {
+        // 当前页号，从1开始
+        current: number;
+        // 总页数
+        total: number;
+        // 一页所包含的项目数量
+        pageSize: number;
+    };
 }
 ```
 
@@ -53,10 +53,10 @@ interface Pagination<T> {
 
 ```typescript
 interface QueryParameter {
-  // 请求的页码
-  current?: number;
-  // 页面大小
-  pageSize?: number;
+    // 请求的页码
+    pageNum?: number;
+    // 页面大小
+    pageSize?: number;
 }
 ```
 

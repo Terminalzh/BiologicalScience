@@ -2,14 +2,13 @@ package com.neutech.mammalia.controller;
 
 import com.neutech.mammalia.bean.Category;
 import com.neutech.mammalia.bean.CategoryCount;
+import com.neutech.mammalia.bean.Response;
 import com.neutech.mammalia.service.CategoryService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/category")
@@ -18,73 +17,73 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping(produces = "application/json;charset=UTF-8")
-    public Map<String, Object> addCategory(@RequestBody List<Category> categories) {
-        Map<String, Object> map = new HashMap<>();
+    public Response addCategory(@RequestBody List<Category> categories) {
+        Response response = new Response();
         if (categoryService.addCategory(categories) >= 1) {
-            map.put("code", HttpStatus.CREATED.value());
-            map.put("message", HttpStatus.CREATED.getReasonPhrase());
+            response.setCode(HttpStatus.CREATED.value());
+            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deleteCategoryById(@PathVariable("id") Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response deleteCategoryById(@PathVariable("id") Integer id) {
+        Response response = new Response();
         int i = categoryService.deleteCategoryById(id);
         if (i >= 1) {
-            map.put("code", HttpStatus.NO_CONTENT.value());
-            map.put("message", "删除成功, 已删除" + i + "条数据");
+            response.setCode(HttpStatus.NO_CONTENT.value());
+            response.setMessage("删除成功, 已删除" + i + "条数据");
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @PutMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
-    public Map<String, Object> updateCategoryNameById(@PathVariable("id") Integer id, @RequestBody Category category) {
-        Map<String, Object> map = new HashMap<>();
+    public Response updateCategoryNameById(@PathVariable("id") Integer id, @RequestBody Category category) {
+        Response response = new Response();
         category.setId(id);
         if (categoryService.updateCategoryById(category) == 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.getReasonPhrase());
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping(value = "/{id}")
-    public Map<String, Object> inquireCategoryById(@PathVariable("id") Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquireCategoryById(@PathVariable("id") Integer id) {
+        Response response = new Response();
         List<Category> categories = categoryService.inquireCategoryByParentId(id);
         if (categories.size() != 0) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.getReasonPhrase());
-            map.put("data", categories);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(categories);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping(value = "/count/{id}")
-    public Map<String, Object> inquireCategoryCountById(@PathVariable("id") Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquireCategoryCountById(@PathVariable("id") Integer id) {
+        Response response = new Response();
         CategoryCount categoryCount = categoryService.inquireCategoryCountById(id);
         if (categoryCount != null) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.getReasonPhrase());
-            map.put("data", categoryCount);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(categoryCount);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 }

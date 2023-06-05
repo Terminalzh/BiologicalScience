@@ -48,4 +48,8 @@ public class User implements Serializable {
      * 创建时间
      */
     private Date createTime;
+    /**
+     *是否为管理员
+     */
+    private Boolean isAdmin;
 }

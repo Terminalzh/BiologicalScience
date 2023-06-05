@@ -1,5 +1,9 @@
 package com.neutech.mammalia.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.neutech.mammalia.bean.Response;
 import com.neutech.mammalia.bean.SpeciesImage;
 import com.neutech.mammalia.service.SpeciesImageService;
 import jakarta.annotation.Resource;
@@ -17,72 +21,74 @@ public class SpeciesImageController {
     private SpeciesImageService speciesImageService;
 
     @PostMapping
-    public Map<String, Object> addSpeciesImageService(@RequestBody SpeciesImage speciesImage) {
-        Map<String, Object> map = new HashMap<>();
+    public Response addSpeciesImageService(@RequestBody SpeciesImage speciesImage) {
+        Response response = new Response();
         if (speciesImageService.addSpeciesImage(speciesImage) == 1) {
-            map.put("code", HttpStatus.CREATED.value());
-            map.put("message", HttpStatus.CREATED.getReasonPhrase());
+            response.setCode(HttpStatus.CREATED.value());
+            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deleteSpeciesImageById(@PathVariable Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response deleteSpeciesImageById(@PathVariable Integer id) {
+        Response response = new Response();
         if (speciesImageService.deleteSpeciesImageById(id) == 1) {
-            map.put("code", HttpStatus.NO_CONTENT.value());
-            map.put("message", HttpStatus.NO_CONTENT.value());
+            response.setCode(HttpStatus.NO_CONTENT.value());
+            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @PutMapping(value = "/{id}")
-    public Map<String, Object> updateSpeciesImageById(@PathVariable Integer id, @RequestBody SpeciesImage speciesImage) {
-        Map<String, Object> map = new HashMap<>();
+    public Response updateSpeciesImageById(@PathVariable Integer id, @RequestBody SpeciesImage speciesImage) {
+        Response response = new Response();
         speciesImage.setId(id);
         if (speciesImageService.updateSpeciesImageById(speciesImage) == 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> inquireSpeciesImageById(@PathVariable Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquireSpeciesImageById(@PathVariable Integer id) {
+        Response response = new Response();
         SpeciesImage speciesImage = speciesImageService.inquireSpeciesImageById(id);
         if (speciesImage != null) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
-            map.put("data", speciesImage);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(speciesImage);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllSpeciesImage() {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquireAllSpeciesImage(Page<Integer> page) {
+        Response response = new Response();
+        PageHelper.startPage(page.getPageNum(),page.getPageSize());
         List<SpeciesImage> speciesImage = speciesImageService.inquireAllSpeciesImages();
+        PageInfo<SpeciesImage> speciesImagePageInfo = new PageInfo<>();
         if (speciesImage.size() > 0) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
-            map.put("data", speciesImage);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(speciesImagePageInfo);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 }

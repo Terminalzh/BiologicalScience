@@ -1,5 +1,9 @@
 package com.neutech.mammalia.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.neutech.mammalia.bean.Response;
 import com.neutech.mammalia.bean.Works;
 import com.neutech.mammalia.service.WorksService;
 import jakarta.annotation.Resource;
@@ -17,72 +21,82 @@ public class WorksController {
     private WorksService worksService;
 
     @PostMapping
-    public Map<String, Object> addWorks(@RequestBody Works works) {
-        Map<String, Object> map = new HashMap<>();
-        if (worksService.addWorks(works) == 1) {
-            map.put("code", HttpStatus.CREATED.value());
-            map.put("message", "上传成功");
+    public Response addWorks(
+            @RequestBody Works works,
+            @RequestBody Integer userId,
+            @RequestBody Integer speciesId
+    ) {
+        Response response = new Response();
+        if (worksService.addWorks(works, userId, speciesId) == 1) {
+            response.setData(HttpStatus.CREATED.value());
+            response.setMessage("上传成功");
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", "上传失败");
+            response.setData(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("上传失败");
         }
-        return map;
+        return response;
     }
 
     @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deleteWorksById(@PathVariable("id") Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response deleteWorksById(@PathVariable("id") Integer id) {
+        Response response = new Response();
         if (worksService.deleteWorksById(id) == 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", "删除成功");
+            response.setData(HttpStatus.OK.value());
+            response.setMessage("删除成功");
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", "未找到该条记录,可能已被删除或不存在");
+            response.setData(HttpStatus.NOT_FOUND.value());
+            response.setMessage("未找到该条记录,可能已被删除或不存在");
         }
-        return map;
+        return response;
     }
 
     @PutMapping(value = "/{id}")
-    public Map<String, Object> updateWorksById(@PathVariable("id") Integer id, @RequestBody Works works) {
-        Map<String, Object> map = new HashMap<>();
+    public Response updateWorksById(
+            @PathVariable("id") Integer id,
+            @RequestBody Works works,
+            @RequestBody Integer speciesId
+    ) {
+        Response response = new Response();
         works.setId(id);
-        if (worksService.updateWorksById(works) >= 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", "修改成功");
+        if (worksService.updateWorksById(works, speciesId) >= 1) {
+            response.setData(HttpStatus.OK.value());
+            response.setMessage("修改成功");
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", "修改失败,请检查您的数据");
+            response.setData(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("修改失败,请检查您的数据");
         }
-        return map;
+        return response;
     }
 
     @GetMapping(value = "/{userId}")
-    public Map<String, Object> inquireWorksByUserId(@PathVariable Integer userId) {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquireWorksByUserId(@PathVariable Integer userId) {
+        Response response = new Response();
         List<Works> works = worksService.inquireAllWorksByUserId(userId);
         if (works.size() >= 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", "success");
-            map.put("data", works);
+            response.setData(HttpStatus.OK.value());
+            response.setMessage("success");
+            response.setData(works);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", "该用户不存在或该用户没有作品");
+            response.setData(HttpStatus.NOT_FOUND.value());
+            response.setMessage("该用户不存在或该用户没有作品");
         }
-        return map;
+        return response;
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllWorks() {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquireAllWorks(Page<Integer> page) {
+        Response response = new Response();
+        PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Works> works = worksService.inquireAllWorks();
+        PageInfo<Works> worksPageInfo = new PageInfo<>(works);
         if (works.size() >= 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", "success");
-            map.put("data", works);
+            response.setData(HttpStatus.OK.value());
+            response.setMessage("success");
+            response.setData(worksPageInfo);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", "没有作品");
+            response.setData(HttpStatus.NOT_FOUND.value());
+            response.setMessage("没有作品");
         }
-        return map;
+        return response;
     }
 }

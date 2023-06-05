@@ -1,6 +1,11 @@
 package com.neutech.mammalia.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.neutech.mammalia.bean.Report;
+import com.neutech.mammalia.bean.Response;
+import com.neutech.mammalia.bean.Works;
 import com.neutech.mammalia.service.ReportService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
@@ -17,73 +22,75 @@ public class ReportController {
     private ReportService reportService;
 
     @PostMapping
-    public Map<String, Object> addReport(@RequestBody Report report) {
-        Map<String, Object> map = new HashMap<>();
+    public Response addReport(@RequestBody Report report) {
+        Response response = new Response();
         if (reportService.addReport(report) == 1) {
-            map.put("code", HttpStatus.CREATED.value());
-            map.put("message", HttpStatus.CREATED.getReasonPhrase());
+            response.setCode(HttpStatus.CREATED.value());
+            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deleteReportById(@PathVariable Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response deleteReportById(@PathVariable Integer id) {
+        Response response = new Response();
         if (reportService.deleteReportById(id) == 1) {
-            map.put("code", HttpStatus.NO_CONTENT.value());
-            map.put("message", HttpStatus.NO_CONTENT.value());
+            response.setCode(HttpStatus.NO_CONTENT.value());
+            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @PutMapping(value = "/{id}")
-    public Map<String, Object> updateReportById(@PathVariable Integer id, @RequestBody Report report) {
-        Map<String, Object> map = new HashMap<>();
+    public Response updateReportById(@PathVariable Integer id, @RequestBody Report report) {
+        Response response = new Response();
         report.setId(id);
         if (reportService.updateReportById(report) == 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> inquireReportById(@PathVariable Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquireReportById(@PathVariable Integer id) {
+        Response response = new Response();
         Report report = reportService.inquireReportById(id);
         if (report != null) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
-            map.put("data", report);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(report);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllReport() {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquireAllReport(Page<Integer> page) {
+        Response response = new Response();
+        PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Report> reports = reportService.inquireAllReport();
+        PageInfo<Report> reportPageInfo = new PageInfo<>(reports);
         if (reports.size() > 0) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
-            map.put("data", reports);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(reportPageInfo);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
 }

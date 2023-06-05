@@ -1,9 +1,13 @@
 package com.neutech.mammalia.service.impl;
 
+import com.neutech.mammalia.bean.Species;
+import com.neutech.mammalia.bean.User;
 import com.neutech.mammalia.bean.Works;
 import com.neutech.mammalia.mapper.WorksMapper;
+import com.neutech.mammalia.service.UserService;
 import com.neutech.mammalia.service.WorksService;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -13,9 +17,19 @@ import java.util.List;
 public class WorksServiceImpl implements WorksService {
     @Resource
     private WorksMapper worksMapper;
+    @Lazy
+    @Resource
+    private UserService userService;
+    @Lazy
+    @Resource
+    private SpeciesServiceImpl speciesService;
 
     @Override
-    public int addWorks(Works works) {
+    public int addWorks(Works works, Integer userId, Integer speciesId) {
+        User user = userService.inquireUserById(userId);
+        works.setUser(user);
+        Species species = speciesService.inquireSpeciesById(speciesId);
+        works.setSpecies(species);
         Date date = new Date();
         works.setCreateTime(date);
         works.setUpdateTime(date);
@@ -38,7 +52,9 @@ public class WorksServiceImpl implements WorksService {
     }
 
     @Override
-    public int updateWorksById(Works works) {
+    public int updateWorksById(Works works, Integer speciesId) {
+        Species species = speciesService.inquireSpeciesById(speciesId);
+        works.setSpecies(species);
         works.setUpdateTime(new Date());
         return worksMapper.updateWorksById(works);
     }

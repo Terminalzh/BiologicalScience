@@ -11,7 +11,8 @@ public interface WorksMapper {
     @Insert("""
             insert into t_works
             (user_id, species_id, image_url, create_time, update_time, is_public, view_count, like_count, comment_count)
-            values(#{works.userId}, #{works.speciesId}, #{works.imageUrl}, #{works.createTime}, #{works.updateTime}, #{works.isPublic}, #{works.viewCount}, #{works.likeCount}, #{works.commentCount})
+            values(#{works.user.id}, #{works.species.id}, #{works.imageUrl}, #{works.createTime},
+            #{works.updateTime}, #{works.isPublic}, #{works.viewCount}, #{works.likeCount}, #{works.commentCount})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addWorks(@Param("works") Works works);
@@ -27,7 +28,7 @@ public interface WorksMapper {
 
     @Update("""
             update t_works set
-            species_id=#{works.speciesId},
+            species_id=#{works.species.id},
             image_url=#{works.imageUrl},
             is_public=#{works.isPublic},
             view_count=#{works.viewCount},
@@ -37,6 +38,18 @@ public interface WorksMapper {
             """)
     int updateWorksById(@Param("works") Works works);
 
+    @Results(id = "worksResultMapping", value = {
+            @Result(id = true, column = "id", property = "id"),
+            @Result(column = "user_id", property = "user", one = @One(select = "com.neutech.mammalia.mapper.UserMapper.inquireUserById")),
+            @Result(column = "species_id", property = "species", one = @One(select = "com.neutech.mammalia.mapper.SpeciesMapper.inquireSpeciesById")),
+            @Result(column = "image_url", property = "imageUrl"),
+            @Result(column = "is_public", property = "isPublic"),
+            @Result(column = "create_time", property = "createTime"),
+            @Result(column = "update_time", property = "updateTime"),
+            @Result(column = "view_count", property = "viewCount"),
+            @Result(column = "like_count", property = "likeCount"),
+            @Result(column = "comment_count", property = "commentCount"),
+    })
     @Select("select * from t_works where id=#{id}")
     Works inquireWorksById(@Param("id") Integer id);
 

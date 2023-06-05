@@ -10,8 +10,8 @@ public interface BannerMapper {
 
     @Insert("""
             insert into t_banner
-            (species_image_id)
-            values(#{banner.speciesImage.id})
+            (species_image_id,create_time,update_time)
+            values(#{banner.speciesImage.id},#{banner.createTime},#{banner.updateTime})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addBanner(@Param("banner") Banner banner);
@@ -33,7 +33,7 @@ public interface BannerMapper {
             """)
     int updateBannerById(@Param("banner") Banner banner);
 
-    @Results(value = {
+    @Results(id = "BannerResultMapping", value = {
             @Result(id = true, column = "id", property = "id"),
             @Result(column = "species_image_id", property = "speciesImage",
                     one = @One(select = "com.neutech.mammalia.mapper.SpeciesImageMapper.inquireSpeciesImageById")),
@@ -43,6 +43,7 @@ public interface BannerMapper {
     @Select("select * from t_banner where id=#{id}")
     Banner inquireBannerById(@Param("id") Integer id);
 
+    @ResultMap(value = "BannerResultMapping")
     @Select("select * from t_banner")
     List<Banner> inquireAllBanner();
 }

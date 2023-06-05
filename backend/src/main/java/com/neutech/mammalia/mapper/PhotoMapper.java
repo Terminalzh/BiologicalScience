@@ -12,7 +12,7 @@ public interface PhotoMapper {
     @Insert("""
             insert into t_photo
             (works_id, is_public)
-            values(#{photo.worksId}, #{photo.isPublic})
+            values(#{photo.works.id}, #{photo.isPublic})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addPhoto(@Param("photo") Photo photo);

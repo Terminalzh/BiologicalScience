@@ -1,13 +1,15 @@
 package com.neutech.mammalia.controller;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.neutech.mammalia.bean.Banner;
+import com.neutech.mammalia.bean.Response;
 import com.neutech.mammalia.service.BannerService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,72 +21,73 @@ public class BannerController {
     private BannerService bannerService;
 
     @PostMapping
-    public Map<String, Object> addBanner(@RequestBody Integer speciesImageId) {
-        Map<String, Object> map = new HashMap<>();
-        if (bannerService.addBanner(speciesImageId) == 1) {
-            map.put("code", HttpStatus.CREATED.value());
-            map.put("message", HttpStatus.CREATED.getReasonPhrase());
+    public Response addBanner(@RequestBody Map<String, Integer> param) {
+        Response response = new Response();
+        if (bannerService.addBanner(param.get("speciesImageId")) == 1) {
+            response.setCode(HttpStatus.CREATED.value());
+            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deleteBannerById(@PathVariable Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response deleteBannerById(@PathVariable Integer id) {
+        Response response = new Response();
         if (bannerService.deleteBannerById(id) == 1) {
-            map.put("code", HttpStatus.NO_CONTENT.value());
-            map.put("message", HttpStatus.NO_CONTENT.value());
+            response.setCode(HttpStatus.NO_CONTENT.value());
+            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @PutMapping(value = "/{id}")
-    public Map<String, Object> updateBannerById(@PathVariable Integer id, @RequestBody Integer speciesImageId) {
-        Map<String, Object> map = new HashMap<>();
-        if (bannerService.updateBannerById(id, speciesImageId) == 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
+    public Response updateBannerById(@PathVariable Integer id, @RequestBody Map<String, Integer> param) {
+        Response response = new Response();
+        if (bannerService.updateBannerById(id, param.get("speciesImageId")) == 1) {
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
         } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> inquireBannerById(@PathVariable Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public Response inquireBannerById(@PathVariable Integer id) {
+        Response response = new Response();
         Banner banner = bannerService.inquireBannerById(id);
         if (banner != null) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
-            map.put("data", banner);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(banner);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllBanner(@RequestBody Integer current, @RequestBody Integer pageSize) {
-        Map<String, Object> map = new HashMap<>();
-        PageHelper.startPage(current, pageSize);
-        List<Banner> banners = bannerService.inquireAllBanner();
-        if (banners.size() > 0) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", HttpStatus.OK.value());
-            map.put("data", banners);
+    public Response inquireAllBanner(Page<Integer> page) {
+        Response response = new Response();
+        PageHelper.startPage(page.getPageNum(), page.getPageSize());
+        List<Banner> list = bannerService.inquireAllBanner();
+        PageInfo<Banner> banners = new PageInfo<>(list);
+        if (list.size() > 0) {
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(banners);
         } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
         }
-        return map;
+        return response;
     }
 }

@@ -11,8 +11,6 @@ public interface PhotoService {
 
     int deletePhotoById(Integer id);
 
-    int deletePhotoBySpeciesId(Integer speciesId);
-
     int updatePhotoById(Photo photo);
 
     Photo inquirePhotoById(Integer id);

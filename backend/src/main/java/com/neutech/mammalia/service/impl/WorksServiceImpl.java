@@ -44,7 +44,7 @@ public class WorksServiceImpl implements WorksService {
     }
 
     @Override
-    public List<Works> inquireWorksById(Integer id) {
+    public Works inquireWorksById(Integer id) {
         return worksMapper.inquireWorksById(id);
     }
 

@@ -15,7 +15,7 @@ public interface WorksService {
 
     int updateWorksById(Works works);
 
-    List<Works> inquireWorksById(Integer id);
+    Works inquireWorksById(Integer id);
 
     List<Works> inquireAllWorksByUserId(Integer userId);
 

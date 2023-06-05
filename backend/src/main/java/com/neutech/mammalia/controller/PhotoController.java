@@ -1,5 +1,6 @@
 package com.neutech.mammalia.controller;
 
+import com.github.pagehelper.PageHelper;
 import com.neutech.mammalia.bean.Photo;
 import com.neutech.mammalia.service.PhotoService;
 import jakarta.annotation.Resource;
@@ -17,9 +18,9 @@ public class PhotoController {
     private PhotoService photoService;
 
     @PostMapping
-    public Map<String, Object> addPhoto(@RequestBody Photo photo) {
+    public Map<String, Object> addPhoto(@RequestBody Integer worksId, @RequestBody Boolean isPublic) {
         Map<String, Object> map = new HashMap<>();
-        if (photoService.addPhoto(photo) == 1) {
+        if (photoService.addPhoto(worksId, isPublic) == 1) {
             map.put("code", HttpStatus.CREATED.value());
             map.put("message", HttpStatus.CREATED.getReasonPhrase());
         } else {
@@ -72,8 +73,9 @@ public class PhotoController {
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllPhoto() {
+    public Map<String, Object> inquireAllPhoto(@RequestBody Integer current, @RequestBody Integer pageSize) {
         Map<String, Object> map = new HashMap<>();
+        PageHelper.startPage(current, pageSize);
         List<Photo> photos = photoService.inquireAllPhotos();
         if (photos.size() > 0) {
             map.put("code", HttpStatus.OK.value());

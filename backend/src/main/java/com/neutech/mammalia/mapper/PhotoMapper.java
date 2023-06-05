@@ -23,9 +23,21 @@ public interface PhotoMapper {
     @UpdateProvider(value = PhotoSqlProvider.class, method = "updatePhotoById")
     int updatePhotoById(@Param("photo") Photo photo);
 
+    @Results(id = "photoResultMapping", value = {
+            @Result(id = true, column = "id", property = "id"),
+            @Result(column = "works_id", property = "works",
+                    one = @One(select = "com.neutech.mammalia.mapper.WorksMapper.inquireWorksById")),
+            @Result(column = "is_public", property = "isPublic"),
+            @Result(column = "view_count", property = "viewCount"),
+            @Result(column = "like_count", property = "likeCount"),
+            @Result(column = "comment_count", property = "commentCount"),
+            @Result(column = "create_time", property = "createTime"),
+            @Result(column = "updateTime", property = "updateTime")
+    })
     @Select("select * from t_photo where id=#{id}")
     Photo inquirePhotoById(@Param("id") Integer id);
 
+    @ResultMap(value = "photoResultMapping")
     @Select("select * from t_photo")
     List<Photo> inquireAllPhotos();
 }

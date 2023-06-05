@@ -18,7 +18,7 @@ public class Photo {
     /**
      * 摄影作品表ID
      */
-    private Integer worksId;
+    private Works works;
 
     /**
      * 照片墙是否公开展示，true 或 false

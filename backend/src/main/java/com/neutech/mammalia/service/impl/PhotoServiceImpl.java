@@ -1,9 +1,12 @@
 package com.neutech.mammalia.service.impl;
 
 import com.neutech.mammalia.bean.Photo;
+import com.neutech.mammalia.bean.Works;
 import com.neutech.mammalia.mapper.PhotoMapper;
 import com.neutech.mammalia.service.PhotoService;
+import com.neutech.mammalia.service.WorksService;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -14,8 +17,16 @@ public class PhotoServiceImpl implements PhotoService {
     @Resource
     private PhotoMapper photoMapper;
 
+    @Lazy
+    @Resource
+    private WorksService worksService;
+
     @Override
-    public int addPhoto(Photo photo) {
+    public int addPhoto(Integer worksId, Boolean isPublic) {
+        Photo photo = new Photo();
+        Works works = worksService.inquireWorksById(worksId);
+        photo.setIsPublic(isPublic);
+        photo.setWorks(works);
         Date date = new Date();
         photo.setCreateTime(date);
         photo.setUpdateTime(date);
@@ -25,11 +36,6 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public int deletePhotoById(Integer id) {
         return photoMapper.deletePhotoById(id);
-    }
-
-    @Override
-    public int deletePhotoBySpeciesId(Integer speciesId) {
-        return photoMapper.deletePhotoBySpeciesId(speciesId);
     }
 
     @Override

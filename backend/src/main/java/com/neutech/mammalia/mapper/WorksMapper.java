@@ -38,7 +38,7 @@ public interface WorksMapper {
     int updateWorksById(@Param("works") Works works);
 
     @Select("select * from t_works where id=#{id}")
-    List<Works> inquireWorksById(@Param("id") Integer id);
+    Works inquireWorksById(@Param("id") Integer id);
 
     @Select("select * from t_works where user_id = #{userId}")
     List<Works> inquireWorksIdByUserId(@Param("userId") Integer userId);

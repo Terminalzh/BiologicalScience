@@ -1,4 +1,5 @@
-import { defineConfig, presetUno, presetWebFonts } from "unocss";
+import { defineConfig, presetIcons, presetUno, presetWebFonts } from "unocss";
+import { presetScrollbar } from 'unocss-preset-scrollbar'
 
 export default defineConfig({
   theme: {
@@ -36,5 +37,7 @@ export default defineConfig({
         playfair: "Playfair",
       },
     }),
+    presetIcons(),
+    presetScrollbar({}),
   ],
 });

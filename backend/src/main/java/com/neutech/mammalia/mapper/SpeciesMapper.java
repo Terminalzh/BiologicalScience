@@ -10,9 +10,9 @@ import java.util.List;
 public interface SpeciesMapper {
     @Insert("""
             insert into t_species
-            (c_name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level,pictureUrl)
+            (c_name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level,pictureUrl,create_time,update_time)
             values (#{species.cName}, #{species.latinName}, #{species.genusId}, #{species.briefIntroduction},
-            #{species.detailIntroduction}, #{species.recommend}, #{species.level}, #{species.pictureUrl});
+            #{species.detailIntroduction}, #{species.recommend}, #{species.level}, #{species.pictureUrl},current_timestamp,current_timestamp);
             """)
     int addSpecies(@Param("species") Species species);
 

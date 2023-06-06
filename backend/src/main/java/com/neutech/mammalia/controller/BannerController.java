@@ -35,10 +35,10 @@ public class BannerController {
         return response;
     }
 
-    @DeleteMapping(value = "/{id}")
-    public Response deleteBannerById(@PathVariable Integer id) {
+    @DeleteMapping(value = "/{speciesId}")
+    public Response deleteBannerById(@PathVariable Integer speciesId) {
         Response response = new Response();
-        if (bannerService.deleteBannerById(id) == 1) {
+        if (bannerService.deleteBannerBySpeciesId(speciesId) == 1) {
             response.setCode(HttpStatus.NO_CONTENT.value());
             response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
         } else {
@@ -48,11 +48,11 @@ public class BannerController {
         return response;
     }
 
-    @PutMapping(value = "/{id}")
-    public Response updateBannerById(@PathVariable Integer id, @RequestBody Map<String, Integer> param) {
+    @PutMapping(value = "/{oldSpeciesId}")
+    public Response updateBannerById(@PathVariable Integer oldSpeciesId, @RequestBody Map<String, Integer> param) {
         Response response = new Response();
-        Integer speciesId = param.get("speciesId");
-        if (bannerService.updateBannerById(id, speciesId) == 1) {
+        Integer speciesId = param.get("newSpeciesId");
+        if (bannerService.updateBannerById(oldSpeciesId, speciesId) == 1) {
             response.setCode(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
         } else {
@@ -62,10 +62,10 @@ public class BannerController {
         return response;
     }
 
-    @GetMapping("/{id}")
-    public Response inquireBannerBySpeciesId(@PathVariable Integer id) {
+    @GetMapping("/{speciesId}")
+    public Response inquireBannerBySpeciesId(@PathVariable Integer speciesId) {
         Response response = new Response();
-        Banner banner = bannerService.inquireBannerBySpeciesId(id);
+        Banner banner = bannerService.inquireBannerBySpeciesId(speciesId);
         if (banner != null) {
             response.setCode(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
@@ -77,8 +77,8 @@ public class BannerController {
         return response;
     }
 
-    @GetMapping
-    public Response inquireAllBanner(Page<Integer> page) {
+    @GetMapping(value = "/page")
+    public Response inquireAllBannerByPage(Page<Integer> page) {
         Response response = new Response();
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Banner> list = bannerService.inquireAllBanner();
@@ -87,6 +87,21 @@ public class BannerController {
             response.setCode(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
             response.setData(banners);
+        } else {
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+        }
+        return response;
+    }
+
+    @GetMapping
+    public Response inquireAllBanner() {
+        Response response = new Response();
+        List<Banner> list = bannerService.inquireAllBanner();
+        if (list.size() > 0) {
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(list);
         } else {
             response.setCode(HttpStatus.NOT_FOUND.value());
             response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());

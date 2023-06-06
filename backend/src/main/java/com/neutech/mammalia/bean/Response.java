@@ -4,7 +4,11 @@ import lombok.Data;
 
 @Data
 public class Response {
+    public Response() {
+        this.data = "";
+    }
+
     private Integer code;
     private String message;
-    private Object data = new Object();
+    private Object data;
 }

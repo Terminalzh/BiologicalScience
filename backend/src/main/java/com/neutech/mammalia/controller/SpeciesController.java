@@ -44,10 +44,10 @@ public class SpeciesController {
         return response;
     }
 
-    @PutMapping(value = "/{id}")
-    public Response updateSpeciesById(@PathVariable Integer id, @RequestBody Species species) {
+    @PutMapping(value = "/{speciesId}")
+    public Response updateSpeciesById(@PathVariable Integer speciesId, @RequestBody Species species) {
         Response response = new Response();
-        species.setId(id);
+        species.setId(speciesId);
         if (speciesService.updateSpeciesById(species) == 1) {
             response.setCode(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());

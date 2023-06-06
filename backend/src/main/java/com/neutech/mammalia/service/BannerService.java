@@ -11,7 +11,7 @@ public interface BannerService {
 
     int deleteBannerBySpeciesId(int speciesId);
 
-    int updateBannerById(Integer id, Integer speciesId);
+    int updateBannerById(Integer oldSpeciesId, Integer newSpeciesId);
 
     Banner inquireBannerById(Integer id);
 

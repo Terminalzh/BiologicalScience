@@ -24,11 +24,11 @@ public interface BannerMapper {
 
     @Update("""
             update t_banner set
-            species_id=#{banner.species.id},
-            update_time=#{banner.updateTime}
-            where id=#{banner.id}
+            species_id=#{newSpeciesId},
+            update_time = current_timestamp
+            where species_id=#{oldSpeciesId}
             """)
-    int updateBannerById(@Param("banner") Banner banner);
+    int updateBannerById(@Param("oldSpeciesId") Integer oldSpeciesId, @Param("newSpeciesId") Integer newSpeciesId);
 
     @Results(id = "BannerResultMapping", value = {
             @Result(id = true, column = "id", property = "id"),

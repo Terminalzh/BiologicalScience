@@ -40,13 +40,8 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public int updateBannerById(Integer id, Integer speciesId) {
-        Banner banner = new Banner();
-        banner.setId(id);
-        Species species = speciesService.inquireSpeciesById(speciesId);
-        banner.setSpecies(species);
-        banner.setUpdateTime(new Date());
-        return bannerMapper.updateBannerById(banner);
+    public int updateBannerById(Integer oldSpeciesId, Integer newSpeciesId) {
+        return bannerMapper.updateBannerById(oldSpeciesId, newSpeciesId);
     }
 
     @Override

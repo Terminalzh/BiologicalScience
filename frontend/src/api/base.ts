@@ -7,7 +7,7 @@ export interface BaseResponse<T> {
 }
 
 export interface PaginationParams {
-  current: number;
+  pageNum: number;
   pageSize?: number;
 }
 
@@ -17,7 +17,9 @@ export interface PaginationEntity extends PaginationParams {
 
 export interface PageResponse<T> {
   list: Array<T>;
-  pagination: PaginationEntity;
+  pageNum: number;
+  pageSize: number;
+  pages: number;
 }
 
 export interface KodoUploadInfoResponse {
@@ -117,4 +119,11 @@ export function put<T>(
         );
       });
   });
+}
+
+export function getTableData<T>(
+  path: string,
+  pagination: Partial<PaginationEntity>
+) {
+  return get<PageResponse<T>>(path, pagination);
 }

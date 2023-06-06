@@ -20,7 +20,7 @@ import {
   createSignal,
   untrack,
 } from "solid-js";
-import { useSearchParams } from "solid-start";
+import { useNavigate, useSearchParams } from "solid-start";
 import { login, register } from "~/api/user";
 import PictureUploader from "~/components/form/PictureUploader";
 import { catchResource } from "~/utils";
@@ -28,6 +28,7 @@ import { catchResource } from "~/utils";
 const LoginForm = () => {
   const [data, setData] = createSignal();
   const [loginResource] = createResource(data, login);
+  const navigate = useNavigate();
   const loginResult = catchResource(loginResource, (e) => {
     untrack(() => {
       notificationService.show({
@@ -45,6 +46,7 @@ const LoginForm = () => {
           title: "登录成功",
           status: "success",
         });
+        navigate("/admin/photos");
       });
     }
   });
@@ -79,7 +81,7 @@ const LoginForm = () => {
 
 const RegistryForm = () => {
   const [data, setData] = createSignal();
-
+  const navigate = useNavigate();
   const [registerResource] = createResource(data, register);
   let avatar = "";
   const registerResult = catchResource(registerResource, (e) => {
@@ -99,6 +101,7 @@ const RegistryForm = () => {
           title: "注册成功",
           status: "success",
         });
+        navigate("/admin/photos");
       });
     }
   });
@@ -129,7 +132,12 @@ const RegistryForm = () => {
 
           <FormControl required>
             <FormLabel>密码</FormLabel>
-            <Input type="password" name="password" placeholder="输入密码" />
+            <Input
+              type="password"
+              name="password"
+              placeholder="输入密码"
+              autocomplete="current-password"
+            />
           </FormControl>
         </div>
       </div>

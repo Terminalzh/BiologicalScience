@@ -21,6 +21,7 @@ import {
 } from "solid-start";
 import "virtual:uno.css";
 import "./style.css";
+import { group } from "console";
 
 const config: HopeThemeConfig = {
   initialColorMode: "system",
@@ -93,6 +94,16 @@ const config: HopeThemeConfig = {
   },
 
   components: {
+    Button: {
+      baseStyle: {
+        root: {
+          borderRadius: "$xl",
+          fontWeight: "bold",
+          letterSpacing: "0.2rem",
+        },
+      },
+    },
+
     Anchor: {
       baseStyle: {
         position: "relative",
@@ -185,6 +196,45 @@ const config: HopeThemeConfig = {
         },
       },
     },
+
+    Popover: {
+      baseStyle: {
+        content: {
+          borderRadius: "$2xl",
+          padding: "1rem",
+        },
+      },
+    },
+
+    Modal: {
+      baseStyle: {
+        content: {
+          borderRadius: "$std",
+          padding: "1rem",
+        },
+      },
+    },
+
+    Select: {
+      baseStyle: {
+        content: {
+          borderRadius: "$2xl",
+        },
+        option: {
+          borderRadius: "$xl",
+        },
+        trigger: {
+          borderRadius: "$xl",
+          border: "none",
+          _light: {
+            background: "$blackAlpha3",
+          },
+          _dark: {
+            background: "$whiteAlpha4",
+          },
+        },
+      },
+    },
   },
 };
 
@@ -194,7 +244,7 @@ export default function Root() {
       <NotificationsProvider>
         <Html lang="en" class="h-full">
           <Head>
-            <Title>SolidStart - Bare</Title>
+            <Title>Mammalia | 哺乳纲动物管理系统</Title>
             <Meta charset="utf-8" />
             <Meta
               name="viewport"

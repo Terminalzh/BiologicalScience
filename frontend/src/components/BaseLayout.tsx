@@ -21,11 +21,13 @@ import {
   JSX,
   Show,
   Suspense,
+  createMemo,
   createResource,
+  untrack,
 } from "solid-js";
 import { Outlet, useLocation, useNavigate } from "solid-start";
 import { LogoIcon } from "~/components/LogoIcon";
-import { User, getMe } from "~/api/user";
+import { User, getMe, logout } from "~/api/user";
 import { catchResource } from "~/utils";
 
 export function MaterialSymbolsDarkMode(props: JSX.IntrinsicElements["svg"]) {
@@ -164,6 +166,50 @@ const NavItem = (props: any) => {
   );
 };
 
+export function SolarUserBoldDuotone(props: JSX.IntrinsicElements["svg"]) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <g>
+        <circle cx="12" cy="6" r="4"></circle>
+        <path
+          d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5Z"
+          opacity=".5"
+        ></path>
+      </g>
+    </svg>
+  );
+}
+
+export function SolarLogout2BoldDuotone(props: JSX.IntrinsicElements["svg"]) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1.2em"
+      height="1.3em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <g>
+        <path
+          d="M16 2h-1c-2.829 0-4.242 0-5.121.879C9 3.758 9 5.172 9 8v8c0 2.829 0 4.243.879 5.122c.878.878 2.292.878 5.119.878H16c2.828 0 4.242 0 5.121-.879C22 20.243 22 18.828 22 16V8c0-2.828 0-4.243-.879-5.121C20.242 2 18.828 2 16 2Z"
+          opacity=".5"
+        ></path>
+        <path
+          fill-rule="evenodd"
+          d="M15.75 12a.75.75 0 0 0-.75-.75H4.027l1.961-1.68a.75.75 0 1 0-.976-1.14l-3.5 3a.75.75 0 0 0 0 1.14l3.5 3a.75.75 0 1 0 .976-1.14l-1.96-1.68H15a.75.75 0 0 0 .75-.75Z"
+          clip-rule="evenodd"
+        ></path>
+      </g>
+    </svg>
+  );
+}
+
 export interface BaseLayoutProps {
   mode: "normal" | "admin";
   children: (user: Accessor<User | undefined>) => JSX.Element;
@@ -177,13 +223,25 @@ export default function BaseLayout(props: BaseLayoutProps) {
 
   const userResult = catchResource(meResource, (e) => {
     if (props.mode === "admin") {
-      notificationService.show({
-        title: "未登录",
-        description: e.message,
-        status: "danger",
+      untrack(() => {
+        notificationService.show({
+          title: "未登录",
+          description: e.message,
+          status: "danger",
+        });
+        navigate("/service/login");
       });
-      navigate("/service/login");
     }
+  });
+
+  const getAvatar = createMemo(() => {
+    if (meResource()?.avatar) {
+      try {
+        const pictures = JSON.parse(meResource()!.avatar);
+        return pictures.m;
+      } catch (e) {}
+    }
+    return "";
   });
 
   return (
@@ -247,17 +305,44 @@ export default function BaseLayout(props: BaseLayoutProps) {
                       height="2.5rem"
                       class="cursor-pointer"
                       name={meResource()?.name}
-                      src={meResource()?.avatar}
+                      src={getAvatar()}
                     />
                     <MenuContent>
                       <MenuItem
+                        icon={
+                          <SolarUserBoldDuotone class="dark:fill-white/40 light:fill-dark/40" />
+                        }
                         onSelect={() => {
-                          navigate("/admin");
+                          navigate("/admin/photos");
                         }}
                       >
                         个人中心
                       </MenuItem>
-                      <MenuItem colorScheme="danger">退出登录</MenuItem>
+                      <MenuItem
+                        onSelect={() => {
+                          logout()
+                            .then((_) => {
+                              untrack(() => {
+                                notificationService.show({
+                                  title: "已退出",
+                                  status: "success",
+                                });
+                                navigate("/service");
+                              });
+                            })
+                            .catch((e) => {
+                              notificationService.show({
+                                title: "退出失败",
+                                status: "danger",
+                                description: e.message,
+                              });
+                            });
+                        }}
+                        icon={<SolarLogout2BoldDuotone class="fill-red-7/87" />}
+                        colorScheme="danger"
+                      >
+                        退出登录
+                      </MenuItem>
                     </MenuContent>
                   </Menu>
                 </Suspense>

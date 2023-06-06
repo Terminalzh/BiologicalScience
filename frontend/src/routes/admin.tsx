@@ -12,43 +12,56 @@ const getMenu = (isAdmin: boolean) => {
   const result = new Array<MenuItemProps>();
   if (true) {
     result.push({
-      title: "用户管理",
+      title: "用户",
       path: "users",
-      icon: "i-ph-users-fill",
+      icon: "i-solar-users-group-two-rounded-bold-duotone",
     });
     result.push({
-      title: "照片墙管理",
+      title: "物种",
+      path: "species",
+      icon: "i-solar-database-bold-duotone",
+    });
+
+    result.push({
+      title: "物种分类",
+      path: "category",
+      icon: "i-solar-folder-2-bold-duotone",
+    });
+
+    result.push({
+      title: "照片墙",
       path: "photos-wall",
-      icon: "i-ph-images-fill",
+      icon: "i-solar-album-bold-duotone",
     });
+
     result.push({
-      title: "物种推荐管理",
+      title: "物种推荐",
       path: "recommends",
-      icon: "i-ph-dog-fill",
+      icon: "i-solar-like-bold-duotone",
     });
     result.push({
-      title: "轮播图管理",
+      title: "轮播图",
       path: "banners",
-      icon: "i-ph-slideshow-fill",
+      icon: "i-solar-slider-vertical-bold-duotone",
     });
 
     result.push({
       title: "可视化报表",
       path: "charts",
-      icon: "i-ph-chart-bar-fill",
+      icon: "i-solar-pie-chart-2-bold-duotone",
     });
 
     result.push({
-      title: "举报信息管理",
+      title: "举报信息",
       path: "feedback",
-      icon: "i-ph-chat-circle-dots-fill",
+      icon: "i-solar-dialog-bold-duotone",
     });
   }
 
   result.push({
-    title: "摄影作品管理",
+    title: "摄影作品",
     path: "photos",
-    icon: "i-ph-camera-fill",
+    icon: "i-solar-camera-minimalistic-bold-duotone",
   });
 
   return result;
@@ -90,7 +103,7 @@ export default function AdminLayout() {
       {(user) => {
         if (user()) {
           return (
-            <div class="flex container-compact gap-16 h-full">
+            <div class="flex container-compact gap-8 h-full">
               <aside class="">
                 <ul class="sticky top-0 list-none dark:bg-white/5 light:bg-dark/5 px-6 py-6 rounded-std min-h-[10rem]">
                   <For each={getMenu(user()!.isAdmin)}>

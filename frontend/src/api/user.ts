@@ -1,4 +1,4 @@
-import { get, post } from "./base";
+import { deletes, get, post } from "./base";
 
 export interface User {
   isAdmin: boolean;
@@ -17,6 +17,11 @@ export function login(data: any) {
     phone: data.username,
     password: data.password,
   });
+}
+
+
+export function logout() {
+  return deletes<string>("/api/user/logout");
 }
 
 export function register(data: any) {

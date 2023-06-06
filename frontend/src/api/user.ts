@@ -1,6 +1,7 @@
 import { get, post } from "./base";
 
 export interface User {
+  isAdmin: boolean;
   id: number;
   name: string;
   avatar: string;

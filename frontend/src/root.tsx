@@ -170,6 +170,21 @@ const config: HopeThemeConfig = {
         },
       },
     },
+
+    Menu: {
+      baseStyle: {
+        content: {
+          borderRadius: "$2xl",
+          paddingLeft: "$2",
+          paddingRight: "$2",
+          paddingTop: "$3",
+          paddingBottom: "$3",
+        },
+        item: {
+          borderRadius: "$2xl",
+        },
+      },
+    },
   },
 };
 
@@ -186,7 +201,7 @@ export default function Root() {
               content="width=device-width, initial-scale=1"
             />
           </Head>
-          <Body class="transition-all pt-20 h-full">
+          <Body class="transition-all h-full">
             <Routes>
               <FileRoutes />
             </Routes>

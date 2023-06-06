@@ -56,4 +56,8 @@ public class Species {
      * 上次更新时间
      */
     private Date updateTime;
+    /**
+     * 物种照片地址
+     */
+    private String pictureUrl;
 }

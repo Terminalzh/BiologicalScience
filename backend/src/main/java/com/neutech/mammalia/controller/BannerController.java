@@ -23,9 +23,11 @@ public class BannerController {
     @PostMapping
     public Response addBanner(@RequestBody Map<String, Integer> param) {
         Response response = new Response();
-        if (bannerService.addBanner(param.get("speciesImageId")) == 1) {
+        Integer speciesId = param.get("speciesId");
+        if (bannerService.addBanner(speciesId) == 1) {
             response.setCode(HttpStatus.CREATED.value());
             response.setMessage(HttpStatus.CREATED.getReasonPhrase());
+            response.setData(bannerService.inquireBannerBySpeciesId(speciesId));
         } else {
             response.setCode(HttpStatus.BAD_REQUEST.value());
             response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
@@ -49,7 +51,8 @@ public class BannerController {
     @PutMapping(value = "/{id}")
     public Response updateBannerById(@PathVariable Integer id, @RequestBody Map<String, Integer> param) {
         Response response = new Response();
-        if (bannerService.updateBannerById(id, param.get("speciesImageId")) == 1) {
+        Integer speciesId = param.get("speciesId");
+        if (bannerService.updateBannerById(id, speciesId) == 1) {
             response.setCode(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
         } else {
@@ -60,9 +63,9 @@ public class BannerController {
     }
 
     @GetMapping("/{id}")
-    public Response inquireBannerById(@PathVariable Integer id) {
+    public Response inquireBannerBySpeciesId(@PathVariable Integer id) {
         Response response = new Response();
-        Banner banner = bannerService.inquireBannerById(id);
+        Banner banner = bannerService.inquireBannerBySpeciesId(id);
         if (banner != null) {
             response.setCode(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());

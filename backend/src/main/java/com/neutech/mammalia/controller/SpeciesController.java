@@ -5,15 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.neutech.mammalia.bean.Response;
 import com.neutech.mammalia.bean.Species;
-import com.neutech.mammalia.bean.User;
 import com.neutech.mammalia.service.SpeciesService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/species")

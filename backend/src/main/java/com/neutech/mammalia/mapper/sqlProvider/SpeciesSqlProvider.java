@@ -21,6 +21,8 @@ public class SpeciesSqlProvider {
             sql.SET("recommend = #{species.recommend}");
         if (species.getLevel() != null)
             sql.SET("level = #{species.level}");
+        if (species.getPictureUrl() != null)
+            sql.SET("pictureUrl = #{species.pictureUrl}");
         sql.SET("update_time = #{species.updateTime}");
         sql.WHERE("id = #{species.id}");
         return sql.toString();

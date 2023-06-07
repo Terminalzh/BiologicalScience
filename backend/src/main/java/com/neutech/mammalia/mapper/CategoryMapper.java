@@ -34,10 +34,6 @@ public interface CategoryMapper {
 
     @Select("select * from t_category where parent_id = #{parentId} and latin_name = #{latinName}")
     Category inquireCategoryByLatinNameAndParentId(@Param("parentId") Integer parentId, @Param("latinName") String latinName);
-
     @Select("select count(0) from t_category where parent_id = #{parentId}")
     int inquireCategoryCountByParentId(@Param("parentId") Integer parentId);
-
-    @Select("select * from t_category")
-    List<Category> inquireAllCategories();
 }

@@ -2,6 +2,7 @@ package com.neutech.mammalia.service;
 
 import com.neutech.mammalia.bean.Category;
 import com.neutech.mammalia.bean.CategoryCount;
+import com.neutech.mammalia.bean.CategoryFlat;
 
 import java.util.List;
 
@@ -17,6 +18,8 @@ public interface CategoryService {
     List<Category> inquireCategoryByParentId(Integer parentId);
 
     Category inquireCategoryByLatinNameAndParentId(Integer parentId, String latinName);
+
+    List<CategoryFlat> inquireAllCategoriesByLevel(Integer level);
 
     CategoryCount inquireCategoryCountById(Integer id);
 }

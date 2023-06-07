@@ -98,6 +98,11 @@ public class CategoryCountServiceImpl implements CategoryCountService {
     }
 
     @Override
+    public List<CategoryCount> inquireAllCategories(String expression) {
+        return categoryCountMapper.inquireAllCategories(expression);
+    }
+
+    @Override
     public String inquireCategorizedInheritance(Integer id) {
         return null;
     }

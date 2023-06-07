@@ -2,6 +2,7 @@ package com.neutech.mammalia.service.impl;
 
 import com.neutech.mammalia.bean.Category;
 import com.neutech.mammalia.bean.CategoryCount;
+import com.neutech.mammalia.bean.CategoryFlat;
 import com.neutech.mammalia.mapper.CategoryMapper;
 import com.neutech.mammalia.service.CategoryCountService;
 import com.neutech.mammalia.service.CategoryService;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Lazy
@@ -30,7 +32,9 @@ public class CategoryServiceImpl implements CategoryService {
         int count = 0;
         //获取最高级
         Category parent = categoryMapper.inquireCategoryById(1);
+        int i = 0;
         for (Category category : categories) {
+            i++;
             //先设置父id
             category.setParentId(parent.getId());
             //通过父id和拉丁文名判断当前分类是否存在
@@ -89,6 +93,33 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category inquireCategoryByLatinNameAndParentId(Integer parentId, String latinName) {
         return categoryMapper.inquireCategoryByLatinNameAndParentId(parentId, latinName);
+    }
+
+    @Override
+    public List<CategoryFlat> inquireAllCategoriesByLevel(Integer level) {
+        String expression = "^(?:(?!" + "\\d+\\.".repeat(level) + "\\d+).)*$";
+        List<CategoryFlat> list = new ArrayList<>();
+        List<CategoryCount> categoryCounts = categoryCountService.inquireAllCategories(expression);
+        for (CategoryCount categoryCount : categoryCounts) {
+            Category category = categoryMapper.inquireCategoryById(categoryCount.getId());
+            CategoryFlat categoryFlat = new CategoryFlat();
+            categoryFlat.setId(category.getId().toString());
+            categoryFlat.setParent(category.getParentId().toString());
+            if (category.getCName() != null)
+                categoryFlat.setName(category.getLatinName() + "(" + category.getCName() + ")");
+            else categoryFlat.setName(category.getLatinName());
+            int length = categoryCount.getCategorizedInheritance().split("\\.").length;
+            switch (length) {
+                case 1 -> categoryFlat.setValue(categoryCount.getSubClass());
+                case 2 -> categoryFlat.setValue(categoryCount.getOrderCount());
+                case 3 -> categoryFlat.setValue(categoryCount.getFamily());
+                case 4 -> categoryFlat.setValue(categoryCount.getGenus());
+                case 5 -> categoryFlat.setValue(categoryCount.getSpecies());
+            }
+            categoryFlat.setLevel(length);
+            list.add(categoryFlat);
+        }
+        return list;
     }
 
     @Override

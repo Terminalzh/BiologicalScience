@@ -3,6 +3,8 @@ package com.neutech.mammalia.mapper;
 import com.neutech.mammalia.bean.CategoryCount;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface CategoryCountMapper {
     @Insert("insert into category_count (id ,categorized_inheritance) values (#{categoryCount.id},#{categoryCount.categorizedInheritance})")
@@ -22,8 +24,11 @@ public interface CategoryCountMapper {
             """)
     int updateCategoryCountById(@Param("categoryCount") CategoryCount categoryCount);
 
-    @Select("SELECT COUNT(0) FROM category_count WHERE categorized_inheritance REGEXP CONCAT('^', #{categorizedInheritance}, '$')")
+    @Select("select COUNT(0) from category_count where categorized_inheritance regexp CONCAT('^', #{categorizedInheritance}, '$')")
     int inquireSubCategoryCount(@Param("categorizedInheritance") String categorizedInheritance);
+
+    @Select("select * from category_count where categorized_inheritance regexp #{expression}")
+    List<CategoryCount> inquireAllCategories(@Param("expression") String expression);
 
     @Select("select categorized_inheritance from category_count where id = #{id}")
     String inquireCategorizedInheritance(@Param("id") Integer id);

@@ -14,6 +14,8 @@ public interface CategoryCountService {
 
     CategoryCount inquireCategoryCount(Integer id);
 
+    List<CategoryCount> inquireAllCategories(String expression);
+
     String inquireCategorizedInheritance(Integer id);
 
 }

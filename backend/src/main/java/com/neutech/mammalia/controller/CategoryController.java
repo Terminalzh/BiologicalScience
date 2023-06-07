@@ -1,8 +1,9 @@
 package com.neutech.mammalia.controller;
 
-import com.neutech.mammalia.bean.Category;
-import com.neutech.mammalia.bean.CategoryCount;
-import com.neutech.mammalia.bean.Response;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.neutech.mammalia.bean.*;
 import com.neutech.mammalia.service.CategoryService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
@@ -83,6 +84,36 @@ public class CategoryController {
         } else {
             response.setCode(HttpStatus.NOT_FOUND.value());
             response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+        }
+        return response;
+    }
+
+    @GetMapping
+    public Response inquireAllCategories(Integer level, Page<Integer> page) {
+        Response response = new Response();
+        if (page != null)
+            PageHelper.startPage(page.getPageNum(), page.getPageSize());
+        else {
+            List<CategoryFlat> list = categoryService.inquireAllCategoriesByLevel(level);
+            if (list.size() > 0) {
+                response.setCode(HttpStatus.OK.value());
+                response.setMessage(HttpStatus.OK.getReasonPhrase());
+                response.setData(list);
+            }
+        }
+        return response;
+    }
+
+    @GetMapping(value = "/page")
+    public Response inquireAllCategoriesByPage(Integer level, Page<Integer> page) {
+        Response response = new Response();
+        PageHelper.startPage(page.getPageNum(), page.getPageSize());
+        List<CategoryFlat> list = categoryService.inquireAllCategoriesByLevel(level);
+        PageInfo<CategoryFlat> pageInfo = new PageInfo<>(list);
+        if (pageInfo.getSize() > 0) {
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(pageInfo);
         }
         return response;
     }

@@ -1,11 +1,13 @@
 package com.neutech.mammalia.bean;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 用户表
@@ -27,6 +29,7 @@ public class User implements Serializable {
     /**
      * 头像
      */
+    @JsonProperty
     private String avatar;
     /**
      * 密码
@@ -49,7 +52,7 @@ public class User implements Serializable {
      */
     private Date createTime;
     /**
-     *是否为管理员
+     * 是否为管理员
      */
     private Boolean isAdmin;
 }

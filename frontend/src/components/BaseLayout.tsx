@@ -375,7 +375,7 @@ export default function BaseLayout(props: BaseLayoutProps) {
         <div class="grow-1 shrink-2 relative overflow-hidden">
           {props.children(userResult)}
         </div>
-        <footer class="container-compact text-center mt-12 py-4 shrink-0">
+        <footer class="container-compact text-center py-4 shrink-0">
           <h5 class="font-bold text-primary">关注我们</h5>
           <ul class="text-center flex items-center justify-center gap-4 mt-2">
             <BrandItem brand={<TablerBrandWechat />} />

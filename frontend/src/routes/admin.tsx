@@ -52,7 +52,7 @@ const getMenu = (isAdmin: boolean) => {
     });
 
     result.push({
-      title: "举报信息",
+      title: "反馈信息",
       path: "feedback",
       icon: "i-solar-dialog-bold-duotone",
     });

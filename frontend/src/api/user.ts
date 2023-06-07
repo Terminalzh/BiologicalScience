@@ -1,4 +1,4 @@
-import { deletes, get, post } from "./base";
+import { deletes, get, post, put } from "./base";
 
 export interface User {
   isAdmin: boolean;
@@ -19,7 +19,6 @@ export function login(data: any) {
   });
 }
 
-
 export function logout() {
   return deletes<string>("/api/user/logout");
 }
@@ -30,4 +29,8 @@ export function register(data: any) {
 
 export function getMe() {
   return get<User>("/api/user/me");
+}
+
+export function updateUser(id: string, data: any) {
+  return put<string>(`/api/user/${id}`, data);
 }

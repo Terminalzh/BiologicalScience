@@ -1,4 +1,4 @@
-import { Input, notificationService } from "@hope-ui/solid";
+import { Input, notificationService, useColorMode } from "@hope-ui/solid";
 import {
   ErrorBoundary,
   JSX,
@@ -78,6 +78,8 @@ export default function PictureUploader(props: PictureUploaderProps) {
   const [file, selectFile] = createSignal<Blob | undefined>();
   const [data] = createResource(file, uploadPicture, {});
   const [pictures, setPictures] = createSignal<Pictures>();
+  const { colorMode } = useColorMode();
+
   const dataResult = catchResource(data, (e) => {
     untrack(() => {
       notificationService.show({
@@ -100,71 +102,78 @@ export default function PictureUploader(props: PictureUploaderProps) {
     const value = dataResult();
     if (value) {
       setPictures(value);
-      console.log(value);
-
       props.onChanged?.call(null, value);
     }
   });
 
   return (
-    <label
-      for={props.name || "img-uploader"}
-      class="relative flex w-5rem h-5rem light:bg-black/5 dark:bg-white/5 rounded-3xl overflow-hidden"
+    <div
       classList={{
-        "cursor-pointer": !data.loading,
-        "cursor-not-allowed": data.loading,
+        dark: colorMode() === "dark",
+        light: colorMode() === "light",
       }}
     >
-      <Switch>
-        <Match
-          when={
-            (pictures() !== undefined || props.value !== undefined) &&
-            !data.loading
-          }
-        >
-          <ErrorBoundary fallback={() => <Icon icon="close" />}>
-            <PrevImage src={pictures() || props.value} />
-          </ErrorBoundary>
-        </Match>
-        <Match
-          when={
-            data.loading ||
-            data.state === "ready" ||
-            data.state === "errored" ||
-            data.state === "unresolved"
-          }
-        >
-          <Switch>
-            <Match when={data.loading}>
-              <Icon icon="loading" />
-            </Match>
-            <Match when={data.state === "ready" || data.state === "unresolved"}>
-              <Icon icon="upload" />
-            </Match>
-          </Switch>
-        </Match>
-      </Switch>
-      <input
-        name={props.name}
-        type="text"
-        class="opacity-0 absolute w-full h-full z--1 box-border"
-        value={pictureStr()}
-        required={props.required}
-      />
-      <input
-        ref={props.ref}
-        id={props.name || "img-uploader"}
-        type="file"
-        class="hidden"
-        disabled={data.loading}
-        accept="image/png, image/jpeg"
-        onChange={(e) => {
-          if (e.target.files?.length || 0 > 0) {
-            const file = e.target.files!![0];
-            selectFile(() => file);
-          }
+      <label
+        for={props.name || "img-uploader"}
+        class="relative flex w-5rem h-5rem light:bg-black/5 dark:bg-white/5 rounded-3xl overflow-hidden"
+        classList={{
+          "cursor-pointer": !data.loading,
+          "cursor-not-allowed": data.loading,
         }}
-      />
-    </label>
+      >
+        <Switch>
+          <Match
+            when={
+              (pictures() !== undefined || props.value !== undefined) &&
+              !data.loading
+            }
+          >
+            <ErrorBoundary fallback={() => <Icon icon="close" />}>
+              <PrevImage src={pictures() || props.value} />
+            </ErrorBoundary>
+          </Match>
+          <Match
+            when={
+              data.loading ||
+              data.state === "ready" ||
+              data.state === "errored" ||
+              data.state === "unresolved"
+            }
+          >
+            <Switch>
+              <Match when={data.loading}>
+                <Icon icon="loading" />
+              </Match>
+              <Match
+                when={data.state === "ready" || data.state === "unresolved"}
+              >
+                <Icon icon="upload" />
+              </Match>
+            </Switch>
+          </Match>
+        </Switch>
+        <input
+          name={props.name}
+          type="text"
+          class="opacity-0 absolute w-full h-full z--1 box-border"
+          value={pictureStr()}
+          required={props.required}
+        />
+        <input
+          ref={props.ref}
+          id={props.name || "img-uploader"}
+          type="file"
+          class="hidden"
+          disabled={data.loading}
+          accept="image/png, image/jpeg"
+          onChange={(e) => {
+            if (e.target.files?.length || 0 > 0) {
+              const file = e.target.files!![0];
+              selectFile(() => file);
+            }
+          }}
+        />
+      </label>
+    </div>
   );
 }

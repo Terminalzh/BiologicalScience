@@ -113,7 +113,7 @@ export interface TableProps<T> {
    * @param data 若为undefined，则此时的功能为新建行，否则为修改行
    * @returns
    */
-  itemEditor?: (data?: T) => JSX.Element;
+  itemEditor?: (data?: T, onClose?: () => void) => JSX.Element;
 
   onItemClick?: (data?: T) => void;
 }
@@ -351,7 +351,7 @@ const TableBody = <T,>(props: TableProps<T>) => {
       <Modal scrollBehavior="inside" opened={isOpen()} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {props.itemEditor?.call(null, editCurrent())}
+          {props.itemEditor?.call(null, editCurrent(), onClose)}
         </ModalContent>
       </Modal>
     </>

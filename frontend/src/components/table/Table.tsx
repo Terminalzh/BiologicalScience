@@ -115,7 +115,11 @@ export interface TableProps<T> {
    * @param data 若为undefined，则此时的功能为新建行，否则为修改行
    * @returns
    */
-  itemEditor?: (data?: T, onClose?: () => void) => JSX.Element;
+  itemEditor?: (
+    data?: T,
+    onClose?: () => void,
+    refetch?: () => void
+  ) => JSX.Element;
 
   onItemClick?: (data?: T) => void;
 }
@@ -191,17 +195,10 @@ const TableBody = <T,>(props: TableProps<T>) => {
     });
   };
 
-  const [dataResource, { mutate, refetch }] = createResource(
-    pageParam,
-    fetchData
-  );
-
-  const afterEditingOrCreating = () => {
-    refetch();
-  };
+  const [dataResource, { refetch }] = createResource(pageParam, fetchData);
 
   const [deleteId, setDeleteId] = createSignal<string>();
-  const [deleteItemResource] = createResource(deleteId, deletes);
+  const [deleteItemResource, { mutate }] = createResource(deleteId, deletes);
   const deleteItemResult = catchResource(deleteItemResource, (e) => {
     untrack(() => {
       notificationService.show({
@@ -220,6 +217,7 @@ const TableBody = <T,>(props: TableProps<T>) => {
           status: "success",
         });
         refetch();
+        mutate();
       });
     }
   });
@@ -329,10 +327,10 @@ const TableBody = <T,>(props: TableProps<T>) => {
                                 size="sm"
                                 loading={deleteItemResource.loading}
                                 colorScheme="danger"
-                                onClick={async () => {
+                                onClick={() => {
                                   if (onDelete) {
-                                    await onDelete(row);
-                                    refetch();
+                                    // await onDelete(row);
+                                    // refetch();
                                   } else {
                                     setDeleteId(`${api}/${row.id}`);
                                   }
@@ -352,10 +350,15 @@ const TableBody = <T,>(props: TableProps<T>) => {
           </For>
         </Tbody>
       </HopeTable>
-      <Modal scrollBehavior="inside" opened={isOpen()} onClose={onClose}>
+      <Modal
+        scrollBehavior="inside"
+        opened={isOpen()}
+        onClose={onClose}
+        closeOnOverlayClick={false}
+      >
         <ModalOverlay />
         <ModalContent>
-          {props.itemEditor?.call(null, editCurrent(), onClose)}
+          {props.itemEditor?.call(null, editCurrent(), onClose, refetch)}
         </ModalContent>
       </Modal>
     </>

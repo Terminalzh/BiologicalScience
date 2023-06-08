@@ -2,14 +2,10 @@ import {
   Anchor,
   Avatar,
   Button,
-  Divider,
   IconButton,
-  Image,
   Menu,
   MenuContent,
-  MenuGroup,
   MenuItem,
-  MenuLabel,
   MenuTrigger,
   Spinner,
   notificationService,
@@ -25,7 +21,7 @@ import {
   createResource,
   untrack,
 } from "solid-js";
-import { A, Outlet, useLocation, useNavigate } from "solid-start";
+import { useLocation, useNavigate } from "solid-start";
 import { LogoIcon } from "~/components/LogoIcon";
 import { User, getMe, logout } from "~/api/user";
 import { catchResource } from "~/utils";
@@ -310,7 +306,7 @@ export default function BaseLayout(props: BaseLayoutProps) {
                     <MenuContent>
                       <MenuItem
                         icon={
-                          <SolarUserBoldDuotone class="dark:fill-white/40 light:fill-dark/40" />
+                          <SolarUserBoldDuotone class="fill-brand-primary/80" />
                         }
                         onSelect={() => {
                           navigate("/admin/photos");

@@ -21,7 +21,7 @@ export default defineConfig({
       //   rewrite: (path) => path.replace(/^\/api/, ""),
       // },
       "/api": {
-        target: "https://frp-fan.top:15798", // The API is running locally via IIS on this port
+        target: "https://cn-sy-dx-1.natfrp.cloud:31150", // The API is running locally via IIS on this port
         changeOrigin: true,
         secure: false,
       },

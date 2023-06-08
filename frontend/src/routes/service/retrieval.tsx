@@ -1,7 +1,7 @@
 import { Button, Input } from "@hope-ui/solid";
 import { For, createSignal } from "solid-js";
 import { PaginationParams } from "~/api/base";
-import { SpeciesSearcher } from "~/components/SpeciesSearcher";
+import { CategoryFilter } from "~/components/SpeciesSearcher";
 import SpeciesCard, {
   SpeciesCardProps,
 } from "~/components/species/SpeciesCard";
@@ -53,7 +53,7 @@ export default function RetrievalPage() {
       </div>
       <div class="py-2">
         <h3 class="text-brand-primary/87 font-bold leading-loose">筛选</h3>
-        <SpeciesSearcher class="grid grid-cols-4 gap-2" />
+        <CategoryFilter class="grid grid-cols-4 gap-2" />
       </div>
       <div class="mt-4">
         <div class="grid grid-cols-4 gap-4">

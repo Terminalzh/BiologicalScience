@@ -21,3 +21,4 @@ export const allCategories = (level: number) => {
 export const getCategory = (id: number) => {
   return get<Array<CategoryShort>>(`/api/category/${id}`);
 };
+

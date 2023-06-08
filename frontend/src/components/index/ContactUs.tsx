@@ -43,7 +43,7 @@ export default function ContactUs() {
   });
 
   createEffect(() => {
-    if (feedbackResult()) {
+    if (feedbackResult() !== undefined) {
       untrack(() => {
         notificationService.show({
           title: "发送成功",
@@ -68,7 +68,7 @@ export default function ContactUs() {
               <FormLabel>称谓</FormLabel>
               <Input
                 type="text"
-                name="reportName"
+                name="reporterName"
                 placeholder="请输入您的姓名"
               />
             </FormControl>

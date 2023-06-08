@@ -13,6 +13,7 @@ const CreationModal = (props: {
   data?: any;
   name?: string;
   onClose?: () => void;
+  refetch?: () => void;
 }) => {
   const [loading, setLoading] = createSignal(false);
 
@@ -38,6 +39,7 @@ const CreationModal = (props: {
             });
             setLoading(false);
             props.onClose?.();
+            props.refetch?.();
           }}
           onSubmitted={() => {
             setLoading(true);
@@ -45,11 +47,14 @@ const CreationModal = (props: {
         />
       </ModalBody>
       <ModalFooter>
+        <Button onClick={props.onClose} class="btn-outlined">
+          取消
+        </Button>
         <Button
           type="submit"
           form={props.name || "form"}
           loading={loading()}
-          class="btn"
+          class="btn ml-4"
         >
           {props.data ? "确认修改" : "确认保存"}
         </Button>
@@ -93,8 +98,13 @@ export default function UsersPage() {
       ]}
       api="/api/user"
       operations
-      itemEditor={(data?: any, onClose?: () => void) => (
-        <CreationModal data={data} name="user-form" onClose={onClose} />
+      itemEditor={(data?: any, onClose?: () => void, refetch?: () => void) => (
+        <CreationModal
+          data={data}
+          name="user-form"
+          onClose={onClose}
+          refetch={refetch}
+        />
       )}
       topCaptions={{
         createButton() {

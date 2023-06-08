@@ -52,7 +52,7 @@ const getMenu = (isAdmin: boolean) => {
     });
 
     result.push({
-      title: "举报信息",
+      title: "反馈信息",
       path: "feedback",
       icon: "i-solar-dialog-bold-duotone",
     });
@@ -115,7 +115,7 @@ export default function AdminLayout() {
                   </For>
                 </ul>
               </aside>
-              <main class="h-full overflow-auto flex-1 scrollbar dark:scrollbar-track-color-white/5 scrollbar-thumb-color-brand-primary/10 scrollbar-rounded scrollbar-w-0.5rem scrollbar-radius-2 scrollbar-track-radius-4 scrollbar-thumb-radius-4">
+              <main class="h-full overflow-auto flex-1 scrollbar dark:scrollbar-track-color-white/5 scrollbar-thumb-color-brand-primary/10 scrollbar-rounded scrollbar-w-0.5rem scrollbar-radius-2 scrollbar-track-radius-4 scrollbar-thumb-radius-4 border-dashed border-y-3 border-dark/10 py-4 px-2">
                 <Outlet />
               </main>
             </div>

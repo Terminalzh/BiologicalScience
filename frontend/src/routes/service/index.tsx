@@ -7,7 +7,7 @@ import Recommends from "~/components/index/Recommends";
 
 export default function Service() {
   return (
-    <div class="flex flex-col gap-12">
+    <div class="flex flex-col gap-12 mb-12">
       <LandingPage />
       <OrdersList />
       <section class="bg-brand-primary/80 py-8">

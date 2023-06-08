@@ -37,3 +37,10 @@ body {
 .line-container:hover .line-ul {
   animation-play-state: paused;
 }
+
+
+
+
+.highcharts-background {
+  background-color: aliceblue;
+}

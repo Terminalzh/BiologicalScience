@@ -3,7 +3,7 @@ import { PictureTarget, Pictures } from "~/utils/pictures";
 
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import dayjs from "dayjs";
-import { Image } from "@hope-ui/solid";
+import { Avatar, Image } from "@hope-ui/solid";
 
 dayjs.extend(localizedFormat);
 
@@ -38,6 +38,19 @@ export const PictureColumn = (
   pictures: string,
   target: PictureTarget = "m"
 ): JSX.Element => {
-  const images = JSON.parse(pictures) as Pictures;
-  return <Image src={images[target]} class="h-12" />;
+  try {
+    const images = JSON.parse(pictures) as Pictures;
+    return <Image src={images[target]} class="h-12 rounded-2xl" />;
+  } catch (e) {
+    return <Image src={pictures} class="h-12 rounded-2xl" />;
+  }
+};
+
+export const AvatarColumn = (pictures: string) => {
+  try {
+    const images = JSON.parse(pictures) as Pictures;
+    return <Avatar src={images["m"]} />;
+  } catch (e) {
+    return <Avatar src={pictures} />;
+  }
 };

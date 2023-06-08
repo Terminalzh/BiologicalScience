@@ -76,6 +76,8 @@ export interface TopCaptions {
    * @returns 是否拦截此次点击事件，也就是说，当返回true时，这个按钮的默认事件将不会触发
    */
   createButton?: () => boolean;
+
+  customElements?: Array<JSX.Element>;
 }
 
 /**
@@ -113,7 +115,11 @@ export interface TableProps<T> {
    * @param data 若为undefined，则此时的功能为新建行，否则为修改行
    * @returns
    */
-  itemEditor?: (data?: T) => JSX.Element;
+  itemEditor?: (
+    data?: T,
+    onClose?: () => void,
+    refetch?: () => void
+  ) => JSX.Element;
 
   onItemClick?: (data?: T) => void;
 }
@@ -189,17 +195,10 @@ const TableBody = <T,>(props: TableProps<T>) => {
     });
   };
 
-  const [dataResource, { mutate, refetch }] = createResource(
-    pageParam,
-    fetchData
-  );
-
-  const afterEditingOrCreating = () => {
-    refetch();
-  };
+  const [dataResource, { refetch }] = createResource(pageParam, fetchData);
 
   const [deleteId, setDeleteId] = createSignal<string>();
-  const [deleteItemResource] = createResource(deleteId, deletes);
+  const [deleteItemResource, { mutate }] = createResource(deleteId, deletes);
   const deleteItemResult = catchResource(deleteItemResource, (e) => {
     untrack(() => {
       notificationService.show({
@@ -211,13 +210,14 @@ const TableBody = <T,>(props: TableProps<T>) => {
   });
 
   createEffect(() => {
-    if (deleteItemResult()) {
+    if (deleteItemResult() !== undefined) {
       untrack(() => {
         notificationService.show({
           title: "删除成功",
           status: "success",
         });
         refetch();
+        mutate();
       });
     }
   });
@@ -230,6 +230,8 @@ const TableBody = <T,>(props: TableProps<T>) => {
       <HopeTable striped="odd" highlightOnHover dense>
         <TableCaption class="caption-top">
           <div class="flex justify-end gap-4 items-center">
+            <For each={props.topCaptions?.customElements}>{(item) => item}</For>
+
             <Show when={props.topCaptions?.createButton}>
               <Button
                 class="btn"
@@ -325,10 +327,10 @@ const TableBody = <T,>(props: TableProps<T>) => {
                                 size="sm"
                                 loading={deleteItemResource.loading}
                                 colorScheme="danger"
-                                onClick={async () => {
+                                onClick={() => {
                                   if (onDelete) {
-                                    await onDelete(row);
-                                    refetch();
+                                    // await onDelete(row);
+                                    // refetch();
                                   } else {
                                     setDeleteId(`${api}/${row.id}`);
                                   }
@@ -348,10 +350,15 @@ const TableBody = <T,>(props: TableProps<T>) => {
           </For>
         </Tbody>
       </HopeTable>
-      <Modal scrollBehavior="inside" opened={isOpen()} onClose={onClose}>
+      <Modal
+        scrollBehavior="inside"
+        opened={isOpen()}
+        onClose={onClose}
+        closeOnOverlayClick={false}
+      >
         <ModalOverlay />
         <ModalContent>
-          {props.itemEditor?.call(null, editCurrent())}
+          {props.itemEditor?.call(null, editCurrent(), onClose, refetch)}
         </ModalContent>
       </Modal>
     </>

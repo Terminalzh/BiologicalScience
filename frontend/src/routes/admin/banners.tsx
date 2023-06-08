@@ -2,21 +2,25 @@ import {
   Button,
   FormControl,
   Input,
+  Modal,
   ModalBody,
+  ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
+  createDisclosure,
 } from "@hope-ui/solid";
 import { DateTimeColumn, PictureColumn, Table } from "~/components/table";
 
 const CreationModal = (props: { data?: any; name?: string }) => {
+  const { isOpen, onOpen, onClose } = createDisclosure();
+
   return (
     <>
       <ModalHeader>{props.data ? "修改" : "新建"}</ModalHeader>
       <ModalBody>
         <form id={props.name}>
-          <FormControl>
-            <Input type="text" />
-          </FormControl>
+          <Button onClick={onOpen}>选择物种</Button>
         </form>
       </ModalBody>
       <ModalFooter>
@@ -24,6 +28,16 @@ const CreationModal = (props: { data?: any; name?: string }) => {
           {props.data ? "确认修改" : "确认保存"}
         </Button>
       </ModalFooter>
+
+      <Modal opened={isOpen()} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Header</ModalHeader>
+          <ModalBody>
+            {/* <SpeciesSearcher /> */}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

@@ -2,14 +2,10 @@ import {
   Anchor,
   Avatar,
   Button,
-  Divider,
   IconButton,
-  Image,
   Menu,
   MenuContent,
-  MenuGroup,
   MenuItem,
-  MenuLabel,
   MenuTrigger,
   Spinner,
   notificationService,
@@ -25,7 +21,7 @@ import {
   createResource,
   untrack,
 } from "solid-js";
-import { Outlet, useLocation, useNavigate } from "solid-start";
+import { useLocation, useNavigate } from "solid-start";
 import { LogoIcon } from "~/components/LogoIcon";
 import { User, getMe, logout } from "~/api/user";
 import { catchResource } from "~/utils";
@@ -161,7 +157,7 @@ const BrandItem = (props: { brand: JSX.Element }) => {
 const NavItem = (props: any) => {
   return (
     <li class="cursor-pointer hover:text-brand-primary/87 transition-all">
-      {props.children}
+      <a href={props.target}>{props.children}</a>
     </li>
   );
 };
@@ -235,9 +231,9 @@ export default function BaseLayout(props: BaseLayoutProps) {
   });
 
   const getAvatar = createMemo(() => {
-    if (meResource()?.avatar) {
+    if (userResult()?.avatar) {
       try {
-        const pictures = JSON.parse(meResource()!.avatar);
+        const pictures = JSON.parse(userResult()!.avatar);
         return pictures.m;
       } catch (e) {}
     }
@@ -268,8 +264,8 @@ export default function BaseLayout(props: BaseLayoutProps) {
             </div>
             <Show when={props.mode === "normal"}>
               <ul class="flex font-sans gap-8 flex-1 items-center list-none justify-center font-500 text-lg">
-                <NavItem>主页</NavItem>
-                <NavItem>物种检索</NavItem>
+                <NavItem target="/service">主页</NavItem>
+                <NavItem target="/service/retrieval">物种检索</NavItem>
                 <NavItem>每日推荐</NavItem>
                 <NavItem>关于我们</NavItem>
               </ul>
@@ -310,7 +306,7 @@ export default function BaseLayout(props: BaseLayoutProps) {
                     <MenuContent>
                       <MenuItem
                         icon={
-                          <SolarUserBoldDuotone class="dark:fill-white/40 light:fill-dark/40" />
+                          <SolarUserBoldDuotone class="fill-brand-primary/80" />
                         }
                         onSelect={() => {
                           navigate("/admin/photos");
@@ -375,7 +371,7 @@ export default function BaseLayout(props: BaseLayoutProps) {
         <div class="grow-1 shrink-2 relative overflow-hidden">
           {props.children(userResult)}
         </div>
-        <footer class="container-compact text-center mt-12 py-4 shrink-0">
+        <footer class="container-compact text-center py-4 shrink-0">
           <h5 class="font-bold text-primary">关注我们</h5>
           <ul class="text-center flex items-center justify-center gap-4 mt-2">
             <BrandItem brand={<TablerBrandWechat />} />

@@ -22,6 +22,7 @@ import {
 } from "solid-js";
 import { useNavigate, useSearchParams } from "solid-start";
 import { login, register } from "~/api/user";
+import RegistryForm from "~/components/RegistryForm";
 import PictureUploader from "~/components/form/PictureUploader";
 import { catchResource } from "~/utils";
 
@@ -57,12 +58,12 @@ const LoginForm = () => {
   });
   return (
     <form ref={form} class="flex flex-col gap-6 mt-4">
-      <FormControl required>
+      <FormControl required disabled={loginResource.loading}>
         <FormLabel>用户名</FormLabel>
         <Input type="text" name="username" placeholder="用户名或邮箱" />
       </FormControl>
 
-      <FormControl required>
+      <FormControl required disabled={loginResource.loading}>
         <FormLabel>密码</FormLabel>
         <Input type="password" name="password" placeholder="输入密码" />
       </FormControl>
@@ -79,101 +80,10 @@ const LoginForm = () => {
   );
 };
 
-const RegistryForm = () => {
-  const [data, setData] = createSignal();
-  const navigate = useNavigate();
-  const [registerResource] = createResource(data, register);
-  let avatar = "";
-  const registerResult = catchResource(registerResource, (e) => {
-    untrack(() => {
-      notificationService.show({
-        title: "注册失败",
-        status: "danger",
-        description: e.message,
-      });
-    });
-  });
-
-  createEffect(() => {
-    if (registerResult()) {
-      untrack(() => {
-        notificationService.show({
-          title: "注册成功",
-          status: "success",
-        });
-        navigate("/admin/photos");
-      });
-    }
-  });
-
-  const { form } = createForm({
-    onSubmit: (values) => {
-      values.avatar = avatar;
-      setData(values);
-    },
-  });
-  return (
-    <form ref={form} class="flex flex-col gap-6 mt-4">
-      <div class="flex gap-8 items-center">
-        <div>
-          <PictureUploader
-            name="avatar"
-            required
-            onChanged={(value) => {
-              avatar = JSON.stringify(value);
-            }}
-          />
-        </div>
-        <div class="flex flex-col gap-4">
-          <FormControl required>
-            <FormLabel>姓名</FormLabel>
-            <Input type="text" name="name" placeholder="输入您的姓名" />
-          </FormControl>
-
-          <FormControl required>
-            <FormLabel>密码</FormLabel>
-            <Input
-              type="password"
-              name="password"
-              placeholder="输入密码"
-              autocomplete="current-password"
-            />
-          </FormControl>
-        </div>
-      </div>
-
-      <FormControl required>
-        <FormLabel>性别</FormLabel>
-        <RadioGroup defaultValue="男" name="gender">
-          <HStack spacing="$4">
-            <Radio value="男">男</Radio>
-            <Radio value="女">女</Radio>
-          </HStack>
-        </RadioGroup>
-      </FormControl>
-      <FormControl required>
-        <FormLabel>电话号码</FormLabel>
-        <Input type="tel" name="phone" placeholder="输入您的电话号码" />
-      </FormControl>
-      <FormControl required>
-        <FormLabel>电子邮箱</FormLabel>
-        <Input type="email" name="email" placeholder="feedback@mammalia.org" />
-      </FormControl>
-      <div class="flex gap-4">
-        <Button
-          loading={registerResource.loading}
-          type="submit"
-          class="flex-1 btn"
-        >
-          立即注册
-        </Button>
-      </div>
-    </form>
-  );
-};
-
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
   const isLoginMode = createMemo(() => searchParams.registry !== "true");
   return (
     <section class="min-h-65vh flex justify-center items-center">
@@ -190,7 +100,27 @@ export default function LoginPage() {
           <LoginForm />
         </Show>
 
-        <Show when={isLoginMode()} fallback={<RegistryForm />}>
+        <Show
+          when={isLoginMode()}
+          fallback={
+            <RegistryForm
+              onFailed={(e) => {
+                notificationService.show({
+                  title: "注册失败",
+                  status: "danger",
+                  description: e.message,
+                });
+              }}
+              onSucceed={() => {
+                notificationService.show({
+                  title: "注册成功",
+                  status: "success",
+                });
+                navigate("/admin/photos");
+              }}
+            />
+          }
+        >
           <p class="text-center mt-4">
             <Anchor>忘记密码</Anchor>
           </p>

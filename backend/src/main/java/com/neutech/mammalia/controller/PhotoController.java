@@ -24,9 +24,8 @@ public class PhotoController {
     @PostMapping
     public Response addPhoto(@RequestBody Map<String, Object> param) {
         Response response = new Response();
-        Integer worksId = (Integer) param.get("worksId");
-        Boolean isPublic = (Boolean) param.get("isPublic");
-        if (photoService.addPhoto(worksId, isPublic) == 1) {
+        Integer worksId = (Integer) param.get("speciesId");
+        if (photoService.addPhoto(worksId) == 1) {
             response.setCode(HttpStatus.CREATED.value());
             response.setMessage(HttpStatus.CREATED.getReasonPhrase());
         } else {

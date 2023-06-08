@@ -53,9 +53,11 @@ public interface WorksMapper {
     @Select("select * from t_works where id=#{id}")
     Works inquireWorksById(@Param("id") Integer id);
 
+    @ResultMap(value = "worksResultMapping")
     @Select("select * from t_works where user_id = #{userId}")
     List<Works> inquireWorksIdByUserId(@Param("userId") Integer userId);
 
+    @ResultMap(value = "worksResultMapping")
     @Select("select * from t_works")
     List<Works> inquireAllWorks();
 }

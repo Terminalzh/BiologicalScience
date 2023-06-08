@@ -2,6 +2,7 @@ package com.neutech.mammalia.service.impl;
 
 import com.alibaba.druid.sql.visitor.functions.If;
 import com.neutech.mammalia.bean.CategoryCount;
+import com.neutech.mammalia.bean.Photo;
 import com.neutech.mammalia.bean.Species;
 import com.neutech.mammalia.mapper.SpeciesMapper;
 import com.neutech.mammalia.service.*;
@@ -21,7 +22,7 @@ public class SpeciesServiceImpl implements SpeciesService {
     private WorksService worksService;
     @Lazy
     @Resource
-    private CategoryCountService categoryCountService;
+    private PhotoService photoService;
 
     @Override
 
@@ -32,6 +33,7 @@ public class SpeciesServiceImpl implements SpeciesService {
     @Override
     public int deleteSpeciesById(Integer id) {
         worksService.deleteWorksBySpeciesId(id);
+        photoService.deletePhotoBySpeciesId(id);
         return speciesMapper.deleteSpeciesById(id);
     }
 
@@ -53,14 +55,7 @@ public class SpeciesServiceImpl implements SpeciesService {
 
     @Override
     public List<Species> inquireSpeciesByKeyword(String keyword, String inheritance) {
-        List<CategoryCount> categoryCounts = categoryCountService.inquireCategoryFlatByInheritance(inheritance);
-        List<Species> list = new ArrayList<>();
-        for (CategoryCount categoryCount : categoryCounts) {
-            Species species = speciesMapper.inquireSpeciesByKeyword(categoryCount.getId(), keyword);
-            if (species != null)
-                list.add(species);
-        }
-        return list;
+        return speciesMapper.inquireSpeciesByKeyword(inheritance, keyword);
     }
 
     @Override

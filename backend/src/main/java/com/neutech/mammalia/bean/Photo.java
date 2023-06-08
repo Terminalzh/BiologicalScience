@@ -16,14 +16,9 @@ public class Photo {
     private Integer id;
 
     /**
-     * 摄影作品表ID
+     * 物种表id
      */
-    private Works works;
-
-    /**
-     * 照片墙是否公开展示，true 或 false
-     */
-    private Boolean isPublic;
+    private Species species;
 
     /**
      * 照片墙被查看的次数

@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 public interface PhotoService {
-    int addPhoto(Integer worksId, Boolean isPublic);
+    int addPhoto(Integer speciesId);
 
     int deletePhotoById(Integer id);
+
+    int deletePhotoBySpeciesId(Integer speciesId);
 
     int updatePhotoById(Photo photo);
 

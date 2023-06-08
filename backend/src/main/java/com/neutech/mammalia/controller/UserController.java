@@ -73,6 +73,7 @@ public class UserController {
 
     @DeleteMapping(value = "/logout")
     public Response logout(HttpSession session) {
+        session.removeAttribute("user");
         session.invalidate();
         Response response = new Response();
         response.setCode(HttpStatus.OK.value());

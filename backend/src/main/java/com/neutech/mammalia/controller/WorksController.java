@@ -89,12 +89,17 @@ public class WorksController {
     public Response inquireAllWorks(Page<Integer> page, HttpSession session) {
         Response response = new Response();
         User user = (User) session.getAttribute("user");
-        PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Works> works;
+        PageInfo<Works> worksPageInfo;
+        PageHelper.startPage(page.getPageNum(), page.getPageSize());
         if (user.getIsAdmin())
             works = worksService.inquireAllWorks();
-        else works = worksService.inquireAllWorksByUserId(user.getId());
-        PageInfo<Works> worksPageInfo = new PageInfo<>(works);
+        else
+            works = worksService.inquireAllWorksByUserId(user.getId());
+        for (Works work : works) {
+            work.setUser(user);
+        }
+        worksPageInfo = new PageInfo<>(works);
         if (works.size() >= 1) {
             response.setCode(HttpStatus.OK.value());
             response.setMessage("success");

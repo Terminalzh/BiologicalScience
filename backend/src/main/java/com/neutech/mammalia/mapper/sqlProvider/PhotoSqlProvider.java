@@ -7,8 +7,6 @@ public class PhotoSqlProvider {
     public static String updatePhotoById(Photo photo) {
         SQL sql = new SQL();
         sql.UPDATE("t_photo");
-        if (photo.getIsPublic() != null)
-            sql.SET("is_public  = #{photo.isPublic}");
         if (photo.getViewCount() != null)
             sql.SET("view_count  = #{photo.viewCount}");
         if (photo.getLikeCount() != null)

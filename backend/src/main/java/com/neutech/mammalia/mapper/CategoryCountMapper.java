@@ -32,10 +32,9 @@ public interface CategoryCountMapper {
     List<CategoryCount> inquireAllCategories(@Param("expression") String expression);
 
     @Select("""
-            select * from category_count where
-            categorized_inheritance regexp concat('^',#{inheritance}) and
-            species is null
-            limit 
+            select * from category_count
+            left join t_species ts on category_count.id = ts.id
+            where categorized_inheritance regexp concat('^',#{inheritance})
             """)
     List<CategoryCount> inquireCategoryFlatByInheritance(@Param("inheritance") String inheritance);
 

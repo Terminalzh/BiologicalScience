@@ -22,7 +22,9 @@ public class SpeciesSqlProvider {
         if (species.getLevel() != null)
             sql.SET("level = #{species.level}");
         if (species.getPictureUrl() != null)
-            sql.SET("pictureUrl = #{species.pictureUrl}");
+            sql.SET("picture_url = #{species.pictureUrl}");
+        if (species.getBetterUrl() != null)
+            sql.SET("better_url = #{species.betterUrl}");
         sql.SET("update_time = CURRENT_TIMESTAMP");
         sql.WHERE("id = #{species.id}");
         return sql.toString();

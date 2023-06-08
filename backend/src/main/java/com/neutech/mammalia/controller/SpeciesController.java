@@ -92,7 +92,7 @@ public class SpeciesController {
     }
 
     @GetMapping(value = "/blur")
-    public Response inquireSpeciesByBlur(String keyword, String inheritance,Page<Integer> page) {
+    public Response inquireSpeciesByBlur(String keyword, String inheritance, Page<Integer> page) {
         Response response = new Response();
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Species> species = speciesService.inquireSpeciesByKeyword(keyword, inheritance);

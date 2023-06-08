@@ -60,4 +60,8 @@ public class Species {
      * 物种照片地址
      */
     private String pictureUrl;
+    /**
+     * better
+     */
+    private String betterUrl;
 }

@@ -1,13 +1,11 @@
 import {
   Button,
-  FormControl,
-  Input,
   ModalBody,
-  ModalContent,
   ModalFooter,
   ModalHeader,
   notificationService,
 } from "@hope-ui/solid";
+import { createSignal } from "solid-js";
 import RegistryForm from "~/components/RegistryForm";
 import { AvatarColumn, DateColumn, Table } from "~/components/table";
 
@@ -16,6 +14,8 @@ const CreationModal = (props: {
   name?: string;
   onClose?: () => void;
 }) => {
+  const [loading, setLoading] = createSignal(false);
+
   return (
     <>
       <ModalHeader>{props.data ? "修改" : "新建"}</ModalHeader>
@@ -29,18 +29,28 @@ const CreationModal = (props: {
               status: "danger",
               description: e.message,
             });
+            setLoading(false);
           }}
           onSucceed={() => {
             notificationService.show({
               title: props.data ? "修改成功" : "新建成功",
               status: "success",
             });
+            setLoading(false);
             props.onClose?.();
+          }}
+          onSubmitted={() => {
+            setLoading(true);
           }}
         />
       </ModalBody>
       <ModalFooter>
-        <Button type="submit" form={props.name || "form"}>
+        <Button
+          type="submit"
+          form={props.name || "form"}
+          loading={loading()}
+          class="btn"
+        >
           {props.data ? "确认修改" : "确认保存"}
         </Button>
       </ModalFooter>

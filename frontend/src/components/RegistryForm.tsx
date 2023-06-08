@@ -32,6 +32,7 @@ export default function RegistryForm(props: {
   name?: string;
   onFailed?: (e: Error) => void;
   onSucceed?: () => void;
+  onSubmitted?: () => void;
 }) {
   const [data, setData] = createSignal<{ id?: string; data: any }>();
   const [registerResource] = createResource(data, api);
@@ -43,7 +44,7 @@ export default function RegistryForm(props: {
   });
 
   createEffect(() => {
-    if (registerResult()) {
+    if (registerResult() !== undefined) {
       untrack(() => {
         props.onSucceed?.();
       });
@@ -53,9 +54,11 @@ export default function RegistryForm(props: {
   const { form } = createForm({
     onSubmit: (values) => {
       values.avatar = avatar;
+      props?.onSubmitted?.();
       setData({ id: props.data?.id, data: values });
     },
   });
+
   return (
     <form ref={form} id={props.name} class="flex flex-col gap-6 mt-4">
       <div class="flex gap-8 items-center">
@@ -63,14 +66,16 @@ export default function RegistryForm(props: {
           <PictureUploader
             name="avatar"
             required
-            value={props.data?.avatar}
+            value={
+              props.data?.avatar ? JSON.parse(props.data!.avatar) : undefined
+            }
             onChanged={(value) => {
               avatar = JSON.stringify(value);
             }}
           />
         </div>
         <div class="flex flex-col gap-4">
-          <FormControl required>
+          <FormControl required disabled={registerResource.loading}>
             <FormLabel>用户名</FormLabel>
             <Input
               type="text"
@@ -80,7 +85,7 @@ export default function RegistryForm(props: {
             />
           </FormControl>
 
-          <FormControl required>
+          <FormControl required disabled={registerResource.loading}>
             <FormLabel>密码</FormLabel>
             <Input
               type="password"
@@ -93,16 +98,16 @@ export default function RegistryForm(props: {
         </div>
       </div>
 
-      <FormControl required>
+      <FormControl required disabled={registerResource.loading}>
         <FormLabel>性别</FormLabel>
-        <RadioGroup defaultValue="男" name="gender" value={props.data?.gender}>
+        <RadioGroup defaultValue={props.data?.gender || "男"} name="gender">
           <HStack spacing="$4">
             <Radio value="男">男</Radio>
             <Radio value="女">女</Radio>
           </HStack>
         </RadioGroup>
       </FormControl>
-      <FormControl required>
+      <FormControl required disabled={registerResource.loading}>
         <FormLabel>电话号码</FormLabel>
         <Input
           type="tel"
@@ -111,7 +116,7 @@ export default function RegistryForm(props: {
           value={props.data?.phone}
         />
       </FormControl>
-      <FormControl required>
+      <FormControl required disabled={registerResource.loading}>
         <FormLabel>电子邮箱</FormLabel>
         <Input
           type="email"

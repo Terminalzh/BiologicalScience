@@ -95,14 +95,25 @@ export default function PictureUploader(props: PictureUploaderProps) {
   });
 
   const pictureStr = createMemo(() =>
-    pictures() ? JSON.stringify(pictures()) : ""
+    pictures() ? JSON.stringify(pictures()) : undefined
   );
+
+  createEffect(() => {
+    if (props.value) {
+      setPictures(props.value);
+    }
+  });
 
   createEffect(() => {
     const value = dataResult();
     if (value) {
       setPictures(value);
-      props.onChanged?.call(null, value);
+    }
+  });
+
+  createEffect(() => {
+    if (pictures()) {
+      props.onChanged?.call(null, pictures()!);
     }
   });
 
@@ -129,7 +140,7 @@ export default function PictureUploader(props: PictureUploaderProps) {
             }
           >
             <ErrorBoundary fallback={() => <Icon icon="close" />}>
-              <PrevImage src={pictures() || props.value} />
+              <PrevImage src={pictures()} />
             </ErrorBoundary>
           </Match>
           <Match

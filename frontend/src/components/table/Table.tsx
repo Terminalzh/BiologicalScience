@@ -76,6 +76,8 @@ export interface TopCaptions {
    * @returns 是否拦截此次点击事件，也就是说，当返回true时，这个按钮的默认事件将不会触发
    */
   createButton?: () => boolean;
+
+  customElements?: Array<JSX.Element>;
 }
 
 /**
@@ -211,7 +213,7 @@ const TableBody = <T,>(props: TableProps<T>) => {
   });
 
   createEffect(() => {
-    if (deleteItemResult()) {
+    if (deleteItemResult() !== undefined) {
       untrack(() => {
         notificationService.show({
           title: "删除成功",
@@ -230,6 +232,8 @@ const TableBody = <T,>(props: TableProps<T>) => {
       <HopeTable striped="odd" highlightOnHover dense>
         <TableCaption class="caption-top">
           <div class="flex justify-end gap-4 items-center">
+            <For each={props.topCaptions?.customElements}>{(item) => item}</For>
+
             <Show when={props.topCaptions?.createButton}>
               <Button
                 class="btn"

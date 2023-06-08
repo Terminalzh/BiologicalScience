@@ -6,17 +6,51 @@ import {
   Image,
   Input,
   Textarea,
+  notificationService,
 } from "@hope-ui/solid";
+import { createEffect, createResource, createSignal, untrack } from "solid-js";
+import feedback from "~/api/feedback";
 import qr from "~/assets/images/qrcode.png";
+import { catchResource } from "~/utils";
 
 export default function ContactUs() {
+  const [data, setData] = createSignal();
+  const [feedbackResource] = createResource(data, feedback);
+  const feedbackResult = catchResource(feedbackResource, (e) => {
+    untrack(() => {
+      notificationService.show({
+        title: "发送失败",
+        status: "danger",
+        description: e.message,
+      });
+    });
+  });
+
   const { form } = createForm({
     onSubmit(values) {
-      console.log(values);
+      setData(values);
     },
+
     onError(error, context) {
-      console.log(error, context);
+      untrack(() => {
+        notificationService.show({
+          title: "发送失败",
+          status: "danger",
+          description: error as string,
+        });
+      });
     },
+  });
+
+  createEffect(() => {
+    if (feedbackResult()) {
+      untrack(() => {
+        notificationService.show({
+          title: "发送成功",
+          status: "success",
+        });
+      });
+    }
   });
   return (
     <section class="flex container-compact justify-around">
@@ -32,7 +66,11 @@ export default function ContactUs() {
           <div class="flex gap-4">
             <FormControl required>
               <FormLabel>称谓</FormLabel>
-              <Input type="text" name="name" placeholder="请输入您的姓名" />
+              <Input
+                type="text"
+                name="reportName"
+                placeholder="请输入您的姓名"
+              />
             </FormControl>
 
             <FormControl required>
@@ -40,7 +78,7 @@ export default function ContactUs() {
               <Input
                 required
                 type="email"
-                name="contact"
+                name="email"
                 placeholder="feedback@mammalia.org"
               />
             </FormControl>
@@ -48,14 +86,19 @@ export default function ContactUs() {
           <FormControl required>
             <FormLabel>内容</FormLabel>
             <Textarea
-              name="content"
+              name="reportReason"
               rows={8}
               placeholder="请填写您想对我们说的话，举报信息等"
             ></Textarea>
           </FormControl>
         </form>
         <div class="text-end mt-4">
-          <Button type="submit" form="contact-form" class="btn">
+          <Button
+            loading={feedbackResource.loading}
+            type="submit"
+            form="contact-form"
+            class="btn"
+          >
             提交
           </Button>
         </div>

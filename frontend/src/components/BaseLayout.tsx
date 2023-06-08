@@ -25,7 +25,7 @@ import {
   createResource,
   untrack,
 } from "solid-js";
-import { Outlet, useLocation, useNavigate } from "solid-start";
+import { A, Outlet, useLocation, useNavigate } from "solid-start";
 import { LogoIcon } from "~/components/LogoIcon";
 import { User, getMe, logout } from "~/api/user";
 import { catchResource } from "~/utils";
@@ -161,7 +161,7 @@ const BrandItem = (props: { brand: JSX.Element }) => {
 const NavItem = (props: any) => {
   return (
     <li class="cursor-pointer hover:text-brand-primary/87 transition-all">
-      {props.children}
+      <a href={props.target}>{props.children}</a>
     </li>
   );
 };
@@ -235,9 +235,9 @@ export default function BaseLayout(props: BaseLayoutProps) {
   });
 
   const getAvatar = createMemo(() => {
-    if (meResource()?.avatar) {
+    if (userResult()?.avatar) {
       try {
-        const pictures = JSON.parse(meResource()!.avatar);
+        const pictures = JSON.parse(userResult()!.avatar);
         return pictures.m;
       } catch (e) {}
     }
@@ -268,8 +268,8 @@ export default function BaseLayout(props: BaseLayoutProps) {
             </div>
             <Show when={props.mode === "normal"}>
               <ul class="flex font-sans gap-8 flex-1 items-center list-none justify-center font-500 text-lg">
-                <NavItem>主页</NavItem>
-                <NavItem>物种检索</NavItem>
+                <NavItem target="/service">主页</NavItem>
+                <NavItem target="/service/retrieval">物种检索</NavItem>
                 <NavItem>每日推荐</NavItem>
                 <NavItem>关于我们</NavItem>
               </ul>

@@ -58,12 +58,12 @@ const LoginForm = () => {
   });
   return (
     <form ref={form} class="flex flex-col gap-6 mt-4">
-      <FormControl required>
+      <FormControl required disabled={loginResource.loading}>
         <FormLabel>用户名</FormLabel>
         <Input type="text" name="username" placeholder="用户名或邮箱" />
       </FormControl>
 
-      <FormControl required>
+      <FormControl required disabled={loginResource.loading}>
         <FormLabel>密码</FormLabel>
         <Input type="password" name="password" placeholder="输入密码" />
       </FormControl>

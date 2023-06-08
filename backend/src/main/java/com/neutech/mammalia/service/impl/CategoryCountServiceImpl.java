@@ -2,6 +2,8 @@ package com.neutech.mammalia.service.impl;
 
 import com.neutech.mammalia.bean.Category;
 import com.neutech.mammalia.bean.CategoryCount;
+import com.neutech.mammalia.bean.CategoryFlat;
+import com.neutech.mammalia.bean.Species;
 import com.neutech.mammalia.mapper.CategoryCountMapper;
 import com.neutech.mammalia.service.CategoryCountService;
 import com.neutech.mammalia.service.CategoryService;
@@ -103,7 +105,13 @@ public class CategoryCountServiceImpl implements CategoryCountService {
     }
 
     @Override
-    public String inquireCategorizedInheritance(Integer id) {
+    public List<CategoryCount> inquireCategoryFlatByInheritance(String inheritance) {
+        return categoryCountMapper.inquireCategoryFlatByInheritance(inheritance);
+    }
+
+
+    @Override
+    public String inquireCategorizedInheritanceById(Integer id) {
         return null;
     }
 }

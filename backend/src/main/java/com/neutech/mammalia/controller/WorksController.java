@@ -4,9 +4,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.neutech.mammalia.bean.Response;
+import com.neutech.mammalia.bean.User;
 import com.neutech.mammalia.bean.Works;
 import com.neutech.mammalia.service.WorksService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,10 +30,10 @@ public class WorksController {
     ) {
         Response response = new Response();
         if (worksService.addWorks(works, userId, speciesId) == 1) {
-            response.setData(HttpStatus.CREATED.value());
+            response.setCode(HttpStatus.CREATED.value());
             response.setMessage("上传成功");
         } else {
-            response.setData(HttpStatus.BAD_REQUEST.value());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
             response.setMessage("上传失败");
         }
         return response;
@@ -41,10 +43,10 @@ public class WorksController {
     public Response deleteWorksById(@PathVariable("id") Integer id) {
         Response response = new Response();
         if (worksService.deleteWorksById(id) == 1) {
-            response.setData(HttpStatus.OK.value());
+            response.setCode(HttpStatus.OK.value());
             response.setMessage("删除成功");
         } else {
-            response.setData(HttpStatus.NOT_FOUND.value());
+            response.setCode(HttpStatus.NOT_FOUND.value());
             response.setMessage("未找到该条记录,可能已被删除或不存在");
         }
         return response;
@@ -59,10 +61,10 @@ public class WorksController {
         Response response = new Response();
         works.setId(id);
         if (worksService.updateWorksById(works, speciesId) >= 1) {
-            response.setData(HttpStatus.OK.value());
+            response.setCode(HttpStatus.OK.value());
             response.setMessage("修改成功");
         } else {
-            response.setData(HttpStatus.BAD_REQUEST.value());
+            response.setCode(HttpStatus.BAD_REQUEST.value());
             response.setMessage("修改失败,请检查您的数据");
         }
         return response;
@@ -73,28 +75,32 @@ public class WorksController {
         Response response = new Response();
         List<Works> works = worksService.inquireAllWorksByUserId(userId);
         if (works.size() >= 1) {
-            response.setData(HttpStatus.OK.value());
+            response.setCode(HttpStatus.OK.value());
             response.setMessage("success");
             response.setData(works);
         } else {
-            response.setData(HttpStatus.NOT_FOUND.value());
+            response.setCode(HttpStatus.NOT_FOUND.value());
             response.setMessage("该用户不存在或该用户没有作品");
         }
         return response;
     }
 
     @GetMapping
-    public Response inquireAllWorks(Page<Integer> page) {
+    public Response inquireAllWorks(Page<Integer> page, HttpSession session) {
         Response response = new Response();
+        User user = (User) session.getAttribute("user");
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
-        List<Works> works = worksService.inquireAllWorks();
+        List<Works> works;
+        if (user.getIsAdmin())
+            works = worksService.inquireAllWorks();
+        else works = worksService.inquireAllWorksByUserId(user.getId());
         PageInfo<Works> worksPageInfo = new PageInfo<>(works);
         if (works.size() >= 1) {
-            response.setData(HttpStatus.OK.value());
+            response.setCode(HttpStatus.OK.value());
             response.setMessage("success");
             response.setData(worksPageInfo);
         } else {
-            response.setData(HttpStatus.NOT_FOUND.value());
+            response.setCode(HttpStatus.NOT_FOUND.value());
             response.setMessage("没有作品");
         }
         return response;

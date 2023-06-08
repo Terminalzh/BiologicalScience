@@ -1,11 +1,15 @@
 package com.neutech.mammalia.service.impl;
 
+import com.alibaba.druid.sql.visitor.functions.If;
+import com.neutech.mammalia.bean.CategoryCount;
 import com.neutech.mammalia.bean.Species;
 import com.neutech.mammalia.mapper.SpeciesMapper;
 import com.neutech.mammalia.service.*;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,8 +19,12 @@ public class SpeciesServiceImpl implements SpeciesService {
     private SpeciesMapper speciesMapper;
     @Resource
     private WorksService worksService;
+    @Lazy
+    @Resource
+    private CategoryCountService categoryCountService;
 
     @Override
+
     public int addSpecies(Species species) {
         return speciesMapper.addSpecies(species);
     }
@@ -41,6 +49,18 @@ public class SpeciesServiceImpl implements SpeciesService {
     @Override
     public Species inquireSpeciesById(Integer id) {
         return speciesMapper.inquireSpeciesById(id);
+    }
+
+    @Override
+    public List<Species> inquireSpeciesByKeyword(String keyword, String inheritance) {
+        List<CategoryCount> categoryCounts = categoryCountService.inquireCategoryFlatByInheritance(inheritance);
+        List<Species> list = new ArrayList<>();
+        for (CategoryCount categoryCount : categoryCounts) {
+            Species species = speciesMapper.inquireSpeciesByKeyword(categoryCount.getId(), keyword);
+            if (species != null)
+                list.add(species);
+        }
+        return list;
     }
 
     @Override

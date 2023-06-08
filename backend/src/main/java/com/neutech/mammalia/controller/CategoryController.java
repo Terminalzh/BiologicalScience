@@ -89,17 +89,13 @@ public class CategoryController {
     }
 
     @GetMapping
-    public Response inquireAllCategories(Integer level, Page<Integer> page) {
+    public Response inquireAllCategories(Integer level) {
         Response response = new Response();
-        if (page != null)
-            PageHelper.startPage(page.getPageNum(), page.getPageSize());
-        else {
-            List<CategoryFlat> list = categoryService.inquireAllCategoriesByLevel(level);
-            if (list.size() > 0) {
-                response.setCode(HttpStatus.OK.value());
-                response.setMessage(HttpStatus.OK.getReasonPhrase());
-                response.setData(list);
-            }
+        List<CategoryFlat> list = categoryService.inquireAllCategoriesByLevel(level);
+        if (list.size() > 0) {
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(list);
         }
         return response;
     }
@@ -107,9 +103,15 @@ public class CategoryController {
     @GetMapping(value = "/page")
     public Response inquireAllCategoriesByPage(Integer level, Page<Integer> page) {
         Response response = new Response();
-        PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<CategoryFlat> list = categoryService.inquireAllCategoriesByLevel(level);
-        PageInfo<CategoryFlat> pageInfo = new PageInfo<>(list);
+        List<CategoryFlat> subList = list.subList((page.getPageNum() - 1) * page.getPageSize(), Math.min(page.getPageNum() * page.getPageSize(), list.size()));
+        PageInfo<CategoryFlat> pageInfo = new PageInfo<>();
+        pageInfo.setTotal(list.size());
+        pageInfo.setPageNum(page.getPageNum());
+        pageInfo.setPageSize(page.getPageSize());
+        pageInfo.setSize(subList.size());
+        pageInfo.setPages((int) Math.ceil(1.0 * list.size() / page.getPageSize()));
+        pageInfo.setList(subList);
         if (pageInfo.getSize() > 0) {
             response.setCode(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());

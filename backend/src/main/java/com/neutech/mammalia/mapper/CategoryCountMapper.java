@@ -1,6 +1,7 @@
 package com.neutech.mammalia.mapper;
 
 import com.neutech.mammalia.bean.CategoryCount;
+import com.neutech.mammalia.bean.CategoryFlat;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -29,6 +30,14 @@ public interface CategoryCountMapper {
 
     @Select("select * from category_count where categorized_inheritance regexp #{expression}")
     List<CategoryCount> inquireAllCategories(@Param("expression") String expression);
+
+    @Select("""
+            select * from category_count where
+            categorized_inheritance regexp concat('^',#{inheritance}) and
+            species is null
+            limit 
+            """)
+    List<CategoryCount> inquireCategoryFlatByInheritance(@Param("inheritance") String inheritance);
 
     @Select("select categorized_inheritance from category_count where id = #{id}")
     String inquireCategorizedInheritance(@Param("id") Integer id);

@@ -23,7 +23,9 @@ public interface UserMapper {
     @UpdateProvider(value = UserSqlProvider.class, method = "updateUserById")
     int updateUserById(@Param("user") User user);
 
-    @Select("select * from t_user where id=#{id}")
+    @Select("""
+            select * from t_user where id=#{id}
+            """)
     User inquireUserById(@Param("id") Integer id);
 
     @Select("select * from t_user where name=#{name}")

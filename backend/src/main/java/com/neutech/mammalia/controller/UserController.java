@@ -45,9 +45,9 @@ public class UserController {
         Response response = new Response();
         User user = userService.inquireUserByEmailOrPhone(account);
         if (user != null) {
-            session.setAttribute("user", user);
             user = userService.inquireUserByEmailOrPhone(user);
             user.setIsAdmin(user.getEmail().equals(user.getPhone()));
+            session.setAttribute("user", user);
             response.setCode(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
             response.setData(user);
@@ -127,7 +127,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public Response getCurrentUser(HttpServletResponse httpServletResponse, HttpSession session) throws IOException {
+    public Response getCurrentUser(HttpServletResponse httpServletResponse, HttpSession session) {
         Response response = new Response();
         Object user = session.getAttribute("user");
         if (user != null) {

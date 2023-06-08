@@ -90,4 +90,21 @@ public class SpeciesController {
         }
         return response;
     }
+
+    @GetMapping(value = "/blur")
+    public Response inquireSpeciesByBlur(String keyword, String inheritance,Page<Integer> page) {
+        Response response = new Response();
+        PageHelper.startPage(page.getPageNum(), page.getPageSize());
+        List<Species> species = speciesService.inquireSpeciesByKeyword(keyword, inheritance);
+        PageInfo<Species> speciesPageInfo = new PageInfo<>(species);
+        if (species.size() > 0) {
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+            response.setData(speciesPageInfo);
+        } else {
+            response.setCode(HttpStatus.NOT_FOUND.value());
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+        }
+        return response;
+    }
 }

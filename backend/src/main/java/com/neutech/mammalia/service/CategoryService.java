@@ -4,6 +4,7 @@ import com.neutech.mammalia.bean.Category;
 import com.neutech.mammalia.bean.CategoryCount;
 import com.neutech.mammalia.bean.CategoryFlat;
 
+import java.lang.invoke.CallSite;
 import java.util.List;
 
 public interface CategoryService {

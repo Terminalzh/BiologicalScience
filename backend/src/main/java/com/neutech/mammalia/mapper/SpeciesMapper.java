@@ -31,6 +31,14 @@ public interface SpeciesMapper {
     @Select("select * from t_species where genus_id = #{genusId}")
     List<Species> inquireSpeciesByGenusId(@Param("genusId") Integer genusId);
 
+    @Select("""
+            select * from t_species where
+            id = #{id} and
+            (c_name like concat('%',#{keyword},'%') or
+            latin_name like concat('%',#{keyword},'%'))
+            """)
+    Species inquireSpeciesByKeyword(@Param("id") Integer id, @Param("keyword") String keyword);
+
     @Select("select * from t_species")
     List<Species> inquireAllSpecies();
 }

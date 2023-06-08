@@ -15,5 +15,7 @@ public interface SpeciesService {
 
     Species inquireSpeciesById(Integer id);
 
+    List<Species> inquireSpeciesByKeyword(String keyword, String inheritance);
+
     List<Species> inquireAllSpecies();
 }

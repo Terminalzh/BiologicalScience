@@ -98,9 +98,9 @@ const CreationModal = (props: {
                   name="avatar"
                   required
                   value={
-                    props.data?.imageUrl
-                      ? JSON.parse(props.data!.imageUrl)
-                      : undefined
+                    props.data?.pictureUrl
+                      ? JSON.parse(props.data!.pictureUrl)
+                      : props.data?.pictureUrl
                   }
                   onChanged={(value) => {
                     imageUrl = JSON.stringify(value);

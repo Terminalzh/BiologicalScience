@@ -1,4 +1,4 @@
-import { PageResponse, PaginationParams, get } from "./base";
+import { PageResponse, PaginationParams, get, post, put } from "./base";
 
 export interface SearchParams {
   level: string;
@@ -27,7 +27,14 @@ export const searchSpecies = (data: SearchParams) => {
   });
 };
 
-
 export const getSpecies = (id: number) => {
-  return get<SearchResultItem>(`/api/species/${id}`)
-}
+  return get<SearchResultItem>(`/api/species/${id}`);
+};
+
+export const updateSpecies = (id: number, data: any) => {
+  return put(`/api/species/${id}`, data);
+};
+
+export const createSpecies = (data: any) => {
+  return post(`/api/species`, data);
+};

@@ -122,7 +122,7 @@ const CategoryItem = (props: {
 
 export function CategoryFilter(props: {
   class?: string;
-  onSelected?: (levels: string) => void;
+  onSelected?: (levels: string, root: IdNode) => void;
 }) {
   const [rootNode, setRootNode] = createSignal<IdNode>(
     { id: 1 },
@@ -136,7 +136,7 @@ export function CategoryFilter(props: {
   };
 
   createEffect(() => {
-    props.onSelected?.(serializeIdNode2String(rootNode()));
+    props.onSelected?.(serializeIdNode2String(rootNode()), rootNode());
   });
 
   return (

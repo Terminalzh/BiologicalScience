@@ -35,6 +35,7 @@ import {
   Tr,
   createDisclosure,
   notificationService,
+  useColorMode,
 } from "@hope-ui/solid";
 import { Table as HopeTable } from "@hope-ui/solid";
 import { catchResource } from "~/utils";
@@ -175,6 +176,7 @@ const TableBody = <T,>(props: TableProps<T>) => {
   });
 
   const [page, setPage] = createSignal<PaginationEntity>();
+  const { colorMode } = useColorMode();
 
   const fetchData = async (
     pagination: Partial<PaginationEntity>

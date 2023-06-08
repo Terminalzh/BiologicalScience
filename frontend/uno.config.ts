@@ -27,6 +27,8 @@ export default defineConfig({
     "text-body": "text-lg",
     "rounded-std": "rounded-[2.5rem]",
     anchor: "font-bold font-sans text-primary border-b-2 border-b-solid",
+    "scrollbar-std":
+      "scrollbar dark:scrollbar-track-color-white/5 scrollbar-thumb-color-brand-primary/10 scrollbar-rounded scrollbar-w-0.5rem scrollbar-radius-2 scrollbar-track-radius-4 scrollbar-thumb-radius-4 ",
   },
   presets: [
     presetUno(),

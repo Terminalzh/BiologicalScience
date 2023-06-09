@@ -21,6 +21,7 @@ interface PictureUploaderProps {
   required?: boolean;
   value?: Pictures;
   file?: Blob;
+  valueStr?: string;
   ref?: any; // 此处的Ref是选择文件的input的ref，用来实现在外部的click调起选择图片的操作
   onChanged?: (value: Pictures) => void; // 每次值改变时，并且非空时调用
 }
@@ -43,10 +44,14 @@ function Icon(props: { icon: string }) {
   );
 }
 
-function PrevImage(props: { src?: Pictures; target?: PictureTarget }) {
+function PrevImage(props: {
+  src?: Pictures;
+  target?: PictureTarget;
+  valueUrl?: string;
+}) {
   return (
     <img
-      src={props.src ? props.src![props.target || "m"] : undefined}
+      src={props.src ? props.src![props.target || "m"] : props.valueUrl}
       class="w-full h-full object-contain absolute z-10"
     />
   );
@@ -105,6 +110,16 @@ export default function PictureUploader(props: PictureUploaderProps) {
   });
 
   createEffect(() => {
+    if (props.valueStr) {
+      let jsonResult: any = undefined;
+      try {
+        jsonResult = JSON.parse(props.valueStr);
+        setPictures(jsonResult);
+      } catch (e) {}
+    }
+  });
+
+  createEffect(() => {
     const value = dataResult();
     if (value) {
       setPictures(value);
@@ -135,12 +150,14 @@ export default function PictureUploader(props: PictureUploaderProps) {
         <Switch>
           <Match
             when={
-              (pictures() !== undefined || props.value !== undefined) &&
+              (pictures() !== undefined ||
+                props.value !== undefined ||
+                props.valueStr !== undefined) &&
               !data.loading
             }
           >
             <ErrorBoundary fallback={() => <Icon icon="close" />}>
-              <PrevImage src={pictures()} />
+              <PrevImage src={pictures()} valueUrl={props.valueStr} />
             </ErrorBoundary>
           </Match>
           <Match

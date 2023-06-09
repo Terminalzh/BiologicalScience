@@ -45,7 +45,7 @@ import { PictureColumn } from "./table";
 import { Pictures } from "~/utils/pictures";
 import { catchResource } from "~/utils";
 
-interface IdNode {
+export interface IdNode {
   id: number;
   next?: IdNode;
 }
@@ -66,11 +66,19 @@ const CategoryItem = (props: {
   children?: (node: IdNode) => JSX.Element;
 }) => {
   const [id, setId] = createSignal<number>();
+
   createEffect(() => {
     setId(props.node.id);
   });
+
   const [selected, setSelected] = createSignal<IdNode>();
   const [categoryResource] = createResource(id, getCategory);
+
+  createEffect(() => {
+    if (props.node?.next) {
+      setSelected(props.node.next);
+    }
+  });
 
   return (
     <>
@@ -83,6 +91,7 @@ const CategoryItem = (props: {
           }
         >
           <Select
+            defaultValue={props.node.next?.id}
             onChange={(v) => {
               const node = { id: v };
               props.setNext(node);
@@ -122,12 +131,32 @@ const CategoryItem = (props: {
 
 export function CategoryFilter(props: {
   class?: string;
+  value?: string;
   onSelected?: (levels: string, root: IdNode) => void;
 }) {
   const [rootNode, setRootNode] = createSignal<IdNode>(
     { id: 1 },
     { equals: false }
   );
+
+  createEffect(() => {
+    if (props.value) {
+      let node: any = {};
+      let current = node;
+      props.value.split(".").forEach((item) => {
+        if (item !== "1") {
+          current.next = {
+            id: Number.parseInt(item),
+          };
+          current = current.next;
+        } else {
+          current.id = 1;
+        }
+      });
+      setRootNode(node);
+    }
+  });
+
   const setNext = (current: IdNode, next: IdNode) => {
     setRootNode((prev) => {
       current.next = next;

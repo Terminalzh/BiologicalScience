@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@hope-ui/solid";
+import { Button, IconButton, Input } from "@hope-ui/solid";
 import { batch, createEffect, createSignal, For, JSX, Setter } from "solid-js";
 import { PaginationEntity, PaginationParams } from "~/api/base";
 
@@ -180,6 +180,13 @@ export default function Pagination(props: {
         />
       </section>
       <section class="ml-4 flex items-center">
+        <div>
+          <Input class="w-1" />
+          <Button size="sm" class="btn">
+            GO
+          </Button>
+        </div>
+
         <span class="text-secondary">
           共 <span class="text-brand-primary/87">{pageCount()}</span> 页
         </span>

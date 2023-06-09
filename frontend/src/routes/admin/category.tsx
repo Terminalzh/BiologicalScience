@@ -411,7 +411,22 @@ export default function SpeciesCategory() {
                 onOpen();
                 return true;
               },
-              customElements: [<Button class="btn">旭日图</Button>],
+              customElements: [
+                // <Button
+                //   class="btn"
+                //   onClick={() => {
+                //     setMode((pre) => {
+                //       if (pre === "table") {
+                //         return "sunburst";
+                //       } else {
+                //         return "table";
+                //       }
+                //     });
+                //   }}
+                // >
+                //   {mode() === "sunburst" ? "表格" : "旭日图"}
+                // </Button>,
+              ],
             }}
           />
         </Show>

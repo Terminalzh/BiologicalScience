@@ -52,20 +52,16 @@ export const PictureColumn = (
   try {
     const images = JSON.parse(pictures) as Pictures;
     if (images) {
-      <AspectRatio ratio={16 / 10} width="6rem">
-        return <Image src={images[target]} class="h-12 rounded-2xl" />;
-      </AspectRatio>;
+      return (
+        <AspectRatio ratio={16 / 10} width="6rem">
+          return <Image src={images[target]} class="h-12 rounded-2xl" />;
+        </AspectRatio>
+      );
     }
   } catch (e) {}
   return (
     <AspectRatio ratio={16 / 10} width="6rem">
-      <Image
-        src={pictures}
-        class="rounded-2xl"
-        onError={(e) => {
-          console.log(e);
-        }}
-      />
+      <Image src={pictures} class="rounded-2xl" />
     </AspectRatio>
   );
 };

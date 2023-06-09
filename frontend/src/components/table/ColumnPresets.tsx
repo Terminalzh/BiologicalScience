@@ -42,7 +42,7 @@ export const PictureColumn = (
     return (
       <AspectRatio
         ratio={16 / 10}
-        class="dark:bg-white/5 rounded-2xl"
+        class="dark:bg-white/5 light:bg-dark/5 rounded-2xl"
         width="6rem"
       >
         <p class="text-secondary text-center italic">图片缺失</p>

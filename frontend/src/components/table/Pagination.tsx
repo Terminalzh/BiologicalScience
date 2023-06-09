@@ -1,6 +1,45 @@
-import { Button, IconButton, Input } from "@hope-ui/solid";
+import { createForm } from "@felte/solid";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  IconButton,
+  Input,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverFooter,
+  PopoverHeader,
+  PopoverTrigger,
+} from "@hope-ui/solid";
 import { batch, createEffect, createSignal, For, JSX, Setter } from "solid-js";
 import { PaginationEntity, PaginationParams } from "~/api/base";
+
+export function SolarForward2BoldDuotone(props: JSX.IntrinsicElements["svg"]) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1.3em"
+      height="1.3em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <g>
+        <path
+          fill-rule="evenodd"
+          d="M13.97 17.53a.75.75 0 0 0 1.06 0l5-5a.75.75 0 0 0 0-1.06l-5-5a.75.75 0 1 0-1.06 1.06L18.44 12l-4.47 4.47a.75.75 0 0 0 0 1.06Z"
+          clip-rule="evenodd"
+        ></path>
+        <path
+          d="M17.69 12.75H9.5c-.953 0-2.367-.28-3.563-1.141C4.702 10.719 3.75 9.244 3.75 7a.75.75 0 1 1 1.5 0c0 1.756.715 2.78 1.563 3.391c.887.639 1.974.859 2.687.859h8.19l.75.75l-.75.75Zm2.503-.463Z"
+          opacity=".5"
+        ></path>
+      </g>
+    </svg>
+  );
+}
 
 export function SolarAltArrowLeftLineDuotone(
   props: JSX.IntrinsicElements["svg"]
@@ -86,8 +125,20 @@ export default function Pagination(props: {
     });
   });
 
+  const { form } = createForm({
+    onSubmit(values, context) {
+      batch(() => {
+        props.pageSetter((prev) => ({
+          pageNum: values.pageForward,
+          pageSize: prev.pageSize,
+        }));
+        setCurrent(values.pageForward);
+      });
+    },
+  });
+
   return (
-    <div class="flex justify-center py-4 select-none">
+    <div class="flex justify-center py-4 select-none flex-wrap">
       <section class="flex items-center">
         <IconButton
           icon={
@@ -179,14 +230,20 @@ export default function Pagination(props: {
           }}
         />
       </section>
-      <section class="ml-4 flex items-center">
-        <div>
-          <Input class="w-1" />
-          <Button size="sm" class="btn">
-            GO
+      <section class="ml-4 flex items-center gap-4">
+        <form ref={form} class="flex items-center gap-2">
+          <Input
+            type="number"
+            name="pageForward"
+            max={pageCount()}
+            min={1}
+            placeholder="页码"
+            required
+          />
+          <Button type="submit" size="sm" class="btn">
+            转跳
           </Button>
-        </div>
-
+        </form>
         <span class="text-secondary">
           共 <span class="text-brand-primary/87">{pageCount()}</span> 页
         </span>

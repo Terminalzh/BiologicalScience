@@ -27,23 +27,36 @@ public interface SpeciesMapper {
     @UpdateProvider(value = SpeciesSqlProvider.class, method = "updateSpeciesById")
     int updateSpeciesById(@Param("species") Species species);
 
-    @Select("select * from t_species where id = #{id}")
+    @Select("""
+            select t.id, t.c_name, t.latin_name, t.genus_id, t.brief_introduction, t.detail_introduction, t.recommend, t.level, t.create_time, t.update_time, t.picture_url, t.better_url,
+            c.categorized_inheritance
+            from t_species t
+            left join category_count c on t.genus_id = c.id
+            where t.id = #{id}
+            """)
     Species inquireSpeciesById(@Param("id") Integer id);
 
     @Select("select * from t_species where genus_id = #{genusId}")
     List<Species> inquireSpeciesByGenusId(@Param("genusId") Integer genusId);
 
     @Select("""
-            select * from t_species where
-            (c_name like concat('%',#{keyword},'%') or
-            latin_name like concat('%',#{keyword},'%'))
-            and t_species.id in
-            (select category_count.id from category_count
-            where categorized_inheritance regexp concat('^',#{inheritance})
+            select * from t_species t
+            left join category_count c on t.genus_id = c.id
+            where
+            (t.c_name like concat('%',#{keyword},'%') or
+            t.latin_name like concat('%',#{keyword},'%'))
+            and t.id in
+            (select c.id from c
+            where c.categorized_inheritance regexp concat('^',#{inheritance})
             )
+            order by t.update_time desc
             """)
     List<Species> inquireSpeciesByKeyword(@Param("inheritance") String inheritance, @Param("keyword") String keyword);
 
-    @Select("select * from t_species")
+    @Select("""
+            select t.id, t.c_name, t.latin_name, t.genus_id, t.brief_introduction, t.detail_introduction, t.recommend, t.level, t.create_time, t.update_time, t.picture_url, t.better_url,
+            c.categorized_inheritance
+            from t_species t left join category_count c on t.genus_id = c.id  order by update_time desc
+            """)
     List<Species> inquireAllSpecies();
 }

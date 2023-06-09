@@ -64,4 +64,8 @@ public class Species {
      * better
      */
     private String betterUrl;
+    /**
+     * 继承关系
+     */
+    private String categorizedInheritance;
 }

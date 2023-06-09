@@ -9,6 +9,7 @@ import com.neutech.mammalia.bean.Response;
 import com.neutech.mammalia.service.PhotoService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,76 +23,50 @@ public class PhotoController {
     private PhotoService photoService;
 
     @PostMapping
-    public Response addPhoto(@RequestBody Map<String, Object> param) {
-        Response response = new Response();
+    public ResponseEntity<Response> addPhoto(@RequestBody Map<String, Object> param) {
         Integer worksId = (Integer) param.get("speciesId");
-        if (photoService.addPhoto(worksId) == 1) {
-            response.setCode(HttpStatus.CREATED.value());
-            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+        if (photoService.addPhoto(worksId) == 1)
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @DeleteMapping(value = "/{id}")
-    public Response deletePhotoById(@PathVariable Integer id) {
-        Response response = new Response();
-        if (photoService.deletePhotoById(id) == 1) {
-            response.setCode(HttpStatus.NO_CONTENT.value());
-            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+    public ResponseEntity<Response> deletePhotoById(@PathVariable Integer id) {
+        if (photoService.deletePhotoById(id) == 1)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response(HttpStatus.NO_CONTENT));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping(value = "/{id}")
-    public Response updatePhotoById(@PathVariable Integer id, @RequestBody Photo photo) {
-        Response response = new Response();
+    public ResponseEntity<Response> updatePhotoById(@PathVariable Integer id, @RequestBody Photo photo) {
         photo.setId(id);
-        if (photoService.updatePhotoById(photo) == 1) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+        if (photoService.updatePhotoById(photo) == 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @GetMapping("/{id}")
-    public Response inquirePhotoById(@PathVariable Integer id) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquirePhotoById(@PathVariable Integer id) {
         Photo photo = photoService.inquirePhotoById(id);
-        if (photo != null) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(photo);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (photo != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, photo));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
+
     }
 
     @GetMapping
-    public Response inquireAllPhoto(Page<Integer> page) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireAllPhoto(Page<Integer> page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Photo> photos = photoService.inquireAllPhotos();
         PageInfo<Photo> photoPageInfo = new PageInfo<>(photos);
-        if (photos.size() > 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(photoPageInfo);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
-    }
+        if (photos.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, photoPageInfo));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
 
+    }
 }

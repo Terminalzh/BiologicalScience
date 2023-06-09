@@ -33,6 +33,10 @@ public class CategoryCount {
      */
     private Integer species;
     /**
+     * 父ID
+     */
+    private Integer parentId;
+    /**
      * 分类继承关系
      */
     private String categorizedInheritance;

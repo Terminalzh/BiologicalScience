@@ -9,6 +9,7 @@ import com.neutech.mammalia.bean.Works;
 import com.neutech.mammalia.service.ReportService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,75 +23,48 @@ public class ReportController {
     private ReportService reportService;
 
     @PostMapping
-    public Response addReport(@RequestBody Report report) {
-        Response response = new Response();
-        if (reportService.addReport(report) == 1) {
-            response.setCode(HttpStatus.CREATED.value());
-            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+    public ResponseEntity<Response> addReport(@RequestBody Report report) {
+        if (reportService.addReport(report) == 1)
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @DeleteMapping(value = "/{id}")
-    public Response deleteReportById(@PathVariable Integer id) {
-        Response response = new Response();
-        if (reportService.deleteReportById(id) == 1) {
-            response.setCode(HttpStatus.NO_CONTENT.value());
-            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+    public ResponseEntity<Response> deleteReportById(@PathVariable Integer id) {
+        if (reportService.deleteReportById(id) == 1)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response(HttpStatus.NO_CONTENT));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping(value = "/{id}")
-    public Response updateReportById(@PathVariable Integer id, @RequestBody Report report) {
-        Response response = new Response();
+    public ResponseEntity<Response> updateReportById(@PathVariable Integer id, @RequestBody Report report) {
         report.setId(id);
-        if (reportService.updateReportById(report) == 1) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+        if (reportService.updateReportById(report) == 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @GetMapping("/{id}")
-    public Response inquireReportById(@PathVariable Integer id) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireReportById(@PathVariable Integer id) {
         Report report = reportService.inquireReportById(id);
-        if (report != null) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(report);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (report != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, report));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
-    public Response inquireAllReport(Page<Integer> page) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireAllReport(Page<Integer> page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Report> reports = reportService.inquireAllReport();
         PageInfo<Report> reportPageInfo = new PageInfo<>(reports);
-        if (reports.size() > 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(reportPageInfo);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
-    }
+        if (reports.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, reportPageInfo));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
 
+    }
 }

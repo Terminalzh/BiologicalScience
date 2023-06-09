@@ -30,5 +30,6 @@ public class Category {
     /**
      * 父级ID对应分类表的主键
      */
+
     private Integer parentId;
 }

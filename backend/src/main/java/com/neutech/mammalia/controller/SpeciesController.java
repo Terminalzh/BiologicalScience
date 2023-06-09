@@ -8,6 +8,7 @@ import com.neutech.mammalia.bean.Species;
 import com.neutech.mammalia.service.SpeciesService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,92 +20,60 @@ public class SpeciesController {
     private SpeciesService speciesService;
 
     @PostMapping
-    public Response addSpecies(@RequestBody Species species) {
-        Response response = new Response();
-        if (speciesService.addSpecies(species) == 1) {
-            response.setCode(HttpStatus.CREATED.value());
-            response.setMessage("添加成功");
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage("添加失败");
-        }
-        return response;
+    public ResponseEntity<Response> addSpecies(@RequestBody Species species) {
+        if (speciesService.addSpecies(species) == 1)
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED, "添加成功"));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST, "添加失败"));
     }
 
     @DeleteMapping(value = "/{id}")
-    public Response deleteSpeciesById(@PathVariable Integer id) {
-        Response response = new Response();
-        if (speciesService.deleteSpeciesById(id) == 1) {
-            response.setCode(HttpStatus.NO_CONTENT.value());
-            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+    public ResponseEntity<Response> deleteSpeciesById(@PathVariable Integer id) {
+        if (speciesService.deleteSpeciesById(id) == 1)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response(HttpStatus.NO_CONTENT));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping(value = "/{speciesId}")
-    public Response updateSpeciesById(@PathVariable Integer speciesId, @RequestBody Species species) {
-        Response response = new Response();
+    public ResponseEntity<Response> updateSpeciesById(@PathVariable Integer speciesId, @RequestBody Species species) {
         species.setId(speciesId);
-        if (speciesService.updateSpeciesById(species) == 1) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+        if (speciesService.updateSpeciesById(species) == 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
 
     @GetMapping(value = "/{id}")
-    public Response inquireSpeciesById(@PathVariable Integer id) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireSpeciesById(@PathVariable Integer id) {
         Species species = speciesService.inquireSpeciesById(id);
-        if (species != null) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(species);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (species != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, species));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
+
     }
 
     @GetMapping
-    public Response inquireAllSpecies(Page<Integer> page) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireAllSpecies(Page<Integer> page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Species> species = speciesService.inquireAllSpecies();
         PageInfo<Species> speciesPageInfo = new PageInfo<>(species);
-        if (species.size() > 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(speciesPageInfo);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (species.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, speciesPageInfo));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/blur")
-    public Response inquireSpeciesByBlur(String keyword, String inheritance, Page<Integer> page) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireSpeciesByBlur(String keyword, String inheritance, Page<Integer> page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Species> species = speciesService.inquireSpeciesByKeyword(keyword, inheritance);
         PageInfo<Species> speciesPageInfo = new PageInfo<>(species);
-        if (species.size() > 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(speciesPageInfo);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (species.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, speciesPageInfo));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 }

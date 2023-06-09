@@ -20,7 +20,9 @@ public interface CategoryService {
 
     Category inquireCategoryByLatinNameAndParentId(Integer parentId, String latinName);
 
-    List<CategoryFlat> inquireAllCategoriesByLevel(Integer level);
+    List<CategoryFlat> inquireAllCategoriesByLevel(Integer level, Integer start, Integer pageSize);
 
     CategoryCount inquireCategoryCountById(Integer id);
+
+    Integer inquirePageCount(Integer level);
 }

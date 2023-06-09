@@ -14,10 +14,12 @@ public interface CategoryCountService {
 
     CategoryCount inquireCategoryCount(Integer id);
 
-    List<CategoryCount> inquireAllCategories(String expression);
+    List<CategoryCount> inquireAllCategories(String expression, Integer start, Integer pageSize);
 
     List<CategoryCount> inquireCategoryFlatByInheritance(String inheritance);
 
     String inquireCategorizedInheritanceById(Integer id);
+
+    Integer inquirePageCount(String expression);
 
 }

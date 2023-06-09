@@ -7,6 +7,7 @@ import com.neutech.mammalia.bean.*;
 import com.neutech.mammalia.service.CategoryService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,105 +19,72 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping(produces = "application/json;charset=UTF-8")
-    public Response addCategory(@RequestBody List<Category> categories) {
-        Response response = new Response();
-        if (categoryService.addCategory(categories) >= 1) {
-            response.setCode(HttpStatus.CREATED.value());
-            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+    public ResponseEntity<Response> addCategory(@RequestBody List<Category> categories) {
+        if (categoryService.addCategory(categories) >= 1)
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @DeleteMapping(value = "/{id}")
-    public Response deleteCategoryById(@PathVariable("id") Integer id) {
-        Response response = new Response();
+    public ResponseEntity<Response> deleteCategoryById(@PathVariable("id") Integer id) {
         int i = categoryService.deleteCategoryById(id);
-        if (i >= 1) {
-            response.setCode(HttpStatus.NO_CONTENT.value());
-            response.setMessage("删除成功, 已删除" + i + "条数据");
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+        if (i >= 1)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response(HttpStatus.NO_CONTENT, "删除成功, 已删除" + i + "条数据"));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @PutMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
-    public Response updateCategoryNameById(@PathVariable("id") Integer id, @RequestBody Category category) {
-        Response response = new Response();
+    public ResponseEntity<Response> updateCategoryNameById(@PathVariable("id") Integer id, @RequestBody Category category) {
         category.setId(id);
-        if (categoryService.updateCategoryById(category) == 1) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (categoryService.updateCategoryById(category) == 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/{id}")
-    public Response inquireCategoryById(@PathVariable("id") Integer id) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireCategoryById(@PathVariable("id") Integer id) {
         List<Category> categories = categoryService.inquireCategoryByParentId(id);
-        if (categories.size() != 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(categories);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (categories.size() != 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, categories));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/count/{id}")
-    public Response inquireCategoryCountById(@PathVariable("id") Integer id) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireCategoryCountById(@PathVariable("id") Integer id) {
         CategoryCount categoryCount = categoryService.inquireCategoryCountById(id);
-        if (categoryCount != null) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(categoryCount);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (categoryCount != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, categoryCount));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
-    public Response inquireAllCategories(Integer level) {
-        Response response = new Response();
-        List<CategoryFlat> list = categoryService.inquireAllCategoriesByLevel(level);
-        if (list.size() > 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(list);
-        }
-        return response;
+    public ResponseEntity<Response> inquireAllCategories(Integer level) {
+        List<CategoryFlat> list = categoryService.inquireAllCategoriesByLevel(level, 0, Integer.MAX_VALUE);
+        if (list.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, list));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/page")
-    public Response inquireAllCategoriesByPage(Integer level, Page<Integer> page) {
-        Response response = new Response();
-        List<CategoryFlat> list = categoryService.inquireAllCategoriesByLevel(level);
-        List<CategoryFlat> subList = list.subList((page.getPageNum() - 1) * page.getPageSize(), Math.min(page.getPageNum() * page.getPageSize(), list.size()));
+    public ResponseEntity<Response> inquireAllCategoriesByPage(Integer level, Page<Integer> page) {
+        List<CategoryFlat> list = categoryService.inquireAllCategoriesByLevel(level, (page.getPageNum() - 1) * page.getPageSize(), page.getPageSize());
+        Integer pageCount = categoryService.inquirePageCount(level);
         PageInfo<CategoryFlat> pageInfo = new PageInfo<>();
         pageInfo.setTotal(list.size());
         pageInfo.setPageNum(page.getPageNum());
         pageInfo.setPageSize(page.getPageSize());
-        pageInfo.setSize(subList.size());
-        pageInfo.setPages((int) Math.ceil(1.0 * list.size() / page.getPageSize()));
-        pageInfo.setList(subList);
-        if (pageInfo.getSize() > 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(pageInfo);
-        }
-        return response;
+        pageInfo.setSize(list.size());
+        pageInfo.setPages((int) Math.ceil((double) pageCount / page.getPageSize()));
+        pageInfo.setList(list);
+        if (pageInfo.getSize() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, pageInfo));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 }

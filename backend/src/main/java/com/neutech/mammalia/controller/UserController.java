@@ -10,6 +10,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,122 +25,81 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public Response addUser(@RequestBody User user, HttpSession session) {
-        Response response = new Response();
+    public ResponseEntity<Response> addUser(@RequestBody User user, HttpSession session) {
         if (userService.addUser(user) == 1) {
-            session.setAttribute("user", user);
             user = userService.inquireUserByEmailOrPhone(user);
             user.setIsAdmin(user.getEmail().equals(user.getPhone()));
-            response.setCode(HttpStatus.CREATED.value());
-            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
-            response.setData(user);
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+            if (session.getAttribute("user") == null)
+                session.setAttribute("user", user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED, user));
+        } else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
+
     }
 
     @PostMapping(value = "/login")
-    public Response login(@RequestBody User account, HttpSession session) {
-        Response response = new Response();
+    public ResponseEntity<Response> login(@RequestBody User account, HttpSession session) {
         User user = userService.inquireUserByEmailOrPhone(account);
         if (user != null) {
             user = userService.inquireUserByEmailOrPhone(user);
             user.setIsAdmin(user.getEmail().equals(user.getPhone()));
             session.setAttribute("user", user);
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(user);
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, user));
         } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage("邮箱或手机号或密码错误");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
         }
-        return response;
     }
 
     @DeleteMapping(value = "/{id}")
-    public Response deleteUserById(@PathVariable("id") Integer id) {
-        Response response = new Response();
-        if (userService.deleteUserById(id) == 1) {
-            response.setCode(HttpStatus.NO_CONTENT.value());
-            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+    public ResponseEntity<Response> deleteUserById(@PathVariable("id") Integer id) {
+        if (userService.deleteUserById(id) == 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping(value = "/logout")
-    public Response logout(HttpSession session) {
+    public ResponseEntity<Response> logout(HttpSession session) {
         session.removeAttribute("user");
         session.invalidate();
-        Response response = new Response();
-        response.setCode(HttpStatus.OK.value());
-        response.setMessage(HttpStatus.OK.getReasonPhrase());
-        return response;
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
     }
 
     @PutMapping(value = "/{id}")
-    public Response updateUserById(@PathVariable("id") Integer id, @RequestBody User user) {
-        Response response = new Response();
+    public ResponseEntity<Response> updateUserById(@PathVariable("id") Integer id, @RequestBody User user) {
         user.setId(id);
-        if (userService.updateUserById(user) == 1) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+        if (userService.updateUserById(user) == 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @GetMapping(value = "/{id}")
-    public Response inquireUserById(@PathVariable("id") Integer id) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireUserById(@PathVariable("id") Integer id) {
         User user = userService.inquireUserById(id);
-        if (user != null) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(user);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (user != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, user));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
-    public Response inquireAllUser(Page<Integer> page) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireAllUser(Page<Integer> page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<User> users = userService.inquireAllUser();
         PageInfo<User> userPageInfo = new PageInfo<>(users);
-        if (users.size() > 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(userPageInfo);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (users.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, userPageInfo));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/me")
-    public Response getCurrentUser(HttpServletResponse httpServletResponse, HttpSession session) {
-        Response response = new Response();
+    public ResponseEntity<Response> getCurrentUser(HttpSession session) {
         Object user = session.getAttribute("user");
-        if (user != null) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(user);
-        } else {
-            httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.setCode(HttpStatus.UNAUTHORIZED.value());
-            response.setMessage(HttpStatus.UNAUTHORIZED.getReasonPhrase());
-        }
-        return response;
+        if (user != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, user));
+        else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response(HttpStatus.UNAUTHORIZED));
     }
 }

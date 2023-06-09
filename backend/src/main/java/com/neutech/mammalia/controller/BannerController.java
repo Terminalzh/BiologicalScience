@@ -8,6 +8,7 @@ import com.neutech.mammalia.bean.Response;
 import com.neutech.mammalia.service.BannerService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,91 +22,58 @@ public class BannerController {
     private BannerService bannerService;
 
     @PostMapping
-    public Response addBanner(@RequestBody Map<String, Integer> param) {
-        Response response = new Response();
+    public ResponseEntity<Response> addBanner(@RequestBody Map<String, Integer> param) {
         Integer speciesId = param.get("speciesId");
         if (bannerService.addBanner(speciesId) == 1) {
-            response.setCode(HttpStatus.CREATED.value());
-            response.setMessage(HttpStatus.CREATED.getReasonPhrase());
-            response.setData(bannerService.inquireBannerBySpeciesId(speciesId));
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+            Banner banner = bannerService.inquireBannerBySpeciesId(speciesId);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED, banner));
+        } else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @DeleteMapping(value = "/{speciesId}")
-    public Response deleteBannerById(@PathVariable Integer speciesId) {
-        Response response = new Response();
-        if (bannerService.deleteBannerBySpeciesId(speciesId) == 1) {
-            response.setCode(HttpStatus.NO_CONTENT.value());
-            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+    public ResponseEntity<Response> deleteBannerById(@PathVariable Integer speciesId) {
+        if (bannerService.deleteBannerBySpeciesId(speciesId) == 1)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response(HttpStatus.NO_CONTENT));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping(value = "/{oldSpeciesId}")
-    public Response updateBannerById(@PathVariable Integer oldSpeciesId, @RequestBody Map<String, Integer> param) {
-        Response response = new Response();
+    public ResponseEntity<Response> updateBannerById(@PathVariable Integer oldSpeciesId, @RequestBody Map<String, Integer> param) {
         Integer speciesId = param.get("newSpeciesId");
-        if (bannerService.updateBannerById(oldSpeciesId, speciesId) == 1) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-        } else {
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-        return response;
+        if (bannerService.updateBannerById(oldSpeciesId, speciesId) == 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @GetMapping("/{speciesId}")
-    public Response inquireBannerBySpeciesId(@PathVariable Integer speciesId) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireBannerBySpeciesId(@PathVariable Integer speciesId) {
         Banner banner = bannerService.inquireBannerBySpeciesId(speciesId);
-        if (banner != null) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(banner);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (banner != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, banner));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/page")
-    public Response inquireAllBannerByPage(Page<Integer> page) {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireAllBannerByPage(Page<Integer> page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<Banner> list = bannerService.inquireAllBanner();
         PageInfo<Banner> banners = new PageInfo<>(list);
-        if (list.size() > 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(banners);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (list.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, banners));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
-    public Response inquireAllBanner() {
-        Response response = new Response();
+    public ResponseEntity<Response> inquireAllBanner() {
         List<Banner> list = bannerService.inquireAllBanner();
-        if (list.size() > 0) {
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
-            response.setData(list);
-        } else {
-            response.setCode(HttpStatus.NOT_FOUND.value());
-            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-        }
-        return response;
+        if (list.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, list));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 }

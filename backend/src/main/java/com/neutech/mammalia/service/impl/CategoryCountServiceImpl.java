@@ -100,8 +100,8 @@ public class CategoryCountServiceImpl implements CategoryCountService {
     }
 
     @Override
-    public List<CategoryCount> inquireAllCategories(String expression) {
-        return categoryCountMapper.inquireAllCategories(expression);
+    public List<CategoryCount> inquireAllCategories(String expression, Integer start, Integer pageSize) {
+        return categoryCountMapper.inquireAllCategories(expression, start, pageSize);
     }
 
     @Override
@@ -113,5 +113,10 @@ public class CategoryCountServiceImpl implements CategoryCountService {
     @Override
     public String inquireCategorizedInheritanceById(Integer id) {
         return null;
+    }
+
+    @Override
+    public Integer inquirePageCount(String expression) {
+        return categoryCountMapper.inquirePageCount(expression);
     }
 }

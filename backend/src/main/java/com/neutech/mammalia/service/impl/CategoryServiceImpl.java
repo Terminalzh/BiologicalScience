@@ -96,15 +96,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryFlat> inquireAllCategoriesByLevel(Integer level) {
+    public List<CategoryFlat> inquireAllCategoriesByLevel(Integer level, Integer start, Integer pageSize) {
         String expression = "^(?:(?!" + "\\d+\\.".repeat(level) + "\\d+).)*$";
         List<CategoryFlat> list = new ArrayList<>();
-        List<CategoryCount> categoryCounts = categoryCountService.inquireAllCategories(expression);
+        List<CategoryCount> categoryCounts = categoryCountService.inquireAllCategories(expression, start, pageSize);
         for (CategoryCount categoryCount : categoryCounts) {
             Category category = categoryMapper.inquireCategoryById(categoryCount.getId());
             CategoryFlat categoryFlat = new CategoryFlat();
             categoryFlat.setId(category.getId().toString());
-            categoryFlat.setParent(category.getParentId().toString());
+            if (category.getParentId() != null)
+                categoryFlat.setParent(category.getParentId().toString());
             if (category.getCName() != null)
                 categoryFlat.setName(category.getLatinName() + "(" + category.getCName() + ")");
             else categoryFlat.setName(category.getLatinName());
@@ -125,5 +126,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryCount inquireCategoryCountById(Integer id) {
         return categoryCountService.inquireCategoryCount(id);
+    }
+
+    @Override
+    public Integer inquirePageCount(Integer level) {
+        String expression = "^(?:(?!" + "\\d+\\.".repeat(level) + "\\d+).)*$";
+        return categoryCountService.inquirePageCount(expression);
     }
 }

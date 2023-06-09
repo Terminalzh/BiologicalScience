@@ -1,6 +1,7 @@
 package com.neutech.mammalia.mapper;
 
 import com.neutech.mammalia.bean.Category;
+import com.neutech.mammalia.bean.CategoryCount;
 import com.neutech.mammalia.mapper.sqlProvider.CategorySqlProvider;
 import org.apache.ibatis.annotations.*;
 
@@ -26,7 +27,7 @@ public interface CategoryMapper {
     @Select("select * from t_category where id=#{id}")
     Category inquireCategoryById(@Param("id") Integer id);
 
-    @Select("select * from t_category where parent_id = #{parentId}")
+    @Select("select id, c_name, latin_name, species, sub_class, order_count, family, genus, parent_id from t_category where parent_id = #{parentId}")
     List<Category> inquireCategoryByParentId(@Param("parentId") Integer parentId);
 
     @Select("select * from t_category where c_name = #{cName} and latin_name = #{latinName}")
@@ -34,6 +35,10 @@ public interface CategoryMapper {
 
     @Select("select * from t_category where parent_id = #{parentId} and latin_name = #{latinName}")
     Category inquireCategoryByLatinNameAndParentId(@Param("parentId") Integer parentId, @Param("latinName") String latinName);
+
     @Select("select count(0) from t_category where parent_id = #{parentId}")
     int inquireCategoryCountByParentId(@Param("parentId") Integer parentId);
+
+    @Select("select id, sub_class, order_count, family, genus, species, parent_id from t_category")
+    List<CategoryCount> inquireAllCategories();
 }

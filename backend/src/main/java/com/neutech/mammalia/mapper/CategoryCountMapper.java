@@ -11,6 +11,12 @@ public interface CategoryCountMapper {
     @Insert("insert into category_count (id ,categorized_inheritance) values (#{categoryCount.id},#{categoryCount.categorizedInheritance})")
     int addCategoryCount(@Param("categoryCount") CategoryCount categoryCount);
 
+    @Insert("""
+            insert into category_count (id, categorized_inheritance, sub_class, order_count, family, genus, species)
+            values (#{id},#{categorizedInheritance},#{subClass},#{orderCount},#{family},#{genus},#{species});
+            """)
+    int add(CategoryCount categoryCount);
+
     @Delete("delete from category_count where id = #{id}")
     int deleteCategoryCountById(@Param("id") Integer id);
 
@@ -28,8 +34,8 @@ public interface CategoryCountMapper {
     @Select("select COUNT(0) from category_count where categorized_inheritance regexp CONCAT('^', #{categorizedInheritance}, '$')")
     int inquireSubCategoryCount(@Param("categorizedInheritance") String categorizedInheritance);
 
-    @Select("select * from category_count where categorized_inheritance regexp #{expression}")
-    List<CategoryCount> inquireAllCategories(@Param("expression") String expression);
+    @Select("select * from category_count where categorized_inheritance regexp #{expression} order by id desc limit #{start},#{pageSize} ")
+    List<CategoryCount> inquireAllCategories(@Param("expression") String expression, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
 
     @Select("""
             select * from category_count
@@ -40,4 +46,7 @@ public interface CategoryCountMapper {
 
     @Select("select categorized_inheritance from category_count where id = #{id}")
     String inquireCategorizedInheritance(@Param("id") Integer id);
+
+    @Select("select count(id) from category_count where categorized_inheritance regexp #{expression}")
+    Integer inquirePageCount(@Param("expression") String expression);
 }

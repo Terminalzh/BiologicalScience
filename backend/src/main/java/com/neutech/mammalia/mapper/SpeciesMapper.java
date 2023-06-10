@@ -40,14 +40,12 @@ public interface SpeciesMapper {
     List<Species> inquireSpeciesByGenusId(@Param("genusId") Integer genusId);
 
     @Select("""
-            select * from t_species t
-            left join category_count c on t.genus_id = c.id
-            where
+            select * from t_species t where
             (t.c_name like concat('%',#{keyword},'%') or
             t.latin_name like concat('%',#{keyword},'%'))
             and t.id in
-            (select c.id from c
-            where c.categorized_inheritance regexp concat('^',#{inheritance})
+            (select category_count.id from category_count
+            where category_count.categorized_inheritance regexp concat('^',#{inheritance})
             )
             order by t.update_time desc
             """)
@@ -59,4 +57,9 @@ public interface SpeciesMapper {
             from t_species t left join category_count c on t.genus_id = c.id  order by update_time desc
             """)
     List<Species> inquireAllSpecies();
+
+    @Select("select id, c_name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level, create_time, update_time, picture_url, better_url from t_species;")
+    List<Species> inquireAll();
+
+
 }

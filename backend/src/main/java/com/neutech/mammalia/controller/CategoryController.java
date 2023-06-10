@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/category")
@@ -19,7 +21,12 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping(produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> addCategory(@RequestBody List<Category> categories) {
+    public ResponseEntity<Response> addCategory(@RequestBody Map<String, Category> map) {
+        List<Category> categories = new ArrayList<>();
+        categories.add(map.get("sub_class"));
+        categories.add(map.get("order"));
+        categories.add(map.get("sub_class"));
+        categories.add(map.get("sub_class"));
         if (categoryService.addCategory(categories) >= 1)
             return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED));
         else

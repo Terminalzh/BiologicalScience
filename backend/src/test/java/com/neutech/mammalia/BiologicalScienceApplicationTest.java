@@ -1,16 +1,17 @@
 package com.neutech.mammalia;
 
-import com.neutech.mammalia.bean.Category;
-import com.neutech.mammalia.bean.CategoryCount;
+import com.neutech.mammalia.bean.*;
 import com.neutech.mammalia.mapper.CategoryCountMapper;
 import com.neutech.mammalia.mapper.CategoryMapper;
+import com.neutech.mammalia.mapper.DataMapper;
+import com.neutech.mammalia.mapper.SpeciesMapper;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
+import javax.security.auth.Subject;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -21,11 +22,18 @@ public class BiologicalScienceApplicationTest {
     CategoryCountMapper categoryCountMapper;
     @Resource
     CategoryMapper categoryMapper;
+    @Resource
+    DataMapper dataMapper;
+    @Resource
+    SpeciesMapper speciesMapper;
 
     @Test
     void test() {
-        List<CategoryCount> categories = categoryMapper.inquireAllCategories();
-        updateInheritance(categories);
+        List<Data2> data2s = dataMapper.inquireAll();
+        for (Data2 data2 : data2s) {
+            Species species = speciesMapper.inquireSpeciesById(data2.getSpeciesId());
+            dataMapper.addData1(species.getPictureUrl(), species.getId());
+        }
     }
 
     public void updateInheritance(List<CategoryCount> dataList) {

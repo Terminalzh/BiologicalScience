@@ -41,4 +41,7 @@ public interface CategoryMapper {
 
     @Select("select id, sub_class, order_count, family, genus, species, parent_id from t_category")
     List<CategoryCount> inquireAllCategories();
+
+    @Select("select id, c_name, latin_name, parent_id from t_category")
+    List<Category> inquireAll();
 }

@@ -4,6 +4,7 @@ import com.alibaba.druid.sql.visitor.functions.If;
 import com.neutech.mammalia.bean.CategoryCount;
 import com.neutech.mammalia.bean.Photo;
 import com.neutech.mammalia.bean.Species;
+import com.neutech.mammalia.mapper.CategoryCountMapper;
 import com.neutech.mammalia.mapper.SpeciesMapper;
 import com.neutech.mammalia.service.*;
 import jakarta.annotation.Resource;
@@ -23,6 +24,9 @@ public class SpeciesServiceImpl implements SpeciesService {
     @Lazy
     @Resource
     private PhotoService photoService;
+    @Lazy
+    @Resource
+    private CategoryCountService categoryCountService;
 
     @Override
 
@@ -55,7 +59,12 @@ public class SpeciesServiceImpl implements SpeciesService {
 
     @Override
     public List<Species> inquireSpeciesByKeyword(String keyword, String inheritance) {
-        return speciesMapper.inquireSpeciesByKeyword(inheritance, keyword);
+        List<Species> species = speciesMapper.inquireSpeciesByKeyword(inheritance, keyword);
+        for (Species specie : species) {
+            String s = categoryCountService.inquireCategorizedInheritanceById(specie.getId());
+            specie.setCategorizedInheritance(s.substring(0, s.lastIndexOf(".")));
+        }
+        return species;
     }
 
     @Override

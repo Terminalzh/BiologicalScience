@@ -112,7 +112,7 @@ public class CategoryCountServiceImpl implements CategoryCountService {
 
     @Override
     public String inquireCategorizedInheritanceById(Integer id) {
-        return null;
+        return categoryCountMapper.inquireCategorizedInheritance(id);
     }
 
     @Override

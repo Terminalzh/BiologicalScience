@@ -1,19 +1,21 @@
 package com.neutech.mammalia.service.impl;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.neutech.mammalia.bean.CategoryCount;
-import com.neutech.mammalia.bean.Photo;
 import com.neutech.mammalia.bean.Species;
-import com.neutech.mammalia.mapper.CategoryCountMapper;
 import com.neutech.mammalia.mapper.SpeciesMapper;
-import com.neutech.mammalia.service.*;
+import com.neutech.mammalia.service.CategoryCountService;
+import com.neutech.mammalia.service.PhotoService;
+import com.neutech.mammalia.service.SpeciesService;
+import com.neutech.mammalia.service.WorksService;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class SpeciesServiceImpl implements SpeciesService {
@@ -61,7 +63,7 @@ public class SpeciesServiceImpl implements SpeciesService {
     public List<Species> inquireSpeciesByKeyword(String keyword, String inheritance) {
         List<Species> species = speciesMapper.inquireSpeciesByKeyword(inheritance, keyword);
         for (Species specie : species) {
-            String s = categoryCountService.inquireCategorizedInheritanceById(specie.getId());
+            String s = categoryCountService.inquireCategorizedInheritanceById(specie.getGenusId());
             specie.setCategorizedInheritance(s.substring(0, s.lastIndexOf(".")));
         }
         return species;

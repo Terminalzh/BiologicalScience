@@ -18,6 +18,8 @@ public interface CategoryCountService {
 
     List<CategoryCount> inquireCategoryFlatByInheritance(String inheritance);
 
+    CategoryCount inquireCategoryCountById(Integer id);
+
     String inquireCategorizedInheritanceById(Integer id);
 
     Integer inquirePageCount(String expression);

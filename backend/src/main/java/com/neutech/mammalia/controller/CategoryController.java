@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.neutech.mammalia.bean.*;
 import com.neutech.mammalia.service.CategoryService;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -91,6 +92,15 @@ public class CategoryController {
         pageInfo.setList(list);
         if (pageInfo.getSize() > 0)
             return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, pageInfo));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping(value = "/{id}/info")
+    public ResponseEntity<Response> inquireCategoryInfoById(@PathVariable Integer id) {
+        Category category = categoryService.inquireCategoryById(id);
+        if (category != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, category));
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }

@@ -47,6 +47,9 @@ public interface CategoryCountMapper {
     @Select("select categorized_inheritance from category_count where id = #{id}")
     String inquireCategorizedInheritance(@Param("id") Integer id);
 
+    @Select("select * from category_count where id = #{id}")
+    CategoryCount inquireCategoryCountById(@Param("id") Integer id);
+
     @Select("select count(id) from category_count where categorized_inheritance regexp #{expression}")
     Integer inquirePageCount(@Param("expression") String expression);
 }

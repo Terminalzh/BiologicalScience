@@ -43,7 +43,7 @@ public interface SpeciesMapper {
             select * from t_species t where
             (t.c_name like concat('%',#{keyword},'%') or
             t.latin_name like concat('%',#{keyword},'%'))
-            and t.id in
+            and t.genus_id in
             (select category_count.id from category_count
             where category_count.categorized_inheritance regexp concat('^',#{inheritance})
             )

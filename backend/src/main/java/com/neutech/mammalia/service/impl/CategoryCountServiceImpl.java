@@ -109,6 +109,11 @@ public class CategoryCountServiceImpl implements CategoryCountService {
         return categoryCountMapper.inquireCategoryFlatByInheritance(inheritance);
     }
 
+    @Override
+    public CategoryCount inquireCategoryCountById(Integer id) {
+        return categoryCountMapper.inquireCategoryCountById(id);
+    }
+
 
     @Override
     public String inquireCategorizedInheritanceById(Integer id) {

@@ -32,4 +32,8 @@ public class Category {
      */
 
     private Integer parentId;
+    /**
+     * 等级
+     */
+    private Integer level;
 }

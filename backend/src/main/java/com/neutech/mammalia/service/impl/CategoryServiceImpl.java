@@ -82,7 +82,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category inquireCategoryById(Integer id) {
-        return categoryMapper.inquireCategoryById(id);
+        Category category = categoryMapper.inquireCategoryById(id);
+        String inheritance = categoryCountService.inquireCategorizedInheritanceById(id);
+        category.setLevel(inheritance.split("\\.").length);
+        return category;
     }
 
     @Override

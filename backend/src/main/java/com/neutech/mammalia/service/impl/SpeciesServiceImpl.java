@@ -84,8 +84,24 @@ public class SpeciesServiceImpl implements SpeciesService {
     public Set<Species> inquireSomeSpecies() {
         List<Species> species = speciesMapper.inquireSomeSpecies();
         Set<Species> set = new HashSet<>();
-        while (set.size() < 6)
-            set.add(species.get((int) (Math.random() * species.size() - 1)));
+        while (set.size() < 6) {
+            Species specie = species.get((int) (Math.random() * species.size() - 1));
+            if (!set.contains(specie)) {
+                String s = categoryCountService.inquireCategorizedInheritanceById(specie.getGenusId());
+                List<String> list = Arrays.stream(s.substring(0, s.lastIndexOf(".")).split("\\.")).toList();
+                Map<Integer, List<String>> map = new HashMap<>();
+                int i = 1;
+                for (String s1 : list) {
+                    Category category = categoryService.inquireCategoryById(Integer.parseInt(s1));
+                    List<String> names = new ArrayList<>();
+                    names.add(category.getLatinName());
+                    names.add(category.getCName());
+                    map.put(i++, names);
+                }
+                specie.setInheritance(map);
+                set.add(specie);
+            }
+        }
         return set;
     }
 }

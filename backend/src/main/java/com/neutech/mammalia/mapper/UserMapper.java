@@ -31,7 +31,7 @@ public interface UserMapper {
     @Select("select * from t_user where name=#{name}")
     User inquireUserByName(@Param("name") String name);
 
-    @SelectProvider(value = UserSqlProvider.class, method = "inquireUserByEmailOrPhone")
+    @Select("select * from t_user where phone = #{user.phone} or email = #{user.email} ;")
     User inquireUserByEmailOrPhone(@Param("user") User user);
 
     @Select("select * from t_user")

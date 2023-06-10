@@ -47,7 +47,7 @@ public interface SpeciesMapper {
             (select category_count.id from category_count
             where category_count.categorized_inheritance regexp concat('^',#{inheritance})
             )
-            order by t.update_time desc
+            order by better_url desc, t.update_time desc
             """)
     List<Species> inquireSpeciesByKeyword(@Param("inheritance") String inheritance, @Param("keyword") String keyword);
 
@@ -61,5 +61,6 @@ public interface SpeciesMapper {
     @Select("select id, c_name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level, create_time, update_time, picture_url, better_url from t_species;")
     List<Species> inquireAll();
 
-
+    @Select("select * from t_species where better_url is not null")
+    List<Species> inquireSomeSpecies();
 }

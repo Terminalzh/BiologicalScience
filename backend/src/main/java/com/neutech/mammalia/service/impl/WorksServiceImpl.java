@@ -10,8 +10,7 @@ import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class WorksServiceImpl implements WorksService {
@@ -72,5 +71,15 @@ public class WorksServiceImpl implements WorksService {
     @Override
     public List<Works> inquireAllWorks() {
         return worksMapper.inquireAllWorks();
+    }
+
+    @Override
+    public Set<Works> inquireSomeWorks() {
+        List<Works> works = worksMapper.inquireAllWorks();
+        Set<Works> set = new HashSet<>();
+        while (set.size() < 16) {
+            set.add(works.get((int) (Math.random() * works.size() - 1)));
+        }
+        return set;
     }
 }

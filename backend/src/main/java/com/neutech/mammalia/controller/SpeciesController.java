@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/species")
@@ -76,4 +77,14 @@ public class SpeciesController {
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
+
+    @GetMapping(value = "/recommends")
+    public ResponseEntity<Response> inquireSomeSpecies() {
+        Set<Species> species = speciesService.inquireSomeSpecies();
+        if (species.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, species));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
+    }
+
 }

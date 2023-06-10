@@ -60,4 +60,5 @@ public interface WorksMapper {
     @ResultMap(value = "worksResultMapping")
     @Select("select * from t_works")
     List<Works> inquireAllWorks();
+
 }

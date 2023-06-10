@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -34,14 +35,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED, user));
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
-
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<Response> login(@RequestBody User account, HttpSession session) {
+    public ResponseEntity<Response> login(@RequestBody Map<String, String> map, HttpSession session) {
+        User account = new User();
+        account.setEmail(map.get("username"));
+        account.setPhone(map.get("username"));
+        account.setPassword(map.get("password"));
         User user = userService.inquireUserByEmailOrPhone(account);
         if (user != null) {
-            user = userService.inquireUserByEmailOrPhone(user);
             user.setIsAdmin(user.getEmail().equals(user.getPhone()));
             session.setAttribute("user", user);
             return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, user));

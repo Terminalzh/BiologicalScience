@@ -1,6 +1,8 @@
 package com.neutech.mammalia.bean;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -67,5 +69,5 @@ public class Species {
     /**
      * 继承关系
      */
-    private String categorizedInheritance;
+    private Map<Integer, List<String>> inheritance;
 }

@@ -1,26 +1,22 @@
 package com.neutech.mammalia.service.impl;
 
-import com.neutech.mammalia.bean.CategoryCount;
+import com.neutech.mammalia.bean.Category;
 import com.neutech.mammalia.bean.Species;
 import com.neutech.mammalia.mapper.SpeciesMapper;
-import com.neutech.mammalia.service.CategoryCountService;
-import com.neutech.mammalia.service.PhotoService;
-import com.neutech.mammalia.service.SpeciesService;
-import com.neutech.mammalia.service.WorksService;
+import com.neutech.mammalia.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class SpeciesServiceImpl implements SpeciesService {
     @Resource
     private SpeciesMapper speciesMapper;
+    @Lazy
+    @Resource
+    private CategoryService categoryService;
     @Resource
     private WorksService worksService;
     @Lazy
@@ -64,7 +60,17 @@ public class SpeciesServiceImpl implements SpeciesService {
         List<Species> species = speciesMapper.inquireSpeciesByKeyword(inheritance, keyword);
         for (Species specie : species) {
             String s = categoryCountService.inquireCategorizedInheritanceById(specie.getGenusId());
-            specie.setCategorizedInheritance(s.substring(0, s.lastIndexOf(".")));
+            List<String> list = Arrays.stream(s.substring(0, s.lastIndexOf(".")).split("\\.")).toList();
+            Map<Integer, List<String>> map = new HashMap<>();
+            int i = 1;
+            for (String s1 : list) {
+                Category category = categoryService.inquireCategoryById(Integer.parseInt(s1));
+                List<String> names = new ArrayList<>();
+                names.add(category.getLatinName());
+                names.add(category.getCName());
+                map.put(i++, names);
+            }
+            specie.setInheritance(map);
         }
         return species;
     }
@@ -72,5 +78,14 @@ public class SpeciesServiceImpl implements SpeciesService {
     @Override
     public List<Species> inquireAllSpecies() {
         return speciesMapper.inquireAllSpecies();
+    }
+
+    @Override
+    public Set<Species> inquireSomeSpecies() {
+        List<Species> species = speciesMapper.inquireSomeSpecies();
+        Set<Species> set = new HashSet<>();
+        while (set.size() < 6)
+            set.add(species.get((int) (Math.random() * species.size() - 1)));
+        return set;
     }
 }

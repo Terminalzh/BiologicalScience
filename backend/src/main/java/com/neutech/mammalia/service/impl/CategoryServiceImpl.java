@@ -21,6 +21,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     @Resource
     private CategoryMapper categoryMapper;
+    @Lazy
     @Resource
     private SpeciesService speciesService;
     @Lazy

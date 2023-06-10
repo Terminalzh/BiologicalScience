@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/works")
@@ -88,4 +89,14 @@ public class WorksController {
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND, "没有作品"));
     }
+
+    @GetMapping(value = "/recommends")
+    public ResponseEntity<Response> inquireSomeWorks() {
+        Set<Works> works = worksService.inquireSomeWorks();
+        if (works.size() >= 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, works));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
+    }
+
 }

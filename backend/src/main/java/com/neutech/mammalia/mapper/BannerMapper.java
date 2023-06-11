@@ -42,7 +42,7 @@ public interface BannerMapper {
 
     @ResultMap(value = "BannerResultMapping")
     @Select("select * from t_banner where species_id = #{speciesId}")
-    Banner inquireBannerBySpeciesId(@Param("speciesId") Integer speciesId);
+    List<Banner> inquireBannerBySpeciesId(@Param("speciesId") Integer speciesId);
 
     @ResultMap(value = "BannerResultMapping")
     @Select("select * from t_banner")

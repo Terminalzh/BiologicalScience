@@ -20,9 +20,9 @@ import { catchResource } from "~/utils";
 
 const api = (data: { id?: number; data: any }) => {
   if (data.id) {
-    updateBanner(data.id, data.data);
+    return updateBanner(data.id, data.data);
   } else {
-    createBanner(data.data);
+    return createBanner(data.data);
   }
 };
 
@@ -45,7 +45,7 @@ const CreationModal = (props: {
   });
 
   createEffect(() => {
-    if (apiResult()) {
+    if (apiResult() !== undefined) {
       untrack(() => {
         notificationService.show({
           title: "提交成功",
@@ -86,7 +86,10 @@ const CreationModal = (props: {
                 });
               });
             } else {
-              setParam({ id: props.data?.speciesId, data: props.data });
+              setParam({
+                id: props.data?.speciesId,
+                data: { speciesId } || props.data,
+              });
             }
           }}
         >

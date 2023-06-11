@@ -25,8 +25,8 @@ public class BannerController {
     public ResponseEntity<Response> addBanner(@RequestBody Map<String, Integer> param) {
         Integer speciesId = param.get("speciesId");
         if (bannerService.addBanner(speciesId) == 1) {
-            Banner banner = bannerService.inquireBannerBySpeciesId(speciesId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED, banner));
+            List<Banner> banner = bannerService.inquireBannerBySpeciesId(speciesId);
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK,"",""));
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
@@ -50,7 +50,7 @@ public class BannerController {
 
     @GetMapping("/{speciesId}")
     public ResponseEntity<Response> inquireBannerBySpeciesId(@PathVariable Integer speciesId) {
-        Banner banner = bannerService.inquireBannerBySpeciesId(speciesId);
+        List<Banner> banner = bannerService.inquireBannerBySpeciesId(speciesId);
         if (banner != null)
             return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, banner));
         else

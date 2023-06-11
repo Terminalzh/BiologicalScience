@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,7 +46,7 @@ public class WorksController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Response> updateWorksById(
-            @PathVariable("id") Integer id, HttpSession session, @RequestBody Map<String, Object> map) {
+            @PathVariable("id") Integer id, @RequestBody Map<String, Object> map) {
         Works works = new Works();
         works.setImageUrl((String) map.get("imageUrl"));
         works.setIsPublic((Boolean) map.get("isPublic"));
@@ -57,7 +58,6 @@ public class WorksController {
             return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, "修改成功"));
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST, "修改失败,请检查您的数据"));
-
     }
 
     @GetMapping(value = "/{userId}")
@@ -87,7 +87,7 @@ public class WorksController {
         if (works.size() >= 1)
             return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, worksPageInfo));
         else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND, "没有作品"));
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, "没有作品", new ArrayList<Works>()));
     }
 
     @GetMapping(value = "/recommends")
@@ -96,7 +96,7 @@ public class WorksController {
         if (works.size() >= 1)
             return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, works));
         else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, "没有作品", new ArrayList<Works>()));
     }
 
 }

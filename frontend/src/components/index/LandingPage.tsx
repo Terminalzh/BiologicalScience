@@ -2,11 +2,14 @@ import {
   AspectRatio,
   IconButton,
   Image,
+  Spinner,
   notificationService,
 } from "@hope-ui/solid";
 import {
   For,
   JSX,
+  Show,
+  batch,
   createMemo,
   createResource,
   createSignal,
@@ -45,43 +48,40 @@ export function PhMagnifyingGlassBold(props: JSX.IntrinsicElements["svg"]) {
 }
 
 export default function LandingPage() {
-  const bannerPics = [pic, pic1, pic2].map((value) => (
-    <Image
-      src={value}
-      objectFit="cover"
-      borderRadius="3rem"
-      shadow="$md"
-      class="hover:brightness-110 transition-all cursor-pointer animate-fade-in"
-    />
-  ));
-  
+  let bannerPics = new Array<JSX.Element>();
+
   const [pos, setPos] = createSignal(0);
   const imageQueue = new Queue<JSX.Element>();
-  imageQueue.enqueue(bannerPics[pos()]);
-  setPos((prev) => prev + 1);
-  imageQueue.enqueue(bannerPics[pos()]);
-  setPos((prev) => prev + 1);
   const navigate = useNavigate();
 
   const [queue, setQueue] = createSignal(imageQueue, {
     equals: false,
   });
 
-  const [page, setPage] = createSignal<PaginationParams>({
+  const [count, setCount] = createSignal(0);
+
+  getBanner({
     pageNum: 1,
     pageSize: 4,
-  });
-
-  const [bannerResource] = createResource(page, getBanner);
-  const bannerResult = catchResource(bannerResource, (e) => {
-    untrack(() => {
-      notificationService.show({
-        title: "轮播图加载失败",
-        status: "danger",
-        description: e.message,
+  })
+    .then((res) => {
+      res.list.forEach((value) => {
+        bannerPics.push(
+          <Picture
+            value={value.species.pictureUrl || value.species.betterUrl}
+            class="hover:brightness-110 transition-all cursor-pointer animate-fade-in rounded-3rem shadow-md"
+          />
+        );
       });
-    });
-  });
+      batch(() => {
+        imageQueue.enqueue(bannerPics[pos()]);
+        setPos((prev) => prev + 1);
+        imageQueue.enqueue(bannerPics[pos()]);
+        setPos((prev) => prev + 1);
+        setCount(res.list.length);
+      });
+    })
+    .catch(() => {});
 
   onMount(() => {
     setInterval(() => {
@@ -132,23 +132,24 @@ export default function LandingPage() {
         </form>
       </div>
       <div class="w-md">
-        <AspectRatio ratio={16 / 10}>
-          <For each={bannerResult()?.list}>
-            {(item) => (
-              <Picture
-                value={item.species.pictureUrl || item.species.betterUrl}
-                class="hover:brightness-110 transition-all cursor-pointer animate-fade-in rounded-3rem shadow-md"
-              />
-            )}
-          </For>
+        <AspectRatio
+          ratio={16 / 10}
+          onClick={() => {
+            navigate("/service/retrieval");
+          }}
+        >
+          <Show when={queue().toArray().length === 0}>
+            <div>
+              <Spinner />
+            </div>
+          </Show>
+          <For each={queue().toArray()}>{(item) => item}</For>
         </AspectRatio>
         <div class="mt-4">
           <ul class="list-none flex justify-center gap-2 h-2">
-            <For each={bannerResult()?.list}>
-              {(_, index) => {
-                const isCurrent = createMemo(
-                  () => pos() % bannerPics.length === index()
-                );
+            <For each={new Array(count())}>
+              {(count, index) => {
+                const isCurrent = createMemo(() => pos() % 4 === index());
                 return (
                   <li
                     class="rounded-full w-2 transition-all cursor-pointer"

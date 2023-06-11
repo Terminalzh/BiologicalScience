@@ -30,7 +30,7 @@ export default function OrderCard(props: OrderCardProps) {
         </Tooltip>
         <div class="relative h-4 mt--1">
           <div class="inline-block w-10 h-2 bg-brand-primary/80 absolute"></div>
-          <h5 class="absolute font-sans font-bold leading-tight text-sm leading-none text-secondary text-body ">
+          <h5 class="absolute font-sans font-bold leading-tight text-sm leading-none text-primary text-body ">
             {props.chineseName}
           </h5>
         </div>

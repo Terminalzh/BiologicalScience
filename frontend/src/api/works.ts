@@ -12,6 +12,10 @@ export interface RecommendItem {
   species?: SearchResultItem;
 }
 
+export interface WorkItem {
+  imageUrl: string;
+}
+
 export const createWork = (params: any) => {
   return post("/api/works", params);
 };
@@ -22,4 +26,8 @@ export const updateWork = (id: number, params: any) => {
 
 export const recommendWorks = () => {
   return get<Array<RecommendItem>>("/api/works/recommends");
+};
+
+export const listWorks = (pagination: PaginationParams) => {
+  return get<PageResponse<WorkItem>>("/api/works", pagination);
 };

@@ -24,7 +24,7 @@ const Line = (props: { fromLeft?: boolean }) => {
     <div
       class="relative overflow-hidden z-1 w-full h-[11.375rem] line-container"
       onClick={() => {
-        navigate("/service/retrieval");
+        navigate("/service/works");
       }}
     >
       <div class="inline-block absolute h-full z-2 left-0 bg-gradient-to-r light:from-white dark:from-brand-background to-transparent w-40"></div>

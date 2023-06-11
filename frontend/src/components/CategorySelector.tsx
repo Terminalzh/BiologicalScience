@@ -4,17 +4,15 @@ import {
   Match,
   Setter,
   Show,
+  Suspense,
   Switch,
   batch,
   createEffect,
   createMemo,
   createResource,
   createSignal,
-  onMount,
   untrack,
 } from "solid-js";
-import Highcharts from "highcharts";
-import Sunburst from "highcharts/modules/sunburst";
 import {
   Button,
   FormControl,
@@ -43,9 +41,9 @@ import {
   Spinner,
 } from "@hope-ui/solid";
 import { createForm } from "@felte/solid";
-import { allCategories, getCategory } from "~/api/category";
+import { getCategory } from "~/api/category";
 import { catchResource } from "~/utils";
-import { Table } from "~/components/table";
+import { Category } from "./species/CategoryBadge";
 
 const categoryItems = [
   {
@@ -91,8 +89,18 @@ const parseBitmap = (bitmap: number, index: number) => {
   }
   return {
     available: available === 1,
-    canUseExists: index === categoryItems.length - 1 ? false : input !== 1,
+    canUseExists: input !== 1,
   };
+};
+
+export interface CategoryItemProps {
+  id: number;
+  latinName?: string;
+  cName?: string;
+}
+
+const getCategoryItem = (item: CategoryItemProps) => {
+  return getCategory(item.id);
 };
 
 const CategoryItem = (props: {
@@ -100,14 +108,15 @@ const CategoryItem = (props: {
   name: string;
   index: number;
 
-  id: Accessor<number | undefined>;
-  setSelected: Setter<number>;
+  item: Accessor<CategoryItemProps | undefined>;
+  setSelected: Setter<CategoryItemProps>;
   bitmapGetter: Accessor<number>;
   bitmapSetter: Setter<number>;
 }) => {
   const [useExists, setUseExists] = createSignal(false);
 
-  const [options] = createResource(props.id, getCategory);
+  const [options] = createResource(props.item, getCategoryItem);
+  
   const optionsResult = catchResource(options, (e) => {
     untrack(() => {
       notificationService.show({
@@ -124,7 +133,11 @@ const CategoryItem = (props: {
 
   createEffect(() => {
     if (optionsResult()?.[0].id) {
-      props.setSelected(optionsResult()?.[0].id!);
+      props.setSelected({
+        id: optionsResult()?.[0].id!,
+        cName: optionsResult()?.[0].cName,
+        latinName: optionsResult()?.[0].latinName,
+      });
     }
   });
 
@@ -200,7 +213,15 @@ const CategoryItem = (props: {
               disabled={!status().available}
               defaultValue={optionsResult()?.[0].id}
               onChange={(v) => {
-                props.setSelected(v);
+                optionsResult()?.forEach((item) => {
+                  if (item.id === v) {
+                    props.setSelected({
+                      id: item.id,
+                      cName: item.cName,
+                      latinName: item.latinName,
+                    });
+                  }
+                });
               }}
             >
               <SelectTrigger>
@@ -270,102 +291,89 @@ const CategoryItem = (props: {
   );
 };
 
-export default function SpeciesCategory() {
+export function CategorySelector(props: {
+  onChanged: (data: any) => void;
+  data?: any;
+}) {
   const { isOpen, onOpen, onClose } = createDisclosure();
   const { colorMode } = useColorMode();
-  const [level, setLevel] = createSignal<number>();
   const [bitMap, setBitMap] = createSignal(0);
-  const [allCategoriesResource] = createResource(level, allCategories);
-  const allCategoriesResult = catchResource(allCategoriesResource, (e) => {
-    untrack(() => {
-      notificationService.show({
-        title: "请求失败",
-        status: "danger",
-        description: e.message,
-      });
-    });
-  });
 
-  const [mode, setMode] = createSignal<"table" | "sunburst">("table");
+  const [selectResult, setSelectResult] = createSignal<string[][]>();
 
   const { form } = createForm({
     onSubmit: (values) => {
       untrack(() => {
         if (values.sub_class.latinName === undefined) {
-          values.sub_class = categoryIds[0][0]();
+          values.sub_class = categoryIds[1][0]();
+        } else {
+          values.sub_class.id = 0;
         }
+
+        if (values.order.latinName === undefined) {
+          values.order = categoryIds[2][0]();
+        } else {
+          values.order.id = 0;
+        }
+        if (values.family.latinName === undefined) {
+          values.family = categoryIds[3][0]();
+        } else {
+          values.family.id = 0;
+        }
+        if (values.genus.latinName === undefined) {
+          values.genus = categoryIds[4][0]();
+        } else {
+          values.genus.id = 0;
+        }
+        props.onChanged(values);
+        onClose();
+
+        setSelectResult(
+          Object.values(values)
+            .map((value: any) => {
+              return [value.latinName, value.cName];
+            })
+            .reverse()
+        );
       });
     },
   });
 
   const categoryIds = [
-    createSignal<number>(1),
-    createSignal<number>(),
-    createSignal<number>(),
-    createSignal<number>(),
-    createSignal<number>(),
+    createSignal<CategoryItemProps>({
+      id: 1,
+      cName: "",
+      latinName: "",
+    }),
+    createSignal<CategoryItemProps>(),
+    createSignal<CategoryItemProps>(),
+    createSignal<CategoryItemProps>(),
+    createSignal<CategoryItemProps>(),
   ];
 
+  const categories = createMemo(() => {
+    if (!props.data) {
+      return undefined;
+    }
+    return Object.values(props.data).reverse() as string[][];
+  });
 
   return (
-    <>
-      <div class="h-full">
-        <Show when={mode() === "table"}>
-          <Table
-            columns={[
-              {
-                title: "名称",
-                value(record) {
-                  return record.name;
-                },
-              },
-            ]}
-            api="/api/category/page"
-            params={{
-              level: 5,
-            }}
-            topCaptions={{
-              createButton() {
-                onOpen();
-                return true;
-              },
-              customElements: [
-                // <Button
-                //   class="btn"
-                //   onClick={() => {
-                //     setMode((pre) => {
-                //       if (pre === "table") {
-                //         return "sunburst";
-                //       } else {
-                //         return "table";
-                //       }
-                //     });
-                //   }}
-                // >
-                //   {mode() === "sunburst" ? "表格" : "旭日图"}
-                // </Button>,
-              ],
-            }}
-          />
-        </Show>
-
-        <figure
-          class="h-full opacity-80"
-          id="container"
-          classList={{
-            hidden: mode() === "table",
-          }}
-        ></figure>
-        <Modal
-          opened={isOpen()}
-          onClose={onClose}
-          closeOnOverlayClick={false}
-          scrollBehavior="inside"
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>新增分类</ModalHeader>
-            <ModalBody class={colorMode()}>
+    <div>
+      <Category values={selectResult() || categories()} />
+      <Button class="btn-outlined mt-4" type="button" onClick={onOpen}>
+        选择类别
+      </Button>
+      <Modal
+        opened={isOpen()}
+        onClose={onClose}
+        closeOnOverlayClick={false}
+        scrollBehavior="inside"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>新增分类</ModalHeader>
+          <ModalBody class={colorMode()}>
               <form id="category" ref={form}>
                 <div class="flex flex-col gap-4">
                   <For each={categoryItems}>
@@ -373,7 +381,7 @@ export default function SpeciesCategory() {
                       <CategoryItem
                         {...item}
                         index={index()}
-                        id={categoryIds[index()][0]}
+                        item={categoryIds[index()][0]}
                         setSelected={categoryIds[index() + 1][1]}
                         bitmapGetter={bitMap}
                         bitmapSetter={setBitMap}
@@ -382,18 +390,17 @@ export default function SpeciesCategory() {
                   </For>
                 </div>
               </form>
-            </ModalBody>
-            <ModalFooter>
-              <Button class="btn-outlined" onClick={onClose}>
-                取消
-              </Button>
-              <Button type="submit" form="category" class="btn ml-4">
-                确定新增
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </div>
-    </>
+          </ModalBody>
+          <ModalFooter>
+            <Button class="btn-outlined" onClick={onClose}>
+              取消
+            </Button>
+            <Button type="submit" form="category" class="btn ml-4">
+              确定新增
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </div>
   );
 }

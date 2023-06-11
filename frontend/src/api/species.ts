@@ -14,9 +14,12 @@ export interface SearchResultItem {
   latinName: string;
   detailIntroduction?: string;
   id: number;
-  pictureUrl: string;
+  pictureUrl?: string;
+  betterUrl?: string;
   recommend: boolean;
   updateTime: string;
+  categorizedInheritance: string;
+  inheritance: Record<"1" | "2" | "3" | "4" | "5", Array<string>>;
 }
 
 export const searchSpecies = (data: SearchParams) => {
@@ -38,3 +41,8 @@ export const updateSpecies = (id: number, data: any) => {
 export const createSpecies = (data: any) => {
   return post(`/api/species`, data);
 };
+
+
+export const recommendSpecies = () => {
+  return get<Array<SearchResultItem>>("/api/species/recommends")
+}

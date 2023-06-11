@@ -1,5 +1,6 @@
 import { Input } from "@hope-ui/solid";
+import { Table } from "~/components/table";
 
 export default function PhotosWallPage() {
-  return <div class="grid grid-cols-2 gap-4"></div>;
+  return <Table columns={[]} />;
 }

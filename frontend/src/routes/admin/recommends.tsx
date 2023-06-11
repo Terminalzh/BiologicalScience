@@ -1,3 +1,5 @@
+import { Table } from "~/components/table";
+
 export default function RecommendsPage() {
-  return <h1>RecommendsPage</h1>
+  return <Table columns={[]} />;
 }

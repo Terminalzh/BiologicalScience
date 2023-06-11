@@ -1,9 +1,34 @@
-import { AspectRatio, IconButton, Image } from "@hope-ui/solid";
-import { For, JSX, createMemo, createSignal, onMount, untrack } from "solid-js";
+import {
+  AspectRatio,
+  IconButton,
+  Image,
+  Spinner,
+  notificationService,
+} from "@hope-ui/solid";
+import {
+  For,
+  JSX,
+  Show,
+  batch,
+  createMemo,
+  createResource,
+  createSignal,
+  onMount,
+  untrack,
+} from "solid-js";
 import pic from "~/assets/images/ivan.webp";
 import pic1 from "~/assets/images/lion.webp";
 import pic2 from "~/assets/images/animal.webp";
-import { Queue } from "~/utils";
+import { Queue, catchResource } from "~/utils";
+import { createForm } from "@felte/solid";
+import { useNavigate } from "solid-start";
+import { PaginationParams } from "~/api/base";
+import { listBanners } from "~/api/banner";
+import Picture from "../Picture";
+
+const getBanner = (pagination: PaginationParams) => {
+  return listBanners(pagination.pageNum, pagination.pageSize);
+};
 
 export function PhMagnifyingGlassBold(props: JSX.IntrinsicElements["svg"]) {
   return (
@@ -23,25 +48,40 @@ export function PhMagnifyingGlassBold(props: JSX.IntrinsicElements["svg"]) {
 }
 
 export default function LandingPage() {
-  const bannerPics = [pic, pic1, pic2].map((value) => (
-    <Image
-      src={value}
-      objectFit="cover"
-      borderRadius="3rem"
-      shadow="$md"
-      class="hover:brightness-110 transition-all cursor-pointer animate-fade-in"
-    />
-  ));
+  let bannerPics = new Array<JSX.Element>();
+
   const [pos, setPos] = createSignal(0);
   const imageQueue = new Queue<JSX.Element>();
-  imageQueue.enqueue(bannerPics[pos()]);
-  setPos((prev) => prev + 1);
-  imageQueue.enqueue(bannerPics[pos()]);
-  setPos((prev) => prev + 1);
+  const navigate = useNavigate();
 
   const [queue, setQueue] = createSignal(imageQueue, {
     equals: false,
   });
+
+  const [count, setCount] = createSignal(0);
+
+  getBanner({
+    pageNum: 1,
+    pageSize: 4,
+  })
+    .then((res) => {
+      res.list.forEach((value) => {
+        bannerPics.push(
+          <Picture
+            value={value.species.pictureUrl || value.species.betterUrl}
+            class="hover:brightness-110 transition-all cursor-pointer animate-fade-in rounded-3rem shadow-md"
+          />
+        );
+      });
+      batch(() => {
+        imageQueue.enqueue(bannerPics[pos()]);
+        setPos((prev) => prev + 1);
+        imageQueue.enqueue(bannerPics[pos()]);
+        setPos((prev) => prev + 1);
+        setCount(res.list.length);
+      });
+    })
+    .catch(() => {});
 
   onMount(() => {
     setInterval(() => {
@@ -56,6 +96,12 @@ export default function LandingPage() {
     }, 3000);
   });
 
+  const { form } = createForm({
+    onSubmit(values) {
+      navigate(`retrieval?keyword=${values.keyword}`);
+    },
+  });
+
   return (
     <div class="container-compact flex gap-12 items-center pt-15">
       <div class="flex-1">
@@ -66,31 +112,44 @@ export default function LandingPage() {
         <p class="text-secondary text-body">
           哺乳动物在地球上已经存在了约2.2亿年，现在已经分布在全球各地，包括陆地、海洋和空气中。哺乳动物的种类非常丰富，包括鲸、象、猫、狗、猴子、鼠类和人类等。它们在生态系统中扮演着重要的角色，包括控制猎物数量、传播花粉、分解有机物和维持生态平衡等。
         </p>
-        <div class="mt-6 border-brand-primary/87 border-solid border-4 flex items-center justify-between rounded-full pl-10 pr-4 py-4">
+        <form
+          ref={form}
+          class="mt-6 border-brand-primary/87 border-solid border-4 flex items-center justify-between rounded-full pl-10 pr-4 py-4"
+        >
           <input
             type="text"
+            name="keyword"
             placeholder="探索更多哺乳动物..."
             class="focus:outline-none bg-transparent outline-0  text-primary text-2xl placeholder:text-brand-primary/50 placeholder:font-500 flex-1"
           />
           <IconButton
             size="lg"
+            type="submit"
             class="rounded-full bg-brand-primary/87"
             icon={<PhMagnifyingGlassBold />}
             aria-label="搜索"
           />
-        </div>
+        </form>
       </div>
       <div class="w-md">
-        <AspectRatio ratio={16 / 10}>
+        <AspectRatio
+          ratio={16 / 10}
+          onClick={() => {
+            navigate("/service/retrieval");
+          }}
+        >
+          <Show when={queue().toArray().length === 0}>
+            <div>
+              <Spinner />
+            </div>
+          </Show>
           <For each={queue().toArray()}>{(item) => item}</For>
         </AspectRatio>
         <div class="mt-4">
           <ul class="list-none flex justify-center gap-2 h-2">
-            <For each={bannerPics}>
-              {(_, index) => {
-                const isCurrent = createMemo(
-                  () => pos() % bannerPics.length === index()
-                );
+            <For each={new Array(count())}>
+              {(count, index) => {
+                const isCurrent = createMemo(() => pos() % 4 === index());
                 return (
                   <li
                     class="rounded-full w-2 transition-all cursor-pointer"

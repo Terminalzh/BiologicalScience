@@ -4,6 +4,7 @@ import { PictureTarget, Pictures } from "~/utils/pictures";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import dayjs from "dayjs";
 import { AspectRatio, Avatar, Image, Spinner } from "@hope-ui/solid";
+import Picture from "../Picture";
 
 dayjs.extend(localizedFormat);
 
@@ -38,34 +39,9 @@ export const PictureColumn = (
   pictures: string,
   target: PictureTarget = "m"
 ): JSX.Element => {
-  if (!pictures) {
-    return (
-      <AspectRatio
-        ratio={16 / 10}
-        class="dark:bg-white/5 rounded-2xl"
-        width="6rem"
-      >
-        <p class="text-secondary text-center italic">图片缺失</p>
-      </AspectRatio>
-    );
-  }
-  try {
-    const images = JSON.parse(pictures) as Pictures;
-    if (images) {
-      <AspectRatio ratio={16 / 10} width="6rem">
-        return <Image src={images[target]} class="h-12 rounded-2xl" />;
-      </AspectRatio>;
-    }
-  } catch (e) {}
   return (
     <AspectRatio ratio={16 / 10} width="6rem">
-      <Image
-        src={pictures}
-        class="rounded-2xl"
-        onError={(e) => {
-          console.log(e);
-        }}
-      />
+      <Picture value={pictures} class="rounded-2xl" />
     </AspectRatio>
   );
 };

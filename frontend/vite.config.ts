@@ -15,16 +15,22 @@ export default defineConfig({
     https: true,
     proxy: {
       "/api/pictures": "http://127.0.0.1:7711",
+      // "/api": "http://127.0.0.1:8080",
+      "/api": {
+        target: "http://127.0.0.1:8080",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
       // "/api": {
       //   target: "http://127.0.0.1:4523/m1/2818466-0-default",
       //   changeOrigin: true,
       //   rewrite: (path) => path.replace(/^\/api/, ""),
       // },
-      "/api": {
-        target: "https://cn-sy-dx-1.natfrp.cloud:31150", // The API is running locally via IIS on this port
-        changeOrigin: true,
-        secure: false,
-      },
+      // "/api": {
+      //   target: "https://cn-sy-dx-1.natfrp.cloud:31150", // The API is running locally via IIS on this port
+      //   changeOrigin: true,
+      //   secure: false,
+      // },
     },
   },
 });

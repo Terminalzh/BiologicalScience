@@ -47,7 +47,7 @@ const LoginForm = () => {
           title: "登录成功",
           status: "success",
         });
-        navigate("/admin/photos");
+        navigate("/admin/charts");
       });
     }
   });
@@ -116,7 +116,7 @@ export default function LoginPage() {
                   title: "注册成功",
                   status: "success",
                 });
-                navigate("/admin/photos");
+                navigate("/admin/charts");
               }}
             />
           }

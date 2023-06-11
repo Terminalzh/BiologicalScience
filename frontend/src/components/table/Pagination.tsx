@@ -87,7 +87,7 @@ export function SolarAltArrowRightLineDuotone(
 
 export default function Pagination(props: {
   pagination: PaginationEntity;
-  pageSetter: Setter<PaginationParams>;
+  onChanged?: (page: PaginationParams) => void;
 }) {
   let beforeOffset = 0;
   let left = 0;
@@ -126,13 +126,13 @@ export default function Pagination(props: {
   });
 
   const { form } = createForm({
-    onSubmit(values, context) {
+    onSubmit(values) {
       batch(() => {
-        props.pageSetter((prev) => ({
-          pageNum: values.pageForward,
-          pageSize: prev.pageSize,
-        }));
         setCurrent(values.pageForward);
+        props?.onChanged?.({
+          pageNum: values.pageForward,
+          pageSize: props.pagination.pageSize,
+        });
       });
     },
   });
@@ -163,11 +163,13 @@ export default function Pagination(props: {
               return;
             }
             batch(() => {
-              props.pageSetter((prev) => ({
-                pageNum: prev.pageNum - 1,
-                pageSize: prev.pageSize,
-              }));
-              setCurrent((p) => p - 1);
+              setCurrent((p) => {
+                props.onChanged?.({
+                  pageNum: p - 1,
+                  pageSize: props.pagination.pageSize,
+                });
+                return p - 1;
+              });
             });
           }}
         />
@@ -178,10 +180,10 @@ export default function Pagination(props: {
             <Button
               onClick={() => {
                 batch(() => {
-                  props.pageSetter((prev) => ({
+                  props.onChanged?.({
                     pageNum: item,
-                    pageSize: prev.pageSize,
-                  }));
+                    pageSize: props.pagination.pageSize,
+                  });
                   setCurrent(item);
                 });
               }}
@@ -221,11 +223,13 @@ export default function Pagination(props: {
               return;
             }
             batch(() => {
-              props.pageSetter((prev) => ({
-                pageNum: prev.pageNum + 1,
-                pageSize: prev.pageSize,
-              }));
-              setCurrent((p) => p + 1);
+              setCurrent((p) => {
+                props.onChanged?.({
+                  pageNum: p + 1,
+                  pageSize: props.pagination.pageSize,
+                });
+                return p + 1;
+              });
             });
           }}
         />
@@ -237,6 +241,7 @@ export default function Pagination(props: {
             name="pageForward"
             max={pageCount()}
             min={1}
+            width="4.5rem"
             placeholder="页码"
             required
           />

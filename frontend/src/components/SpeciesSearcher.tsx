@@ -1,4 +1,5 @@
 import {
+  AspectRatio,
   Button,
   Image,
   Input,
@@ -44,6 +45,7 @@ import {
 import { PictureColumn } from "./table";
 import { Pictures } from "~/utils/pictures";
 import { catchResource } from "~/utils";
+import Picture from "./Picture";
 
 export interface IdNode {
   id: number;
@@ -215,15 +217,6 @@ const SearchResultBrief = (props: {
   item: SearchResultItem;
   onClick?: () => void;
 }) => {
-  const url = createMemo(() => {
-    try {
-      const pic = JSON.parse(props.item.pictureUrl) as Pictures;
-      return pic.m;
-    } catch (_) {
-      return props.item.pictureUrl;
-    }
-  });
-
   return (
     <li
       class="flex gap-4 items-center rounded-2xl hover:dark:bg-white/5 hover:light:bg-dark/5 p-2 cursor-pointer transition-all"
@@ -231,9 +224,21 @@ const SearchResultBrief = (props: {
         props.onClick?.();
       }}
     >
-      <div>
-        <Image src={url()} class="h-10 rounded-xl" />
-      </div>
+      <AspectRatio ratio={1} width="3rem">
+        <Show
+          when={props.item.betterUrl || props.item.pictureUrl}
+          fallback={
+            <div class=" light:bg-dark/5 dark:bg-light/5 p-2 rounded-xl flex items-center ">
+              <p class="text-xs text-center text-secondary">图片缺失</p>
+            </div>
+          }
+        >
+          <Picture
+            value={props.item?.pictureUrl || props.item?.betterUrl}
+            class="rounded-xl"
+          />
+        </Show>
+      </AspectRatio>
       <div>
         <p class="font-bold font-playfair italic text-xl text-primary leading-none">
           {props.item.latinName}
@@ -305,7 +310,10 @@ export function SpeciesSelector(props: {
                   return {
                     level: levels,
                     keyword: pre?.keyword,
-                    pagination: pre.pagination,
+                    pagination: {
+                      pageNum: 1,
+                      pageSize: 10,
+                    },
                   };
                 });
               }}
@@ -315,14 +323,11 @@ export function SpeciesSelector(props: {
               placeholder="关键词搜索"
               onInput={(e) => {
                 setSearchParam((pre) => {
-                  if (!searchResource.loading) {
-                    return {
-                      level: pre.level,
-                      keyword: e.target.value,
-                      pagination: pre.pagination,
-                    };
-                  }
-                  return pre;
+                  return {
+                    level: pre.level,
+                    keyword: e.target.value,
+                    pagination: pre.pagination,
+                  };
                 });
               }}
             />
@@ -341,7 +346,7 @@ export function SpeciesSelector(props: {
                     </div>
                   }
                 >
-                  <ul class="dark:border-white/10 light:border-dark/10 border-2 border-dashed rounded-xl">
+                  <ul class="dark:border-white/10 light:border-dark/10 border-2 border-dashed rounded-xl p-2">
                     <Show when={(searchResource()?.list?.length || 0) === 0}>
                       <p class="font-italic text-secondary py-4 text-center">
                         没有匹配的结果
@@ -358,6 +363,36 @@ export function SpeciesSelector(props: {
                         />
                       )}
                     </For>
+
+                    <Show
+                      when={
+                        searchResource()?.pageNum !== searchResource()?.pages
+                      }
+                    >
+                      <div class="flex justify-center items-center mt-1">
+                        <Button
+                          size="xs"
+                          variant="ghost"
+                          class="hover:bg-brand-primary/20"
+                          onClick={() => {
+                            setSearchParam((prev) => {
+                              return {
+                                level: prev.level,
+                                keyword: prev.keyword,
+                                pagination: {
+                                  pageNum: prev.pagination.pageNum,
+                                  pageSize:
+                                    (prev.pagination.pageSize || 10) + 10,
+                                },
+                              };
+                              return prev;
+                            });
+                          }}
+                        >
+                          加载更多
+                        </Button>
+                      </div>
+                    </Show>
                   </ul>
                 </Suspense>
               </ErrorBoundary>

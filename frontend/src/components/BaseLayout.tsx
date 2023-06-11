@@ -155,9 +155,15 @@ const BrandItem = (props: { brand: JSX.Element }) => {
 };
 
 const NavItem = (props: any) => {
+  const navigate = useNavigate();
   return (
-    <li class="cursor-pointer hover:text-brand-primary/87 transition-all">
-      <a href={props.target}>{props.children}</a>
+    <li
+      class="cursor-pointer hover:text-brand-primary/87 transition-all"
+      onClick={() => {
+        navigate(props.target);
+      }}
+    >
+      {props.children}
     </li>
   );
 };
@@ -213,7 +219,7 @@ export interface BaseLayoutProps {
 
 export default function BaseLayout(props: BaseLayoutProps) {
   const { colorMode, toggleColorMode } = useColorMode();
-  const [meResource] = createResource(getMe);
+  const [meResource, { mutate }] = createResource(getMe);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -266,8 +272,8 @@ export default function BaseLayout(props: BaseLayoutProps) {
               <ul class="flex font-sans gap-8 flex-1 items-center list-none justify-center font-500 text-lg">
                 <NavItem target="/service">主页</NavItem>
                 <NavItem target="/service/retrieval">物种检索</NavItem>
-                <NavItem>每日推荐</NavItem>
-                <NavItem>关于我们</NavItem>
+                <NavItem target="/service#recommendation">每日推荐</NavItem>
+                <NavItem target="/service#about-us">关于我们</NavItem>
               </ul>
             </Show>
             <div class="flex gap-8 flex-1 items-center justify-end">
@@ -309,7 +315,7 @@ export default function BaseLayout(props: BaseLayoutProps) {
                           <SolarUserBoldDuotone class="fill-brand-primary/80" />
                         }
                         onSelect={() => {
-                          navigate("/admin/photos");
+                          navigate("/admin/charts");
                         }}
                       >
                         个人中心
@@ -324,6 +330,9 @@ export default function BaseLayout(props: BaseLayoutProps) {
                                   status: "success",
                                 });
                                 navigate("/service");
+                                if (location.pathname.endsWith("service")) {
+                                  mutate();
+                                }
                               });
                             })
                             .catch((e) => {

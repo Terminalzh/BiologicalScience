@@ -250,7 +250,7 @@ export default function Root() {
               content="width=device-width, initial-scale=1"
             />
           </Head>
-          <Body class="transition-all h-full">
+          <Body class="h-full">
             <Routes>
               <FileRoutes />
             </Routes>

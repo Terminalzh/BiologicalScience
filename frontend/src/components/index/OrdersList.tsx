@@ -55,7 +55,7 @@ export default function OrdersList() {
         <For each={orders}>{(item) => <OrderCard {...item} />}</For>
       </div>
       <div class="text-end mt-8">
-        <Anchor href="https://google.com">查看更多</Anchor>
+        <Anchor href="service/retrieval">查看更多</Anchor>
       </div>
     </section>
   );

@@ -262,7 +262,12 @@ const TableBody = <T,>(props: TableProps<T>) => {
         <TableCaption class="caption-bottom">
           <Show when={page()}>
             {(value) => (
-              <Pagination pagination={value()} pageSetter={setPageParam} />
+              <Pagination
+                pagination={value()}
+                onChanged={(page) => {
+                  setPageParam(page);
+                }}
+              />
             )}
           </Show>
         </TableCaption>

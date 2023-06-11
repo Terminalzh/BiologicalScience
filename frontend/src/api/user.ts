@@ -14,7 +14,7 @@ export interface User {
 
 export function login(data: any) {
   return post<User>("/api/user/login", {
-    phone: data.username,
+    username: data.username,
     password: data.password,
   });
 }

@@ -10,7 +10,14 @@ interface MenuItemProps {
 
 const getMenu = (isAdmin: boolean) => {
   const result = new Array<MenuItemProps>();
-  if (true) {
+
+  result.push({
+    title: "总览",
+    path: "charts",
+    icon: "i-solar-pie-chart-2-bold-duotone",
+  });
+
+  if (isAdmin) {
     result.push({
       title: "用户",
       path: "users",
@@ -22,33 +29,27 @@ const getMenu = (isAdmin: boolean) => {
       icon: "i-solar-database-bold-duotone",
     });
 
-    result.push({
-      title: "物种分类",
-      path: "category",
-      icon: "i-solar-folder-2-bold-duotone",
-    });
+    // result.push({
+    //   title: "物种分类",
+    //   path: "category",
+    //   icon: "i-solar-folder-2-bold-duotone",
+    // });
 
-    result.push({
-      title: "照片墙",
-      path: "photos-wall",
-      icon: "i-solar-album-bold-duotone",
-    });
+    // result.push({
+    //   title: "照片墙",
+    //   path: "photos-wall",
+    //   icon: "i-solar-album-bold-duotone",
+    // });
 
-    result.push({
-      title: "物种推荐",
-      path: "recommends",
-      icon: "i-solar-like-bold-duotone",
-    });
+    // result.push({
+    //   title: "物种推荐",
+    //   path: "recommends",
+    //   icon: "i-solar-like-bold-duotone",
+    // });
     result.push({
       title: "轮播图",
       path: "banners",
       icon: "i-solar-slider-vertical-bold-duotone",
-    });
-
-    result.push({
-      title: "可视化报表",
-      path: "charts",
-      icon: "i-solar-pie-chart-2-bold-duotone",
     });
 
     result.push({

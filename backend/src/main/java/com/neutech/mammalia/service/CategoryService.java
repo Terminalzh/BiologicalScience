@@ -4,11 +4,10 @@ import com.neutech.mammalia.bean.Category;
 import com.neutech.mammalia.bean.CategoryCount;
 import com.neutech.mammalia.bean.CategoryFlat;
 
-import java.lang.invoke.CallSite;
 import java.util.List;
 
 public interface CategoryService {
-    int addCategory(List<Category> categories);
+    int addCategory(Category category);
 
     int deleteCategoryById(Integer id);
 
@@ -19,6 +18,8 @@ public interface CategoryService {
     List<Category> inquireCategoryByParentId(Integer parentId);
 
     Category inquireCategoryByLatinNameAndParentId(Integer parentId, String latinName);
+
+    Category inquireCategoryByName(String latinName, String cName);
 
     List<CategoryFlat> inquireAllCategoriesByLevel(Integer level, Integer start, Integer pageSize);
 

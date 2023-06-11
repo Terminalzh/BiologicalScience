@@ -21,24 +21,11 @@ public class CategoryController {
     @Resource
     private CategoryService categoryService;
 
-    @PostMapping(produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> addCategory(@RequestBody Map<String, Category> map) {
-        List<Category> categories = new ArrayList<>();
-        categories.add(map.get("sub_class"));
-        categories.add(map.get("order"));
-        categories.add(map.get("sub_class"));
-        categories.add(map.get("sub_class"));
-        if (categoryService.addCategory(categories) >= 1)
-            return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED));
-        else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
-    }
-
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Response> deleteCategoryById(@PathVariable("id") Integer id) {
         int i = categoryService.deleteCategoryById(id);
         if (i >= 1)
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response(HttpStatus.NO_CONTENT, "删除成功, 已删除" + i + "条数据"));
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, "删除成功, 已删除" + i + "条数据"));
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
@@ -49,7 +36,7 @@ public class CategoryController {
         if (categoryService.updateCategoryById(category) == 1)
             return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
         else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @GetMapping(value = "/{id}")

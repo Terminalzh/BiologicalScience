@@ -6,7 +6,7 @@ import com.neutech.mammalia.bean.CategoryCount;
 import java.util.List;
 
 public interface CategoryCountService {
-    int addCategoryCount(List<Category> categories);
+    int addCategoryCount(CategoryCount categoryCount);
 
     int deleteCategoryCountById(Integer id);
 

@@ -34,7 +34,7 @@ public class BannerController {
     @DeleteMapping(value = "/{speciesId}")
     public ResponseEntity<Response> deleteBannerById(@PathVariable Integer speciesId) {
         if (bannerService.deleteBannerBySpeciesId(speciesId) == 1)
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response(HttpStatus.NO_CONTENT));
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }

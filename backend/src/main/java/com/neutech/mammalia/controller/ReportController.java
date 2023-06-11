@@ -33,7 +33,7 @@ public class ReportController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Response> deleteReportById(@PathVariable Integer id) {
         if (reportService.deleteReportById(id) == 1)
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response(HttpStatus.NO_CONTENT));
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }

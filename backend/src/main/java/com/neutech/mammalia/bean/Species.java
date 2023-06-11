@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -70,4 +71,18 @@ public class Species {
      * 继承关系
      */
     private Map<Integer, List<String>> inheritance;
+
+    @JsonProperty
+    private Map<String, CategoryParam> category;
+
+    @Data
+    @JsonSerialize
+    public static class CategoryParam {
+        @JsonProperty
+        private String latinName;
+        @JsonProperty
+        private String cName;
+        @JsonProperty
+        private Integer id;
+    }
 }

@@ -29,27 +29,8 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryCountService categoryCountService;
 
     @Override
-    public int addCategory(List<Category> categories) {
-        int count = 0;
-        //获取最高级
-        Category parent = categoryMapper.inquireCategoryById(1);
-        int i = 0;
-        for (Category category : categories) {
-            i++;
-            //先设置父id
-            category.setParentId(parent.getId());
-            //通过父id和拉丁文名判断当前分类是否存在
-            Category categoryByName = categoryMapper.inquireCategoryByLatinNameAndParentId(category.getParentId(), category.getLatinName());
-            //不存在就新增
-            if (categoryByName == null) {
-                count += categoryMapper.addCategory(category);
-            }
-            //更新父级
-            parent = categoryMapper.inquireCategoryByLatinNameAndParentId(category.getParentId(), category.getLatinName());
-        }
-        //在所有分类增加后再增加数量
-        categoryCountService.addCategoryCount(categories);
-        return count;
+    public int addCategory(Category category) {
+        return categoryMapper.addCategory(category);
     }
 
     @Override
@@ -88,7 +69,6 @@ public class CategoryServiceImpl implements CategoryService {
         category.setLevel(inheritance.split("\\.").length);
         return category;
     }
-
     @Override
     public List<Category> inquireCategoryByParentId(Integer parentId) {
         return categoryMapper.inquireCategoryByParentId(parentId);
@@ -97,6 +77,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category inquireCategoryByLatinNameAndParentId(Integer parentId, String latinName) {
         return categoryMapper.inquireCategoryByLatinNameAndParentId(parentId, latinName);
+    }
+
+    @Override
+    public Category inquireCategoryByName(String latinName, String cName) {
+        return categoryMapper.inquireCategoryByName(cName, latinName);
     }
 
     @Override

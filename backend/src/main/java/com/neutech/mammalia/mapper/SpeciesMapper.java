@@ -51,11 +51,7 @@ public interface SpeciesMapper {
             """)
     List<Species> inquireSpeciesByKeyword(@Param("inheritance") String inheritance, @Param("keyword") String keyword);
 
-    @Select("""
-            select t.id, t.c_name, t.latin_name, t.genus_id, t.brief_introduction, t.detail_introduction, t.recommend, t.level, t.create_time, t.update_time, t.picture_url, t.better_url,
-            c.categorized_inheritance
-            from t_species t left join category_count c on t.genus_id = c.id  order by update_time desc
-            """)
+    @Select("select *  from t_species order by update_time desc")
     List<Species> inquireAllSpecies();
 
     @Select("select id, c_name, latin_name, genus_id, brief_introduction, detail_introduction, recommend, level, create_time, update_time, picture_url, better_url from t_species;")
@@ -63,4 +59,7 @@ public interface SpeciesMapper {
 
     @Select("select * from t_species where better_url is not null")
     List<Species> inquireSomeSpecies();
+
+    @Select("select * from t_species where latin_name = #{latinName} and c_name = #{cName}")
+    Species inquireSpeciesByName(Species species);
 }

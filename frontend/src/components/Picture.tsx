@@ -30,9 +30,11 @@ export default function Picture(props: {
   const src = createMemo(() => {
     try {
       if (props.value) {
-        return (JSON.parse(props.value) as Pictures)[
-          props.target || "m"
-        ].replace("http", "https");
+        const url = (JSON.parse(props.value) as Pictures)[props.target || "m"];
+        if (!url.startsWith("https")) {
+          return url.replace("http", "https");
+        }
+        return url;
       } else {
         return "";
       }

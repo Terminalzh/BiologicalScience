@@ -39,10 +39,10 @@ export const updateSpecies = (id: number, data: any) => {
 };
 
 export const createSpecies = (data: any) => {
+  data.id = -1;
   return post(`/api/species`, data);
 };
 
-
 export const recommendSpecies = () => {
-  return get<Array<SearchResultItem>>("/api/species/recommends")
-}
+  return get<Array<SearchResultItem>>("/api/species/recommends");
+};

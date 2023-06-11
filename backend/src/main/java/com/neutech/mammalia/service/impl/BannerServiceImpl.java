@@ -50,7 +50,7 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public Banner inquireBannerBySpeciesId(Integer speciesId) {
+    public List<Banner> inquireBannerBySpeciesId(Integer speciesId) {
         return bannerMapper.inquireBannerBySpeciesId(speciesId);
     }
 

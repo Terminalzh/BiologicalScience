@@ -6,6 +6,9 @@
 - `frontend`: 前端项目，solidjs + unocss
 - `assets`: 储存文档中需要使用的资源文件，如图片。
 
+### 二、如何启动
+分别启动前后端项目即可，详见frontend, backend文件夹中的README
+
 ### 二、系统概要
 
 #### 1. 系统的基本结构

@@ -149,6 +149,18 @@ const UserInfo = () => {
   );
 };
 
+const Databases = () => {
+  return (
+    <SectionCard title="数据库统计">
+      <p class="text-xl flex justify-center items-center h-full">
+        <span>已收录</span>{" "}
+        <span class="text-3xl font-bold text-brand-primary/80">5229</span>
+        <span>种哺乳纲物种</span>
+      </p>
+    </SectionCard>
+  );
+};
+
 export default function ChartsPage() {
   let chart: Highcharts.Chart;
   onMount(() => {
@@ -280,8 +292,9 @@ export default function ChartsPage() {
   });
   return (
     <div>
-      <div class="grid grid-cols-2">
+      <div class="grid grid-cols-2 gap-8">
         <UserInfo />
+        <Databases />
       </div>
       <div class="mt-8">
         <Show when={categories.loading}>

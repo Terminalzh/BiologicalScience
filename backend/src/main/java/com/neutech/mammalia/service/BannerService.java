@@ -15,7 +15,7 @@ public interface BannerService {
 
     Banner inquireBannerById(Integer id);
 
-    Banner inquireBannerBySpeciesId(Integer speciesId);
+    List<Banner> inquireBannerBySpeciesId(Integer speciesId);
 
     List<Banner> inquireAllBanner();
 

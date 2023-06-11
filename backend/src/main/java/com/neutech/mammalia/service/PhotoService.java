@@ -2,17 +2,20 @@ package com.neutech.mammalia.service;
 
 import com.neutech.mammalia.bean.Photo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 public interface PhotoService {
-    int addPhoto(@Param("photo") Photo photo);
+    int addPhoto(Integer speciesId);
 
-    int deletePhotoById(@Param("id") Integer id);
+    int deletePhotoById(Integer id);
 
-    int updatePhotoById(@Param("photo") Photo photo);
+    int deletePhotoBySpeciesId(Integer speciesId);
 
-    Photo inquirePhotoById(@Param("id") Integer id);
+    int updatePhotoById(Photo photo);
+
+    Photo inquirePhotoById(Integer id);
 
     List<Photo> inquireAllPhotos();
 

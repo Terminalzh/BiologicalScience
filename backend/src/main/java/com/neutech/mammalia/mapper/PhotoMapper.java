@@ -1,6 +1,7 @@
 package com.neutech.mammalia.mapper;
 
 import com.neutech.mammalia.bean.Photo;
+import com.neutech.mammalia.mapper.sqlProvider.PhotoSqlProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -10,8 +11,8 @@ public interface PhotoMapper {
 
     @Insert("""
             insert into t_photo
-            (species_id, works_id, is_public, view_count, like_count, comment_count)
-            values(#{photo.speciesId}, #{photo.worksId}, #{photo.isPublic}, #{photo.viewCount}, #{photo.likeCount}, #{photo.commentCount})
+            (species_id)
+            values(#{photo.works.id})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addPhoto(@Param("photo") Photo photo);
@@ -19,22 +20,26 @@ public interface PhotoMapper {
     @Delete("delete from t_photo where id=#{id}")
     int deletePhotoById(@Param("id") Integer id);
 
-    @Update("""
-            update t_photo set
-            species_id=#{photo.speciesId},
-            works_id=#{photo.worksId},
-            is_public=#{photo.isPublic},
-            view_count=#{photo.viewCount},
-            like_count=#{photo.likeCount},
-            comment_count=#{photo.commentCount},
-            update_time=#{photo.updateTime}
-            where id=#{photo.id}
-            """)
+    @Delete("delete from t_photo where species_id = #{speciesId}")
+    int deletePhotoBySpeciesId(@Param("speciesId") Integer speciesId);
+
+    @UpdateProvider(value = PhotoSqlProvider.class, method = "updatePhotoById")
     int updatePhotoById(@Param("photo") Photo photo);
 
+    @Results(id = "photoResultMapping", value = {
+            @Result(id = true, column = "id", property = "id"),
+            @Result(column = "species_id", property = "species",
+                    one = @One(select = "com.neutech.mammalia.mapper.SpeciesMapper.inquireSpeciesById")),
+            @Result(column = "view_count", property = "viewCount"),
+            @Result(column = "like_count", property = "likeCount"),
+            @Result(column = "comment_count", property = "commentCount"),
+            @Result(column = "create_time", property = "createTime"),
+            @Result(column = "updateTime", property = "updateTime")
+    })
     @Select("select * from t_photo where id=#{id}")
     Photo inquirePhotoById(@Param("id") Integer id);
 
+    @ResultMap(value = "photoResultMapping")
     @Select("select * from t_photo")
     List<Photo> inquireAllPhotos();
 }

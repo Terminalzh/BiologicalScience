@@ -1,5 +1,7 @@
 package com.neutech.mammalia.bean;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,33 +21,19 @@ public class Category {
     /**
      * 中文名
      */
-    private Integer cName;
+    @JsonProperty("cName")
+    private String cName;
     /**
      * 拉丁文名
      */
-    private Integer latinName;
-    /**
-     * 纲总数
-     */
-    private Integer subClassCount;
-    /**
-     * 目总数
-     */
-    private Integer orderCount;
-    /**
-     * 科总数
-     */
-    private Integer familyCount;
-    /**
-     * 属总数
-     */
-    private Integer genusCount;
-    /**
-     * 种总数
-     */
-    private Integer speciesCount;
+    private String latinName;
     /**
      * 父级ID对应分类表的主键
      */
+
     private Integer parentId;
+    /**
+     * 等级
+     */
+    private Integer level;
 }

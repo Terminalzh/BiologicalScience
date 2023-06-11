@@ -1,14 +1,21 @@
 package com.neutech.mammalia.controller;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.neutech.mammalia.bean.Response;
 import com.neutech.mammalia.bean.User;
 import com.neutech.mammalia.service.UserService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -19,114 +26,83 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public Map<String, Object> addUser(@RequestBody User user, HttpSession session) {
-        Map<String, Object> map = new HashMap<>();
-        int result = userService.addUser(user);
-        if (result == 1) {
-            session.setAttribute("user", user);
-            map.put("code", HttpStatus.OK.value());
-            if (user.getEmail().equals(user.getPhone()))
-                map.put("message", "admin");
-            else
-                map.put("message", "user");
-            map.put("data", user);
-        } else {
-            map.put("code", HttpStatus.CREATED.value());
-            map.put("message", "添加失败");
-        }
-        return map;
+    public ResponseEntity<Response> addUser(@RequestBody User user, HttpSession session) {
+        if (userService.addUser(user) == 1) {
+            user = userService.inquireUserByEmailOrPhone(user);
+            user.setIsAdmin(user.getEmail().equals(user.getPhone()));
+            if (session.getAttribute("user") == null)
+                session.setAttribute("user", user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Response(HttpStatus.CREATED, user));
+        } else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @PostMapping(value = "/login")
-    public Map<String, Object> login(@RequestBody User account, HttpSession session) {
-        Map<String, Object> map = new HashMap<>();
-        User user = userService.inquireUserCountByEmailOrPhone(account);
+    public ResponseEntity<Response> login(@RequestBody Map<String, String> map, HttpSession session) {
+        User account = new User();
+        account.setEmail(map.get("username"));
+        account.setPhone(map.get("username"));
+        account.setPassword(map.get("password"));
+        User user = userService.inquireUserByEmailOrPhone(account);
         if (user != null) {
+            user.setIsAdmin(user.getEmail().equals(user.getPhone()));
             session.setAttribute("user", user);
-            map.put("code", HttpStatus.OK.value());
-            if (user.getEmail().equals(user.getPhone()))
-                map.put("message", "admin");
-            else
-                map.put("message", "user");
-            map.put("data", user);
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, user));
         } else {
-            map.put("code", HttpStatus.UNAUTHORIZED.value());
-            map.put("message", "邮箱或手机号或密码错误");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
         }
-        return map;
     }
 
     @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deleteUserById(@PathVariable("id") Integer id) {
-        Map<String, Object> map = new HashMap<>();
-        int result = userService.deleteUserById(id);
-        if (result == 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", "Success");
-        } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", "删除失败,该用户不存在或已删除");
-        }
-        return map;
+    public ResponseEntity<Response> deleteUserById(@PathVariable("id") Integer id) {
+        if (userService.deleteUserById(id) == 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping(value = "/logout")
-    public Map<String, Object> logout(HttpSession session) {
+    public ResponseEntity<Response> logout(HttpSession session) {
+        session.removeAttribute("user");
         session.invalidate();
-        Map<String, Object> map = new HashMap<>();
-        map.put("code", HttpStatus.OK.value());
-        map.put("message", "Success");
-        return map;
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
     }
 
     @PutMapping(value = "/{id}")
-    public Map<String, Object> updateUserById(@PathVariable("id") Integer id, @RequestBody User user) {
-        Map<String, Object> map = new HashMap<>();
+    public ResponseEntity<Response> updateUserById(@PathVariable("id") Integer id, @RequestBody User user) {
         user.setId(id);
-        int result = userService.updateUserById(user);
-        if (result == 1) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", "Success");
-        } else {
-            map.put("code", HttpStatus.BAD_REQUEST.value());
-            map.put("message", "修改失败,该用户不存在或已删除");
-        }
-        return map;
+        if (userService.updateUserById(user) == 1)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(HttpStatus.BAD_REQUEST));
     }
 
     @GetMapping(value = "/{id}")
-    public Map<String, Object> inquireUserById(@PathVariable("id") Integer id) {
-        Map<String, Object> map = new HashMap<>();
+    public ResponseEntity<Response> inquireUserById(@PathVariable("id") Integer id) {
         User user = userService.inquireUserById(id);
-        if (user != null) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", "Success");
-            map.put("data", user);
-        } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", "该用户不存在或已删除");
-        }
-        return map;
+        if (user != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, user));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
-    public Map<String, Object> inquireAllUser(
-            @RequestParam(value = "current", required = false) Integer current,
-            @RequestParam(value = "pageSize", required = false) Integer pageSize
-    ) {
-        Map<String, Object> map = new HashMap<>();
-        PageHelper.startPage(current, pageSize);
+    public ResponseEntity<Response> inquireAllUser(Page<Integer> page) {
+        PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<User> users = userService.inquireAllUser();
-        if (users != null) {
-            map.put("code", HttpStatus.OK.value());
-            map.put("message", "Success");
-            map.put("data", users);
-        } else {
-            map.put("code", HttpStatus.NOT_FOUND.value());
-            map.put("message", "用户列表为空");
-        }
-        return map;
+        PageInfo<User> userPageInfo = new PageInfo<>(users);
+        if (users.size() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, userPageInfo));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(HttpStatus.NOT_FOUND));
     }
 
-
+    @GetMapping("/me")
+    public ResponseEntity<Response> getCurrentUser(HttpSession session) {
+        Object user = session.getAttribute("user");
+        if (user != null)
+            return ResponseEntity.status(HttpStatus.OK).body(new Response(HttpStatus.OK, user));
+        else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response(HttpStatus.UNAUTHORIZED));
+    }
 }

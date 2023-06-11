@@ -1,26 +1,24 @@
 package com.neutech.mammalia.bean;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Photo {
     /**
      * 主键
      */
     private Integer id;
-    /**
-     * 物种表物种ID
-     */
-    private Integer speciesId;
 
     /**
-     * 摄影作品表ID
+     * 物种表id
      */
-    private Integer worksId;
-
-    /**
-     * 照片墙是否公开展示，true 或 false
-     */
-    private Boolean isPublic;
+    private Species species;
 
     /**
      * 照片墙被查看的次数

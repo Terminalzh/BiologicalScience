@@ -1,40 +1,125 @@
 package com.neutech.mammalia.service.impl;
 
 import com.neutech.mammalia.bean.Category;
+import com.neutech.mammalia.bean.CategoryCount;
+import com.neutech.mammalia.bean.CategoryFlat;
 import com.neutech.mammalia.mapper.CategoryMapper;
+import com.neutech.mammalia.service.CategoryCountService;
 import com.neutech.mammalia.service.CategoryService;
+import com.neutech.mammalia.service.SpeciesService;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Lazy
 @Service
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
     @Resource
     private CategoryMapper categoryMapper;
+    @Lazy
+    @Resource
+    private SpeciesService speciesService;
+    @Lazy
+    @Resource
+    private CategoryCountService categoryCountService;
 
     @Override
     public int addCategory(Category category) {
-        return 0;
+        return categoryMapper.addCategory(category);
     }
 
     @Override
     public int deleteCategoryById(Integer id) {
-        return 0;
+        int count = 0;
+        //先获取所有的子级
+        List<Category> categories = categoryMapper.inquireCategoryByParentId(id);
+        //如果没有子级,就开始删除
+        if (categories.size() == 0) {
+            count += speciesService.deleteSpeciesByGenusId(id);
+            count += categoryCountService.deleteCategoryCountById(id);
+            count += categoryMapper.deleteCategoryById(id);
+            return count;
+        } else {
+            //如果有子级,就遍历每个子级,然后递归调用
+            for (Category category : categories) {
+                count += deleteCategoryById(category.getId());
+            }
+            //删除所有子级后,删除当前分类
+            count += speciesService.deleteSpeciesByGenusId(id);
+            count += categoryCountService.deleteCategoryCountById(id);
+            count += categoryMapper.deleteCategoryById(id);
+        }
+        return count;
     }
 
     @Override
     public int updateCategoryById(Category category) {
-        return 0;
+        return categoryMapper.updateCategoryById(category);
     }
 
     @Override
     public Category inquireCategoryById(Integer id) {
-        return null;
+        Category category = categoryMapper.inquireCategoryById(id);
+        String inheritance = categoryCountService.inquireCategorizedInheritanceById(id);
+        category.setLevel(inheritance.split("\\.").length);
+        return category;
+    }
+    @Override
+    public List<Category> inquireCategoryByParentId(Integer parentId) {
+        return categoryMapper.inquireCategoryByParentId(parentId);
     }
 
     @Override
-    public List<Category> inquireAllCategory() {
-        return null;
+    public Category inquireCategoryByLatinNameAndParentId(Integer parentId, String latinName) {
+        return categoryMapper.inquireCategoryByLatinNameAndParentId(parentId, latinName);
+    }
+
+    @Override
+    public Category inquireCategoryByName(String latinName, String cName) {
+        return categoryMapper.inquireCategoryByName(cName, latinName);
+    }
+
+    @Override
+    public List<CategoryFlat> inquireAllCategoriesByLevel(Integer level, Integer start, Integer pageSize) {
+        String expression = "^(?:(?!" + "\\d+\\.".repeat(level) + "\\d+).)*$";
+        List<CategoryFlat> list = new ArrayList<>();
+        List<CategoryCount> categoryCounts = categoryCountService.inquireAllCategories(expression, start, pageSize);
+        for (CategoryCount categoryCount : categoryCounts) {
+            Category category = categoryMapper.inquireCategoryById(categoryCount.getId());
+            CategoryFlat categoryFlat = new CategoryFlat();
+            categoryFlat.setId(category.getId().toString());
+            if (category.getParentId() != null)
+                categoryFlat.setParent(category.getParentId().toString());
+            if (category.getCName() != null)
+                categoryFlat.setName(category.getLatinName() + "(" + category.getCName() + ")");
+            else categoryFlat.setName(category.getLatinName());
+            int length = categoryCount.getCategorizedInheritance().split("\\.").length;
+            switch (length) {
+                case 1 -> categoryFlat.setValue(categoryCount.getSubClass());
+                case 2 -> categoryFlat.setValue(categoryCount.getOrderCount());
+                case 3 -> categoryFlat.setValue(categoryCount.getFamily());
+                case 4 -> categoryFlat.setValue(categoryCount.getGenus());
+                case 5 -> categoryFlat.setValue(categoryCount.getSpecies());
+            }
+            categoryFlat.setLevel(length);
+            list.add(categoryFlat);
+        }
+        return list;
+    }
+
+    @Override
+    public CategoryCount inquireCategoryCountById(Integer id) {
+        return categoryCountService.inquireCategoryCount(id);
+    }
+
+    @Override
+    public Integer inquirePageCount(Integer level) {
+        String expression = "^(?:(?!" + "\\d+\\.".repeat(level) + "\\d+).)*$";
+        return categoryCountService.inquirePageCount(expression);
     }
 }

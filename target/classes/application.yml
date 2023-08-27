@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/biological_science
     username: root
-    password: 1234
+    password: 1111
     type: com.alibaba.druid.pool.DruidDataSource
   aop:
     auto: true
@@ -17,6 +17,5 @@ logging:
   level:
     com.neutech.mammalia.mapper: TRACE
 server:
-  port: 8080
   servlet:
     context-path: /api

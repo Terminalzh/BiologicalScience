@@ -4,16 +4,11 @@ import {
   Button,
   FormControl,
   FormLabel,
-  HStack,
-  Image,
   Input,
-  Radio,
-  RadioGroup,
   notificationService,
 } from "@hope-ui/solid";
 import {
   Show,
-  catchError,
   createEffect,
   createMemo,
   createResource,
@@ -21,9 +16,8 @@ import {
   untrack,
 } from "solid-js";
 import { useNavigate, useSearchParams } from "solid-start";
-import { login, register } from "~/api/user";
+import { login } from "~/api/user";
 import RegistryForm from "~/components/RegistryForm";
-import PictureUploader from "~/components/form/PictureUploader";
 import { catchResource } from "~/utils";
 
 const LoginForm = () => {
